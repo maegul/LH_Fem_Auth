@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+<style>
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.cells path {
+  fill: none;
+  pointer-events: all;
+}
+
+.cells :hover circle {
+  fill: red;
+  r: 10px;
+}
+
+
+button {
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    opacity: 0.4;
+}
+
+#plot {
+  display: block;
+  margin: auto;
+} 
+
+
+div {
+  margin: auto;
+  width: 50%;
+}
+
+.tooltip {
+  background-color: rgba(255, 255, 255, 0.6);
+  width: auto;
+
+}
+
+</style>
+</head>
+
+<body>
+<svg id='plot' width="1200" height="500"></svg>
+
+
+<div>
+<button id='Anatomy' value=0 type="button">Anatomy</button>
+<button id='CellBiology' value=0 type="button">Cell Biology</button>
+<button id='Neurosurgery' value=0 type="button">Neurosurgery</button>
+<button id='Radiology' value=0 type="button">Radiology</button>
+</div>
+
+
+<div id="year_control">
+  <input type="range" name="range" class="slider" id="year_slider" value="2002" min="2002" max="2016" step="1" >
+  <p id="year_text"></p>
+</div>
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src='https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js'></script>
+<script>
+
+
+
+var svg = d3.select("svg"),
+    margin = {top: 40, right: 40, bottom: 40, left: 40},
+    width = svg.attr("width") - margin.left - margin.right,
+    height = svg.attr("height") - margin.top - margin.bottom;
+
+var formatValue = d3.format(",d");
+
+var x = d3.scaleLinear()
+    .rangeRound([0, width]);
+
+var g = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+var t = d3.transition()
+          .duration(1000)
+          .ease(d3.easeLinear);
+
+
+d3.csv("discipline_data.csv", type, function(error, data) {
+  if (error) throw error;
+
+console.log(data);
+
+
+// Making the nested data object from the 2d array of the CSV
+
+  var disciplines = _.uniq(data.map(function(d){
+    return d.discipline;
+  }));
+
+  var countries = _.uniq(data.map(function(d){
+    return d.country;
+  }))
+
+  var years = _.uniq(data.map(function(d){
+    return d.year;
+  }))
+
+  var dat_obj = {};
+  var dat_arr = [];
+
+  for(var i=0; i < disciplines.length; i++) {
+
+    var disc_obj = {};
+
+    for(var j=0; j < countries.length; j++) {
+      for(var k=0; k< years.length; k++) {
+        var path = [disciplines[i], countries[j], years[k]];
+        var dat = data.filter(function(d){
+          return d.discipline==path[0] && d.country == path[1] && d.year==path[2];
+        });
+        // _.set(dat_obj, path, dat[0].percent_fem);
+        dat_arr[i] = _.set(disc_obj, path.slice(1), dat[0].percent_fem);
+        _.set(dat_arr[i], 'discipline', disciplines[i]);
+      }
+    }
+  };
+
+
+
+  console.log(dat_arr);
+
+
+  var yr_txt = d3.select('#year_text')
+                  .style('font-family', 'sans-serif');
+
+  year_idx = parseInt(2002);
+  yr_txt.text('Year: ' + year_idx);
+
+  country = 'USA';
+
+  // filt_data = data.filter(function(d){
+  //       return d.year == year_idx;
+  //     });
+
+
+
+  x.domain([0, 100]);
+
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(20, ".0s"));
+
+
+
+  d3.select("#year_slider").on("input", function () {
+          year_idx = parseInt(this.value);
+          yr_txt.text('Year: ' + year_idx);
+
+          simulation
+            .alpha(0.2)
+            .restart();
+
+          // simulation.nodes(dat_arr);
+
+          simulation.force("x", d3.forceX(function(d) { 
+            return x(d[country][year_idx]); }).strength(1))
+
+  });
+
+
+
+  var simulation = d3.forceSimulation(dat_arr)
+      .force("x", d3.forceX(function(d) { 
+        return x(d[country][year_idx]); }).strength(1))
+      .force("y", d3.forceY(height / 2))
+      .force("collide", d3.forceCollide(10))
+      // .alphaTarget(0.2)
+      .on('tick', tick);
+      // .stop();
+
+  // var xforce = simulation.force('x');
+
+var tooltip = d3.select('body')
+                  .append('div')
+                  .classed('tooltip', true)
+                  .style('position', 'absolute')
+                  .style('visibility', 'hidden')
+                  .style('white-space', 'pre')
+                  .style('font-family', 'sans-serif');
+
+
+
+  var pnt = g.selectAll('.pnt').data(dat_arr, function(d){
+    return d.discipline;
+  });
+
+  console.log(pnt);
+
+  pnt.enter().append('circle')
+              .classed('pnt', true)
+              .attr('r', 8)
+              .attr('cx', function(d){return d.x;})
+              .attr('cy', function(d){return d.y;})
+              .on('mouseover', function(d){
+                var perc = d[country][year_idx];
+
+                return tooltip.style('visibility', 'visible')
+                              .text(d.discipline+'\n'+perc.toFixed(2)+'%');
+              })
+              .on('mousemove', function() {
+                return tooltip
+                        .style('top', (d3.event.pageY-10)+'px')
+                        .style('left', (d3.event.pageX+10)+'px');
+              })
+              .on('mouseout', function(){
+                return tooltip
+                            .style('visibility', 'hidden');
+              })
+
+
+
+function tick(){
+
+  console.log(simulation.alpha());
+  d3.selectAll('.pnt')
+      .attr('cx', function(d){return d.x;})
+      .attr('cy', function(d){return d.y;});
+
+}
+
+
+  // for (var i = 0; i < 120; ++i) simulation.tick();
+
+
+
+  // simulation.nodes(filt_data);
+
+  //   var pnt = g.selectAll('.pnt').data(filt_data, function(d){
+  //   return d.country+d.discipline+d.year+'';
+  // });
+
+  //     pnt.exit().remove();
+
+
+  // pnt.enter().append('circle')
+  //             .classed('pnt', true)
+  //             .attr('r', 8)
+  //             .attr('cx', function(d){return d.x;})
+  //             .attr('cy', function(d){return d.y;})
+
+
+
+
+
+  // var simulation = d3.forceSimulation(data)
+  //     .force("x", d3.forceX(function(d) { return x(d.percent_fem); }).strength(1))
+  //     .force("y", d3.forceY(height / 2))
+  //     .force("collide", d3.forceCollide(10))
+  //     .stop();
+
+  // for (var i = 0; i < 120; ++i) simulation.tick();
+
+
+  // var pnt = g.selectAll('.pnt').data(data, function(d){
+  //   return d.country+d.discipline+d.year+'';
+  // });
+
+
+
+  // pnt.enter().append('circle')
+  //             .classed('pnt', true)
+  //             .attr('r', 8)
+  //             .attr('cx', function(d){return d.x;})
+  //             .attr('cy', function(d){return d.y;})
+  
+
+
+
+
+
+
+
+
+
+
+d3.select('#Anatomy').on('click', function(){
+
+
+
+    var vis = d3.select(this).attr('value');
+    var col = d3.select(this).attr('background-color');
+
+    if (vis == 1){
+
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
+          .transition(t)
+          .attr('fill', 'black');
+
+      d3.select(this).attr('value', 0).style('opacity', 0.4);
+    }
+
+    if (vis == 0){
+
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
+        .transition(t).attr('fill', 'red');
+      d3.select(this).attr('value', 1).style('opacity', 1);
+    }
+
+
+
+
+})
+
+
+d3.select('#CellBiology').on('click', function(){
+  d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).attr('fill', 'red');
+
+
+    var vis = d3.select(this).attr('value');
+    var col = d3.select(this).attr('background-color');
+
+    if (vis == 1){
+
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).attr('fill', 'black');
+
+      d3.select(this).attr('value', 0).style('opacity', 0.4);
+    }
+
+    if (vis == 0){
+
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).attr('fill', 'red');
+      d3.select(this).attr('value', 1).style('opacity', 1);
+    }
+})
+
+
+d3.select('#Neurosurgery').on('click', function(){
+
+  d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).attr('fill', 'red');
+
+
+    var vis = d3.select(this).attr('value');
+    var col = d3.select(this).attr('background-color');
+
+    if (vis == 1){
+
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).attr('fill', 'black');
+
+      d3.select(this).attr('value', 0).style('opacity', 0.4);
+    }
+
+    if (vis == 0){
+
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).attr('fill', 'red');
+      d3.select(this).attr('value', 1).style('opacity', 1);
+    }
+
+
+
+
+})
+
+
+d3.select('#Radiology').on('click', function(){
+  d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).attr('fill', 'red');
+
+
+    var vis = d3.select(this).attr('value');
+    var col = d3.select(this).attr('background-color');
+
+    if (vis == 1){
+
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).attr('fill', 'black');
+
+      d3.select(this).attr('value', 0).style('opacity', 0.4);
+    }
+
+    if (vis == 0){
+
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).attr('fill', 'red');
+      d3.select(this).attr('value', 1).style('opacity', 1);
+    }
+})
+
+
+
+
+});
+
+
+
+
+function type(d) {
+  if (!d.percent_fem) return;
+  d.percent_fem = +d.percent_fem;
+  return d;
+}
+
+</script>
+</body>
