@@ -77,6 +77,16 @@ div {
   <p id="year_text"></p>
 </div>
 
+<div>
+
+<select id='count_sel'>
+<option disabled selected>Select Country</option>
+
+
+</select>
+
+</div>
+
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script type="text/javascript" src='https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js'></script>
@@ -145,6 +155,8 @@ console.log(data);
 
 
 
+
+
   console.log(dat_arr);
 
 
@@ -154,7 +166,9 @@ console.log(data);
   year_idx = parseInt(2002);
   yr_txt.text('Year: ' + year_idx);
 
+
   country = 'USA';
+
 
   // filt_data = data.filter(function(d){
   //       return d.year == year_idx;
@@ -176,17 +190,46 @@ console.log(data);
           year_idx = parseInt(this.value);
           yr_txt.text('Year: ' + year_idx);
 
-          simulation
-            .alpha(0.2)
-            .restart();
 
           // simulation.nodes(dat_arr);
 
           simulation.force("x", d3.forceX(function(d) { 
             return x(d[country][year_idx]); }).strength(1))
+          
+          simulation
+            .alpha(0.2)
+            .restart();
 
   });
 
+
+
+// Adding country selector
+
+var count_sel = d3.select('#count_sel');
+
+for(var i=0; i <countries.length; i++) {
+  count_sel.append('option')
+            .property('value', countries[i])
+            .text(countries[i]);
+
+};
+
+
+count_sel.on('change', function(){
+  country = count_sel.property('value');
+
+
+
+  simulation.force("x", d3.forceX(function(d) { 
+    return x(d[country][year_idx]); }).strength(1));
+
+  simulation
+  .alpha(0.2)
+  .restart();
+
+
+})
 
 
   var simulation = d3.forceSimulation(dat_arr)
@@ -216,6 +259,8 @@ var tooltip = d3.select('body')
 
   console.log(pnt);
 
+
+
   pnt.enter().append('circle')
               .classed('pnt', true)
               .attr('r', 8)
@@ -236,6 +281,7 @@ var tooltip = d3.select('body')
                 return tooltip
                             .style('visibility', 'hidden');
               })
+
 
 
 
