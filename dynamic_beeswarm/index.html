@@ -380,7 +380,7 @@ d3.select('#Anatomy').on('click', function(){
 
       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
           .transition(t)
-          .attr('fill', 'black');
+          .style('fill', '#ad3d8f');
 
       d3.select(this).attr('value', 0).style('opacity', 0.4);
     }
@@ -388,7 +388,7 @@ d3.select('#Anatomy').on('click', function(){
     if (vis == 0){
 
       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
-        .transition(t).attr('fill', 'red');
+        .transition(t).style('fill', 'red');
       d3.select(this).attr('value', 1).style('opacity', 1);
     }
 
@@ -399,7 +399,6 @@ d3.select('#Anatomy').on('click', function(){
 
 
 d3.select('#CellBiology').on('click', function(){
-  d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).attr('fill', 'red');
 
 
     var vis = d3.select(this).attr('value');
@@ -407,14 +406,14 @@ d3.select('#CellBiology').on('click', function(){
 
     if (vis == 1){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).attr('fill', 'black');
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).transition(t).style('fill', '#ad3d8f');
 
       d3.select(this).attr('value', 0).style('opacity', 0.4);
     }
 
     if (vis == 0){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).attr('fill', 'red');
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).transition(t).style('fill', 'red');
       d3.select(this).attr('value', 1).style('opacity', 1);
     }
 })
@@ -422,7 +421,6 @@ d3.select('#CellBiology').on('click', function(){
 
 d3.select('#Neurosurgery').on('click', function(){
 
-  d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).attr('fill', 'red');
 
 
     var vis = d3.select(this).attr('value');
@@ -430,14 +428,14 @@ d3.select('#Neurosurgery').on('click', function(){
 
     if (vis == 1){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).attr('fill', 'black');
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).transition(t).style('fill', '#ad3d8f');
 
       d3.select(this).attr('value', 0).style('opacity', 0.4);
     }
 
     if (vis == 0){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).attr('fill', 'red');
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).transition(t).style('fill', 'red');
       d3.select(this).attr('value', 1).style('opacity', 1);
     }
 
@@ -448,7 +446,6 @@ d3.select('#Neurosurgery').on('click', function(){
 
 
 d3.select('#Radiology').on('click', function(){
-  d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).attr('fill', 'red');
 
 
     var vis = d3.select(this).attr('value');
@@ -456,14 +453,14 @@ d3.select('#Radiology').on('click', function(){
 
     if (vis == 1){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).attr('fill', 'black');
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).transition(t).style('fill', '#ad3d8f');
 
       d3.select(this).attr('value', 0).style('opacity', 0.4);
     }
 
     if (vis == 0){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).attr('fill', 'red');
+      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).transition(t).style('fill', 'red');
       d3.select(this).attr('value', 1).style('opacity', 1);
     }
 })
