@@ -17,15 +17,27 @@
   font: 10px sans-serif;
 }
 
+.pnt {
+    fill: #ad3d8f;
+    opacity: 0.6;
+    stroke:black;
+    stroke-opacity:0.8;
+    stroke-width: 1px;
+}
+
+
+
 .cells path {
   fill: none;
   pointer-events: all;
 }
 
+
 .cells :hover circle {
   fill: red;
   r: 10px;
 }
+
 
 
 button {
@@ -269,17 +281,25 @@ var tooltip = d3.select('body')
               .on('mouseover', function(d){
                 var perc = d[country][year_idx];
 
-                return tooltip.style('visibility', 'visible')
+                tooltip.style('visibility', 'visible')
                               .text(d.discipline+'\n'+perc.toFixed(2)+'%');
+                console.log('mousever');
+                d3.select(this)
+                    .style('opacity', 1);
               })
               .on('mousemove', function() {
                 return tooltip
                         .style('top', (d3.event.pageY-10)+'px')
                         .style('left', (d3.event.pageX+10)+'px');
+
+
               })
               .on('mouseout', function(){
-                return tooltip
+                tooltip
                             .style('visibility', 'hidden');
+                d3.select(this)
+                    .style('opacity', 0.6);
+
               })
 
 
