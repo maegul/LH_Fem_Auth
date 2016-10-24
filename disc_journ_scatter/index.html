@@ -1,0 +1,624 @@
+<head>
+
+<style type="text/css">
+
+/** {
+	border: 1px solid red;
+}
+*/
+
+.page {
+
+	display: -webkit-flex;
+	-webkit-flex-direction: column;
+
+	display: flex;
+	flex-direction: column;
+
+	width: 100%;
+	height: 100%;
+}
+.canvas {
+	display: -webkit-flex;
+	-webkit-flex-direction: row;
+
+	display: flex;
+	flex-direction: row;
+	margin: auto;
+	width: 80%;
+	height: 80%;
+}
+
+.cont, .vis {
+/*	display: inline-block;
+*/	margin: auto;
+}
+
+.vis_journ {
+	visibility: hidden;
+}
+
+.cont {
+	width: 15%;
+
+}
+
+
+.cont_inner {
+	margin: auto;
+}
+
+.v {
+	margin:auto;
+
+	display: -webkit-flex;
+	-webkit-flex-direction: column;
+
+
+	display: flex;
+	flex-direction: column;
+
+	width: 60%;
+	-webkit-flex: 2;
+	flex: 2;
+}
+
+
+.pnt {
+	fill: #ad3d8f;
+}
+
+.err {
+	fill: #ad3d8f;
+}
+
+
+.pnt_journ {
+	fill: #6a55d0;
+}
+
+.err_journ {
+	fill: #6a55d0;
+}
+
+.journ {
+	visibility: hidden;
+}
+
+</style>
+
+</head>
+
+
+
+
+
+<body>
+
+<div class='page'>
+<div class='canvas'>
+
+<!-- control -->
+<div class='cont'>
+
+
+<div class='cont_inner'>
+  <input type="range" name="range" class="slider" id="year_slider" value="2002" min="2002" max="2016" step="1" >
+  <p id="year_text"></p>
+</div>
+
+<div class='cont_inner'>
+<select id='count_sel'>
+<option disabled selected>Select Country</option>
+</select>
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- plot -->
+<div class='v'>
+
+<div class='vis'>
+
+
+</div>
+
+<div class='vis_journ'>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src='https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js'></script>
+
+<script type="text/javascript">
+
+// Dimensions
+
+var margin = {top: 20, right: 20, bottom: 30, left: 70};
+
+var width = 860 - (margin.left + margin.right);
+var height = 250 - (margin.top + margin.bottom);
+
+
+
+// Append SVG
+
+var plot = d3.select('.vis').append('svg')
+				.attr('width', width + (margin.left + margin.right))
+				.attr('height', height + (margin.top + margin.bottom))
+			.append('g')
+				.attr('transform', 'translate('+margin.left+',' + margin.top + ')');
+
+
+
+d3.csv('discipline.data.csv', function(error, data) {
+	if (error) throw error;
+
+	console.log(data);
+
+
+
+// Making Data object from CSV
+
+  var disciplines = _.uniq(data.map(function(d){
+    return d.discipline;
+  }));
+
+  var countries = _.uniq(data.map(function(d){
+    return d.country;
+  }))
+
+  var years = _.uniq(data.map(function(d){
+    return d.year;
+  }))
+
+  var dat_arr = [];
+
+  for(var i=0; i < disciplines.length; i++) {
+
+    var disc_obj = {};
+
+    for(var j=0; j < countries.length; j++) {
+      for(var k=0; k< years.length; k++) {
+        var path = [disciplines[i], countries[j], years[k]];
+        var dat = data.filter(function(d){
+          return d.discipline==path[0] && d.country == path[1] && d.year==path[2];
+        });
+        dat_arr[i] = _.set(disc_obj, path.slice(1), 
+        					{
+        						'percent_fem':dat[0].percent_fem,
+        						'lCI': dat[0].lowerCI,
+        						'uCI': dat[0].upperCI
+        					}
+        				);
+        _.set(dat_arr[i], 'discipline', disciplines[i]);
+      }
+    }
+  };
+
+
+console.log(dat_arr);
+
+  var x = d3.scaleLinear()
+  				.range([0, width])
+  				.domain([0, 100]);
+
+  var y = d3.scalePoint()
+  				.range([height, 0])
+  				.domain(disciplines)
+  				.padding(0.3);
+
+
+ var xAxis = d3.axisBottom(x);
+ var yAxis = d3.axisLeft(y);
+
+
+
+	plot.append('g')
+			.classed('x axis', true)
+			.attr('transform', 'translate(0,' + height+')')
+			.call(xAxis)
+		.append('text')
+			.classed('label', true)
+			.attr('x', width/2)
+			.attr('y', -10)
+			.style('text-anchor', 'end')
+			.text('Percentage Female Authors');
+
+
+	plot.append('g')
+			.classed('y axis', true)
+			.call(yAxis);
+
+
+
+	// Initialise Data Filters
+	var country = 'USA',
+		year = 2002;
+
+	d3.select('#year_text').text('Year: '+year);
+
+
+
+
+
+	var pnt = plot.selectAll('.pnt').data(dat_arr, function(d){
+		return d.discipline;
+	});
+
+
+	console.log(pnt);
+
+	var rad = 10;
+
+	pnt.enter().append('ellipse')
+		.classed('pnt', true)
+		.attr('ry', rad)
+		.attr('rx', rad/3)
+		.attr('cx', function(d) {
+			return x(d[country][year].percent_fem);
+		})
+		.attr('cy', function(d){
+			return y(d.discipline);
+		})
+		.merge(pnt);
+		
+
+
+
+
+
+	var err = plot.selectAll('.err')
+				.data(dat_arr, function(d){
+					return d.discipline;
+				})
+
+
+// Note, it's the top left corner of the rect being positioned
+
+	err.enter().append('rect')
+		.classed('err', true)
+		.attr('height', 2*rad)
+		.attr('y', function(d) {
+			return y(d.discipline) - rad; // to center
+		})
+		.attr('width', function(d){
+			return x(d[country][year].uCI - d[country][year].lCI)
+		})
+		.attr('x', function(d){
+
+			return x(d[country][year].percent_fem) -
+			x((d[country][year].uCI - d[country][year].lCI)/2);
+		})
+		.attr('rx', 4).attr('ry', 4)
+		.style('opacity', 0.3);
+
+
+
+
+		d3.selectAll('.pnt').on('click', function(){
+			d3.select('.vis_journ')
+				.style('visibility', 'visible');
+			});
+
+
+		d3.selectAll('.err').on('click', function(){
+			d3.select('.vis_journ')
+				.transition().duration(1000)
+				.style('visibility', 'visible');
+			});
+
+
+
+
+	// d3.selectAll('.pnt').transition(t).attr('cx', x(10));
+
+	var year_slider = d3.select('#year_slider');
+
+	year_slider.on('input', function(){
+		year = parseInt(this.value);
+
+
+		d3.select('#year_text').text('Year: '+year);
+
+		update();
+		update_journ();
+
+
+	})
+
+
+
+	// Adding country selector
+
+	var count_sel = d3.select('#count_sel');
+
+	for(var i=0; i <countries.length; i++) {
+	  count_sel.append('option')
+	            .property('value', countries[i])
+	            .text(countries[i]);
+
+	};
+
+
+
+	count_sel.on('input', function(){
+		  country = count_sel.property('value');
+		  update();
+		  update_journ();
+
+	})
+
+	function update(){
+
+
+		d3.selectAll('.pnt').transition()
+				.duration(300).ease(d3.easeLinear)
+			.attr('cx', function(d){
+				return x(d[country][year].percent_fem);
+			});
+
+
+		d3.selectAll('.err').transition()
+				.duration(300).ease(d3.easeLinear)
+			.attr('width', function(d){
+			return x(d[country][year].uCI - d[country][year].lCI)
+			})
+			.attr('x', function(d){
+
+			return x(d[country][year].percent_fem) -
+			x((d[country][year].uCI - d[country][year].lCI)/2);
+			})
+
+
+	}
+
+
+	update_journ = function(){
+
+		console.log('hello');
+
+		d3.selectAll('.pnt_journ').transition()
+				.duration(300).ease(d3.easeLinear)
+			.attr('cx', function(d){
+				return x(d[country][year].percent_fem);
+			});
+
+
+		d3.selectAll('.err_journ').transition()
+				.duration(300).ease(d3.easeLinear)
+			.attr('width', function(d){
+			return x(d[country][year].uCI - d[country][year].lCI)
+			})
+			.attr('x', function(d){
+
+			return x(d[country][year].percent_fem) -
+			x((d[country][year].uCI - d[country][year].lCI)/2);
+			})
+
+
+	};
+
+
+
+})
+
+
+
+// 
+// 
+// Journal Plot
+// 
+// 
+
+var plot_journ = d3.select('.vis_journ').append('svg')
+				.attr('width', width + (margin.left + margin.right))
+				.attr('height', height + (margin.top + margin.bottom))
+			.append('g')
+				.attr('transform', 'translate('+margin.left+',' + margin.top + ')');
+
+
+
+d3.csv('journal.data.csv', function(error, data) {
+	if (error) throw error;
+
+	console.log(data);
+
+
+
+// Making Data object from CSV
+
+  var journals = _.uniq(data.map(function(d){
+    return d.journal;
+  }));
+
+  var countries = _.uniq(data.map(function(d){
+    return d.country;
+  }))
+
+  var years = _.uniq(data.map(function(d){
+    return d.year;
+  }))
+
+  var dat_arr = [];
+
+  for(var i=0; i < journals.length; i++) {
+
+    var disc_obj = {};
+
+    for(var j=0; j < countries.length; j++) {
+      for(var k=0; k< years.length; k++) {
+        var path = [journals[i], countries[j], years[k]];
+        var dat = data.filter(function(d){
+          return d.journal==path[0] && d.country == path[1] && d.year==path[2];
+        });
+        dat_arr[i] = _.set(disc_obj, path.slice(1), 
+        					{
+        						'percent_fem':dat[0].percent_fem,
+        						'lCI': dat[0].lowerCI,
+        						'uCI': dat[0].upperCI
+        					}
+        				);
+        _.set(dat_arr[i], 'journal', journals[i]);
+      }
+    }
+  };
+
+
+console.log(dat_arr);
+
+  var x = d3.scaleLinear()
+  				.range([0, width])
+  				.domain([0, 100]);
+
+  var y = d3.scalePoint()
+  				.range([height, 0])
+  				.domain(journals)
+  				.padding(0.3);
+
+
+ var xAxis = d3.axisBottom(x);
+ var yAxis = d3.axisLeft(y);
+
+
+
+	plot_journ.append('g')
+			.classed('x axis', true)
+			.attr('transform', 'translate(0,' + height+')')
+			.call(xAxis)
+		.append('text')
+			.classed('label', true)
+			.attr('x', width/2)
+			.attr('y', -10)
+			.style('text-anchor', 'end')
+			.text('Percentage Female Authors');
+
+
+	plot_journ.append('g')
+			.classed('y axis', true)
+			.call(yAxis);
+
+
+
+	// Initialise Data Filters
+	var country = 'USA',
+		year = 2002;
+
+	d3.select('#year_text').text('Year: '+year);
+
+
+
+
+
+	var pnt = plot_journ.selectAll('.pnt_journ').data(dat_arr, function(d){
+		return d.journal;
+	});
+
+
+
+	var rad = 10;
+
+	pnt.enter().append('ellipse')
+		.classed('pnt_journ', true)
+		.attr('ry', rad)
+		.attr('rx', rad/3)
+		.attr('cx', function(d) {
+			return x(d[country][year].percent_fem);
+		})
+		.attr('cy', function(d){
+			return y(d.journal);
+		})
+		.merge(pnt);
+
+
+	var err = plot_journ.selectAll('.err_journ')
+				.data(dat_arr, function(d){
+					return d.journal;
+				})
+
+
+// Note, it's the top left corner of the rect being positioned
+
+	err.enter().append('rect')
+		.classed('err_journ', true)
+		.attr('height', 2*rad)
+		.attr('y', function(d) {
+			return y(d.journal) - rad; // to center
+		})
+		.attr('width', function(d){
+			return x(d[country][year].uCI - d[country][year].lCI)
+		})
+		.attr('x', function(d){
+
+			return x(d[country][year].percent_fem) -
+			x((d[country][year].uCI - d[country][year].lCI)/2);
+		})
+		.attr('rx', 4).attr('ry', 4)
+		.style('opacity', 0.3);
+
+
+
+
+
+
+	// d3.selectAll('.pnt_journ').transition(t).attr('cx', x(10));
+
+
+// Some sort scope issue in trying to use this in the discipline plot
+
+	// update_journ = function(){
+
+	// 	console.log('hello');
+
+	// 	d3.selectAll('.pnt_journ').transition()
+	// 			.duration(300).ease(d3.easeLinear)
+	// 		.attr('cx', function(d){
+	// 			return x(d[country][year].percent_fem);
+	// 		});
+
+
+	// 	d3.selectAll('.err_journ').transition()
+	// 			.duration(300).ease(d3.easeLinear)
+	// 		.attr('width', function(d){
+	// 		return x(d[country][year].uCI - d[country][year].lCI)
+	// 		})
+	// 		.attr('x', function(d){
+
+	// 		return x(d[country][year].percent_fem) -
+	// 		x((d[country][year].uCI - d[country][year].lCI)/2);
+	// 		})
+
+
+	// };
+
+
+})
+
+
+
+
+
+</script>
+</body>
