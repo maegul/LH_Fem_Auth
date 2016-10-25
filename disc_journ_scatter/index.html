@@ -18,15 +18,18 @@
 	width: 100%;
 	height: 100%;
 }
+
+
 .canvas {
 	display: -webkit-flex;
 	-webkit-flex-direction: row;
 
 	display: flex;
 	flex-direction: row;
+
 	margin: auto;
 	width: 80%;
-	height: 80%;
+	height: 90%;
 }
 
 .cont, .vis {
@@ -36,16 +39,42 @@
 
 .vis_journ {
 	visibility: hidden;
+	margin: auto;
 }
 
 .cont {
-	width: 15%;
+	width: 20%;
+	height: 80%;
+
+	display: -webkit-flex;
+	-webkit-flex-direction:column;
+	-webkit-justify-content:flex-start;
+	-webkit-align-items: flex-start;
+
+
+	display: flex;
+	flex-direction:column;
+	justify-content:flex-start;
+	align-items: flex-start;
+
+
 
 }
 
 
 .cont_inner {
-	margin: auto;
+/*	margin: auto;
+*/}
+
+#year_text {
+	margin-top: 2px;
+	text-align: right;
+}
+
+.cont_desc {
+	font-size: 1em;
+	font-weight: bold;
+	font-family: sans-serif;
 }
 
 .v {
@@ -81,6 +110,10 @@
 	fill: #6a55d0;
 }
 
+.pnt, .err {
+	cursor: pointer;
+}
+
 .journ {
 	visibility: hidden;
 }
@@ -103,13 +136,16 @@
 
 
 <div class='cont_inner'>
-  <input type="range" name="range" class="slider" id="year_slider" value="2002" min="2002" max="2016" step="1" >
-  <p id="year_text"></p>
+	<p class='cont_desc'>Year</p>
+	<input type="range" name="range" class="slider" id="year_slider" value="2002" min="2002" max="2016" step="1" >
+	<p id="year_text"></p>
+
 </div>
 
-<div class='cont_inner'>
-<select id='count_sel'>
-<option disabled selected>Select Country</option>
+<div class='cont_inner' style='padding-top:20px'>
+	<p class='cont_desc'>Country</p>
+	<select id='count_sel'>
+	<option disabled selected>Select Country</option>
 </select>
 </div>
 
@@ -258,7 +294,7 @@ console.log(dat_arr);
 	var country = 'USA',
 		year = 2002;
 
-	d3.select('#year_text').text('Year: '+year);
+	d3.select('#year_text').text(year);
 
 
 
@@ -341,7 +377,7 @@ console.log(dat_arr);
 		year = parseInt(this.value);
 
 
-		d3.select('#year_text').text('Year: '+year);
+		d3.select('#year_text').text(year);
 
 		update();
 		update_journ();
@@ -526,7 +562,7 @@ console.log(dat_arr);
 	var country = 'USA',
 		year = 2002;
 
-	d3.select('#year_text').text('Year: '+year);
+	d3.select('#year_text').text(year);
 
 
 
