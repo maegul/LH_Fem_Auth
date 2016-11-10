@@ -116,6 +116,9 @@ var formatValue = d3.format(",d");
 var x = d3.scaleLinear()
     .rangeRound([0, width]);
 
+var r = d3.scaleSqrt()
+          .range([6, 25]);
+
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -125,239 +128,403 @@ var t = d3.transition()
           .ease(d3.easeLinear);
 
 
-d3.csv("discipline_data.csv", type, function(error, data) {
+console.log('hello');
+
+d3.json("json_test.json", function(error, data) {
   if (error) throw error;
 
 console.log(data);
 
 
-// Making the nested data object from the 2d array of the CSV
+// X Axis
 
-  var disciplines = _.uniq(data.map(function(d){
-    return d.discipline;
-  }));
+  x.domain([0, 1]);
 
-  var countries = _.uniq(data.map(function(d){
-    return d.country;
-  }))
+  var ntot_overall_ext = d3.extent(
+    _.flattenDeep(
+      data.map(function(datobj){
+        var vals =  _.flatMapDeep(datobj, function(d){return d['ntot_overall'];})
+        return vals.filter(function(v){return v!=undefined})
+      })));
 
-  var years = _.uniq(data.map(function(d){
-    return d.year;
-  }))
+  r.domain(ntot_overall_ext);
 
-  var dat_obj = {};
-  var dat_arr = [];
-
-  for(var i=0; i < disciplines.length; i++) {
-
-    var disc_obj = {};
-
-    for(var j=0; j < countries.length; j++) {
-      for(var k=0; k< years.length; k++) {
-        var path = [disciplines[i], countries[j], years[k]];
-        var dat = data.filter(function(d){
-          return d.discipline==path[0] && d.country == path[1] && d.year==path[2];
-        });
-        // _.set(dat_obj, path, dat[0].percent_fem);
-        dat_arr[i] = _.set(disc_obj, path.slice(1), dat[0].percent_fem);
-        _.set(dat_arr[i], 'discipline', disciplines[i]);
-      }
-    }
-  };
+console.log(r(5000))
 
 
+  //   )))
+
+  // var ticks = x.ticks(20),
+  //     tickFormat = x.tickFormat(20, "+%");
+
+  // ticks.map(tickFormat);
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(20, "s"));
+
+
+  var tooltip = d3.select('body')
+                    .append('div')
+                    .classed('tooltip', true)
+                    .style('position', 'absolute')
+                    .style('visibility', 'hidden')
+                    .style('white-space', 'pre')
+                    .style('font-family', 'sans-serif');
 
 
 
-  console.log(dat_arr);
+
+  var year = 2003;
+
+
+  var simulation = d3.forceSimulation(data)
+      .force("x", d3.forceX(function(d) { 
+        return x(d[year]['prop_overall']); }).strength(0.9))
+      .force("y", d3.forceY(height/2).strength(0.1))
+      .force("collide", d3.forceCollide(function(d){return r(d[year]['ntot_overall'])}))
+      // .alphaTarget(0.2)
+      .alphaDecay(0.014)
+      .on('tick', tick);
+      // .stop();
+
+
+
+  var pnt = g.selectAll('.pnt').data(data, function(d){return d.discipline;})
+
+
+  pnt.enter().append('circle').classed('pnt', true)
+      .attr('r', function(d){return r(d[year]['ntot_overall'])})
+      .attr('cx', function(d){return d.x})
+      .attr('cy', function(d){return height/2})
+      .on('mouseover', function(d){
+        var perc = d[year]['prop_overall'];
+        var num = d[year]['ntot_overall'];
+
+        tooltip.style('visibility', 'visible')
+                      .text(d.discipline+'\n'+perc.toFixed(2)+'%'+'\n' + num +' papers');
+        console.log('mousever');
+        d3.select(this)
+            .style('opacity', 1);
+      })
+      .on('mousemove', function() {
+        return tooltip
+                .style('top', (d3.event.pageY-10)+'px')
+                .style('left', (d3.event.pageX+10)+'px');
+
+
+      })
+      .on('mouseout', function(){
+        tooltip.style('visibility', 'hidden');
+        d3.select(this)
+            .style('opacity', 0.6);
+
+      })
+
+
+  console.log(pnt);
+
+//   var pnt = g.selectAll('.pnt').data(dat_arr, function(d){
+//     return d.discipline;
+//   });
+
+//   console.log(pnt);
+
+
+
+//   pnt.enter().append('circle')
+//               .classed('pnt', true)
+//               .attr('r', 8)
+//               .attr('cx', function(d){return d.x;})
+//               .attr('cy', function(d){return d.y;})
+//               .on('mouseover', function(d){
+//                 var perc = d[country][year_idx];
+
+//                 tooltip.style('visibility', 'visible')
+//                               .text(d.discipline+'\n'+perc.toFixed(2)+'%');
+//                 console.log('mousever');
+//                 d3.select(this)
+//                     .style('opacity', 1);
+//               })
+//               .on('mousemove', function() {
+//                 return tooltip
+//                         .style('top', (d3.event.pageY-10)+'px')
+//                         .style('left', (d3.event.pageX+10)+'px');
+
+
+//               })
+//               .on('mouseout', function(){
+//                 tooltip
+//                             .style('visibility', 'hidden');
+//                 d3.select(this)
+//                     .style('opacity', 0.6);
+
+//               })
 
 
   var yr_txt = d3.select('#year_text')
                   .style('font-family', 'sans-serif');
 
-  year_idx = parseInt(2002);
-  yr_txt.text('Year: ' + year_idx);
-
-
-  country = 'USA';
-
-
-  // filt_data = data.filter(function(d){
-  //       return d.year == year_idx;
-  //     });
-
-
-
-  x.domain([0, 100]);
-
-
-  g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).ticks(20, ".0s"));
-
+  yr_txt.text('Year: ' + year);
 
 
   d3.select("#year_slider").on("input", function () {
-          year_idx = parseInt(this.value);
-          yr_txt.text('Year: ' + year_idx);
+          year = parseInt(this.value);
+          yr_txt.text('Year: ' + year);
 
 
           // simulation.nodes(dat_arr);
 
           simulation.force("x", d3.forceX(function(d) { 
-            return x(d[country][year_idx]); }).strength(1))
+            return x(d[year]['prop_overall']); }).strength(1))
+                    .force('collide', d3.forceCollide(function(d){return r(d[year]['ntot_overall'])}))
           
           simulation
-            .alpha(0.2)
+            .alpha(0.07)
             .restart();
 
   });
 
 
 
-// Adding country selector
-
-var count_sel = d3.select('#count_sel');
-
-for(var i=0; i <countries.length; i++) {
-  count_sel.append('option')
-            .property('value', countries[i])
-            .text(countries[i]);
-
-};
-
-
-count_sel.on('change', function(){
-  country = count_sel.property('value');
-
-
-
-  simulation.force("x", d3.forceX(function(d) { 
-    return x(d[country][year_idx]); }).strength(1));
-
-  simulation
-  .alpha(0.2)
-  .restart();
-
-
-})
-
-
-  var simulation = d3.forceSimulation(dat_arr)
-      .force("x", d3.forceX(function(d) { 
-        return x(d[country][year_idx]); }).strength(1))
-      .force("y", d3.forceY(height / 2))
-      .force("collide", d3.forceCollide(10))
-      // .alphaTarget(0.2)
-      .on('tick', tick);
-      // .stop();
-
-  // var xforce = simulation.force('x');
-
-var tooltip = d3.select('body')
-                  .append('div')
-                  .classed('tooltip', true)
-                  .style('position', 'absolute')
-                  .style('visibility', 'hidden')
-                  .style('white-space', 'pre')
-                  .style('font-family', 'sans-serif');
-
-
-
-  var pnt = g.selectAll('.pnt').data(dat_arr, function(d){
-    return d.discipline;
-  });
-
-  console.log(pnt);
-
-
-
-  pnt.enter().append('circle')
-              .classed('pnt', true)
-              .attr('r', 8)
-              .attr('cx', function(d){return d.x;})
-              .attr('cy', function(d){return d.y;})
-              .on('mouseover', function(d){
-                var perc = d[country][year_idx];
-
-                tooltip.style('visibility', 'visible')
-                              .text(d.discipline+'\n'+perc.toFixed(2)+'%');
-                console.log('mousever');
-                d3.select(this)
-                    .style('opacity', 1);
-              })
-              .on('mousemove', function() {
-                return tooltip
-                        .style('top', (d3.event.pageY-10)+'px')
-                        .style('left', (d3.event.pageX+10)+'px');
-
-
-              })
-              .on('mouseout', function(){
-                tooltip
-                            .style('visibility', 'hidden');
-                d3.select(this)
-                    .style('opacity', 0.6);
-
-              })
-
-
-
-
 function tick(){
 
-  console.log(simulation.alpha());
+  // console.log(simulation.alpha());
   d3.selectAll('.pnt')
+      .attr('r', function(d){return r(d[year]['ntot_overall'])})
       .attr('cx', function(d){return d.x;})
       .attr('cy', function(d){return d.y;});
 
 }
 
 
-  // for (var i = 0; i < 120; ++i) simulation.tick();
+
+});
+
+// Making the nested data object from the 2d array of the CSV
+
+  // var disciplines = _.uniq(data.map(function(d){
+  //   return d.discipline;
+  // }));
+
+  // var countries = _.uniq(data.map(function(d){
+  //   return d.country;
+  // }))
+
+  // var years = _.uniq(data.map(function(d){
+  //   return d.year;
+  // }))
+
+  // var dat_obj = {};
+  // var dat_arr = [];
+
+  // for(var i=0; i < disciplines.length; i++) {
+
+  //   var disc_obj = {};
+
+  //   for(var j=0; j < countries.length; j++) {
+  //     for(var k=0; k< years.length; k++) {
+  //       var path = [disciplines[i], countries[j], years[k]];
+  //       var dat = data.filter(function(d){
+  //         return d.discipline==path[0] && d.country == path[1] && d.year==path[2];
+  //       });
+  //       // _.set(dat_obj, path, dat[0].percent_fem);
+  //       dat_arr[i] = _.set(disc_obj, path.slice(1), dat[0].percent_fem);
+  //       _.set(dat_arr[i], 'discipline', disciplines[i]);
+  //     }
+  //   }
+  // };
 
 
 
-  // simulation.nodes(filt_data);
 
-  //   var pnt = g.selectAll('.pnt').data(filt_data, function(d){
-  //   return d.country+d.discipline+d.year+'';
-  // });
+//   var yr_txt = d3.select('#year_text')
+//                   .style('font-family', 'sans-serif');
 
-  //     pnt.exit().remove();
-
-
-  // pnt.enter().append('circle')
-  //             .classed('pnt', true)
-  //             .attr('r', 8)
-  //             .attr('cx', function(d){return d.x;})
-  //             .attr('cy', function(d){return d.y;})
+//   year_idx = parseInt(2002);
+//   yr_txt.text('Year: ' + year_idx);
 
 
+//   country = 'USA';
+
+
+//   // filt_data = data.filter(function(d){
+//   //       return d.year == year_idx;
+//   //     });
 
 
 
-  // var simulation = d3.forceSimulation(data)
-  //     .force("x", d3.forceX(function(d) { return x(d.percent_fem); }).strength(1))
-  //     .force("y", d3.forceY(height / 2))
-  //     .force("collide", d3.forceCollide(10))
-  //     .stop();
-
-  // for (var i = 0; i < 120; ++i) simulation.tick();
+//   x.domain([0, 100]);
 
 
-  // var pnt = g.selectAll('.pnt').data(data, function(d){
-  //   return d.country+d.discipline+d.year+'';
-  // });
+//   g.append("g")
+//       .attr("class", "axis axis--x")
+//       .attr("transform", "translate(0," + height + ")")
+//       .call(d3.axisBottom(x).ticks(20, ".0s"));
 
 
 
-  // pnt.enter().append('circle')
-  //             .classed('pnt', true)
-  //             .attr('r', 8)
-  //             .attr('cx', function(d){return d.x;})
-  //             .attr('cy', function(d){return d.y;})
+//   d3.select("#year_slider").on("input", function () {
+//           year_idx = parseInt(this.value);
+//           yr_txt.text('Year: ' + year_idx);
+
+
+//           // simulation.nodes(dat_arr);
+
+//           simulation.force("x", d3.forceX(function(d) { 
+//             return x(d[country][year_idx]); }).strength(1))
+          
+//           simulation
+//             .alpha(0.2)
+//             .restart();
+
+//   });
+
+
+
+// // Adding country selector
+
+// var count_sel = d3.select('#count_sel');
+
+// for(var i=0; i <countries.length; i++) {
+//   count_sel.append('option')
+//             .property('value', countries[i])
+//             .text(countries[i]);
+
+// };
+
+
+// count_sel.on('change', function(){
+//   country = count_sel.property('value');
+
+
+
+//   simulation.force("x", d3.forceX(function(d) { 
+//     return x(d[country][year_idx]); }).strength(1));
+
+//   simulation
+//   .alpha(0.2)
+//   .restart();
+
+
+// })
+
+
+//   var simulation = d3.forceSimulation(dat_arr)
+//       .force("x", d3.forceX(function(d) { 
+//         return x(d[country][year_idx]); }).strength(1))
+//       .force("y", d3.forceY(height / 2))
+//       .force("collide", d3.forceCollide(10))
+//       // .alphaTarget(0.2)
+//       .on('tick', tick);
+//       // .stop();
+
+//   // var xforce = simulation.force('x');
+
+// var tooltip = d3.select('body')
+//                   .append('div')
+//                   .classed('tooltip', true)
+//                   .style('position', 'absolute')
+//                   .style('visibility', 'hidden')
+//                   .style('white-space', 'pre')
+//                   .style('font-family', 'sans-serif');
+
+
+
+//   var pnt = g.selectAll('.pnt').data(dat_arr, function(d){
+//     return d.discipline;
+//   });
+
+//   console.log(pnt);
+
+
+
+//   pnt.enter().append('circle')
+//               .classed('pnt', true)
+//               .attr('r', 8)
+//               .attr('cx', function(d){return d.x;})
+//               .attr('cy', function(d){return d.y;})
+//               .on('mouseover', function(d){
+//                 var perc = d[country][year_idx];
+
+//                 tooltip.style('visibility', 'visible')
+//                               .text(d.discipline+'\n'+perc.toFixed(2)+'%');
+//                 console.log('mousever');
+//                 d3.select(this)
+//                     .style('opacity', 1);
+//               })
+//               .on('mousemove', function() {
+//                 return tooltip
+//                         .style('top', (d3.event.pageY-10)+'px')
+//                         .style('left', (d3.event.pageX+10)+'px');
+
+
+//               })
+//               .on('mouseout', function(){
+//                 tooltip
+//                             .style('visibility', 'hidden');
+//                 d3.select(this)
+//                     .style('opacity', 0.6);
+
+//               })
+
+
+
+
+// function tick(){
+
+//   console.log(simulation.alpha());
+//   d3.selectAll('.pnt')
+//       .attr('cx', function(d){return d.x;})
+//       .attr('cy', function(d){return d.y;});
+
+// }
+
+
+//   // for (var i = 0; i < 120; ++i) simulation.tick();
+
+
+
+//   // simulation.nodes(filt_data);
+
+//   //   var pnt = g.selectAll('.pnt').data(filt_data, function(d){
+//   //   return d.country+d.discipline+d.year+'';
+//   // });
+
+//   //     pnt.exit().remove();
+
+
+//   // pnt.enter().append('circle')
+//   //             .classed('pnt', true)
+//   //             .attr('r', 8)
+//   //             .attr('cx', function(d){return d.x;})
+//   //             .attr('cy', function(d){return d.y;})
+
+
+
+
+
+//   // var simulation = d3.forceSimulation(data)
+//   //     .force("x", d3.forceX(function(d) { return x(d.percent_fem); }).strength(1))
+//   //     .force("y", d3.forceY(height / 2))
+//   //     .force("collide", d3.forceCollide(10))
+//   //     .stop();
+
+//   // for (var i = 0; i < 120; ++i) simulation.tick();
+
+
+//   // var pnt = g.selectAll('.pnt').data(data, function(d){
+//   //   return d.country+d.discipline+d.year+'';
+//   // });
+
+
+
+//   // pnt.enter().append('circle')
+//   //             .classed('pnt', true)
+//   //             .attr('r', 8)
+//   //             .attr('cx', function(d){return d.x;})
+//   //             .attr('cy', function(d){return d.y;})
   
 
 
@@ -369,115 +536,115 @@ function tick(){
 
 
 
-d3.select('#Anatomy').on('click', function(){
+// d3.select('#Anatomy').on('click', function(){
 
 
 
-    var vis = d3.select(this).attr('value');
-    var col = d3.select(this).attr('background-color');
+//     var vis = d3.select(this).attr('value');
+//     var col = d3.select(this).attr('background-color');
 
-    if (vis == 1){
+//     if (vis == 1){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
-          .transition(t)
-          .style('fill', '#ad3d8f');
+//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
+//           .transition(t)
+//           .style('fill', '#ad3d8f');
 
-      d3.select(this).attr('value', 0).style('opacity', 0.4);
-    }
+//       d3.select(this).attr('value', 0).style('opacity', 0.4);
+//     }
 
-    if (vis == 0){
+//     if (vis == 0){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
-        .transition(t).style('fill', 'red');
-      d3.select(this).attr('value', 1).style('opacity', 1);
-    }
-
-
-
-
-})
-
-
-d3.select('#CellBiology').on('click', function(){
-
-
-    var vis = d3.select(this).attr('value');
-    var col = d3.select(this).attr('background-color');
-
-    if (vis == 1){
-
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).transition(t).style('fill', '#ad3d8f');
-
-      d3.select(this).attr('value', 0).style('opacity', 0.4);
-    }
-
-    if (vis == 0){
-
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).transition(t).style('fill', 'red');
-      d3.select(this).attr('value', 1).style('opacity', 1);
-    }
-})
-
-
-d3.select('#Neurosurgery').on('click', function(){
-
-
-
-    var vis = d3.select(this).attr('value');
-    var col = d3.select(this).attr('background-color');
-
-    if (vis == 1){
-
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).transition(t).style('fill', '#ad3d8f');
-
-      d3.select(this).attr('value', 0).style('opacity', 0.4);
-    }
-
-    if (vis == 0){
-
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).transition(t).style('fill', 'red');
-      d3.select(this).attr('value', 1).style('opacity', 1);
-    }
+//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
+//         .transition(t).style('fill', 'red');
+//       d3.select(this).attr('value', 1).style('opacity', 1);
+//     }
 
 
 
 
-})
+// })
 
 
-d3.select('#Radiology').on('click', function(){
+// d3.select('#CellBiology').on('click', function(){
 
 
-    var vis = d3.select(this).attr('value');
-    var col = d3.select(this).attr('background-color');
+//     var vis = d3.select(this).attr('value');
+//     var col = d3.select(this).attr('background-color');
 
-    if (vis == 1){
+//     if (vis == 1){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).transition(t).style('fill', '#ad3d8f');
+//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).transition(t).style('fill', '#ad3d8f');
 
-      d3.select(this).attr('value', 0).style('opacity', 0.4);
-    }
+//       d3.select(this).attr('value', 0).style('opacity', 0.4);
+//     }
 
-    if (vis == 0){
+//     if (vis == 0){
 
-      d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).transition(t).style('fill', 'red');
-      d3.select(this).attr('value', 1).style('opacity', 1);
-    }
-})
-
-
+//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).transition(t).style('fill', 'red');
+//       d3.select(this).attr('value', 1).style('opacity', 1);
+//     }
+// })
 
 
-});
-
+// d3.select('#Neurosurgery').on('click', function(){
 
 
 
-function type(d) {
-  if (!d.percent_fem) return;
-  d.percent_fem = +d.percent_fem;
-  return d;
-}
+//     var vis = d3.select(this).attr('value');
+//     var col = d3.select(this).attr('background-color');
+
+//     if (vis == 1){
+
+//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).transition(t).style('fill', '#ad3d8f');
+
+//       d3.select(this).attr('value', 0).style('opacity', 0.4);
+//     }
+
+//     if (vis == 0){
+
+//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).transition(t).style('fill', 'red');
+//       d3.select(this).attr('value', 1).style('opacity', 1);
+//     }
+
+
+
+
+// })
+
+
+// d3.select('#Radiology').on('click', function(){
+
+
+//     var vis = d3.select(this).attr('value');
+//     var col = d3.select(this).attr('background-color');
+
+//     if (vis == 1){
+
+//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).transition(t).style('fill', '#ad3d8f');
+
+//       d3.select(this).attr('value', 0).style('opacity', 0.4);
+//     }
+
+//     if (vis == 0){
+
+//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).transition(t).style('fill', 'red');
+//       d3.select(this).attr('value', 1).style('opacity', 1);
+//     }
+// })
+
+
+
+
+// });
+
+
+
+
+// function type(d) {
+//   if (!d.percent_fem) return;
+//   d.percent_fem = +d.percent_fem;
+//   return d;
+// }
 
 </script>
 </body>
