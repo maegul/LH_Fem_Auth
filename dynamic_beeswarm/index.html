@@ -6,6 +6,49 @@
 <head>
 <style>
 
+
+
+.page {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.cont {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 0 0 12em;
+}
+
+.main {
+  flex: 0 0 70%;
+  display: flex;
+}
+
+.cont_inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth_sel_cont {
+  align-items: center;
+}
+
+.cont_desc {
+  font-size: 1em;
+  font-weight: bold;
+  font-family: sans-serif;
+  align-self: flex-start;
+}
+
+#year_text {
+  margin-top: 2px;
+  text-align: right;
+}
+
+
+
 .axis path,
 .axis line {
   fill: none;
@@ -42,13 +85,15 @@
 
 button {
     background-color: #008CBA;
+    margin-top: 12px;
+    width: 61.8%;
     border: none;
     color: white;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 0.8em;
     opacity: 0.4;
 }
 
@@ -58,10 +103,6 @@ button {
 } 
 
 
-div {
-  margin: auto;
-  width: 50%;
-}
 
 .tooltip {
   background-color: rgba(255, 255, 255, 0.6);
@@ -73,31 +114,48 @@ div {
 </head>
 
 <body>
-<svg id='plot' width="1200" height="500"></svg>
 
 
-<div>
-<button id='Anatomy' value=0 type="button">Anatomy</button>
-<button id='CellBiology' value=0 type="button">Cell Biology</button>
-<button id='Neurosurgery' value=0 type="button">Neurosurgery</button>
-<button id='Radiology' value=0 type="button">Radiology</button>
+<div class='page'>
+
+
+<div class='cont'>
+
+  <div class='cont_inner'>
+      <p class='cont_desc'>Year</p>
+      <input style='width:100%;' type="range" name="range" class="slider" id="year_slider" value="2002" min="2002" max="2016" step="1" >
+      <p id="year_text"></p>
+  </div>
+
+
+  <div class='cont_inner auth_sel_cont'>
+      <p class='cont_desc'>Author Position</p>
+      <button class='auth_sel' val='overall' value=0 type="button">All</button>
+      <button class='auth_sel' val='first' value=0 type="button">First Author</button>
+      <button class='auth_sel' val='last' value=0 type="button">Last Author</button>
+      <button class='auth_sel' val='single' value=0 type="button">Single Author</button>
+  </div>
+
+
 </div>
 
 
-<div id="year_control">
-  <input type="range" name="range" class="slider" id="year_slider" value="2002" min="2002" max="2016" step="1" >
-  <p id="year_text"></p>
+<div class='main'>
+
+  <svg id='plot' width="950" height="300"></svg>
+
+
 </div>
 
-<div>
-
-<select id='count_sel'>
-<option disabled selected>Select Country</option>
-
-
-</select>
 
 </div>
+
+
+
+
+
+
+
 
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -117,7 +175,7 @@ var x = d3.scaleLinear()
     .rangeRound([0, width]);
 
 var r = d3.scaleSqrt()
-          .range([6, 25]);
+          .range([5, 18]);
 
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -149,20 +207,12 @@ console.log(data);
 
   r.domain(ntot_overall_ext);
 
-console.log(r(5000))
 
-
-  //   )))
-
-  // var ticks = x.ticks(20),
-  //     tickFormat = x.tickFormat(20, "+%");
-
-  // ticks.map(tickFormat);
 
   g.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).ticks(20, "s"));
+      .call(d3.axisBottom(x).ticks(20, ".0%"));
 
 
   var tooltip = d3.select('body')
@@ -176,14 +226,90 @@ console.log(r(5000))
 
 
 
-  var year = 2003;
+  var year = 2002;
+
+  var auth_pos = 'overall';
+
+  d3.selectAll('.auth_sel')
+      .filter(function(b){return d3.select(this).attr('val')==auth_pos;})
+      .style('opacity', 1);
+
+
+  var yr_txt = d3.select('#year_text')
+                  .style('font-family', 'sans-serif');
+
+  yr_txt.text(year);
+
+
+  d3.select("#year_slider").on("input", function () {
+          year = parseInt(this.value);
+          yr_txt.text(year);
+
+
+          // simulation.nodes(dat_arr);
+
+          simulation.force("x", d3.forceX(function(d) { 
+            return x(d[year]['prop_'+auth_pos]); }).strength(1))
+                    .force('collide', d3.forceCollide(function(d){return r(d[year]['ntot_'+auth_pos])}))
+          
+          simulation
+            .alpha(0.07)
+            .restart();
+
+  });
+
+
+
+
+
+
+
+  d3.selectAll('.auth_sel').on('click', function(){
+
+    var butt_val = d3.select(this).attr('val')
+
+    if (butt_val != auth_pos) {
+      auth_pos = butt_val;
+
+      d3.selectAll('.auth_sel').style('opacity', 0.4)
+
+      d3.select(this).style('opacity', 1)
+
+
+      simulation.force("x", d3.forceX(function(d) { 
+        return x(d[year]['prop_'+auth_pos]); }).strength(1))
+                .force('collide', d3.forceCollide(function(d){return r(d[year]['ntot_'+auth_pos])}))
+      
+      simulation
+        .alpha(0.07)
+        .restart();
+  }
+
+
+
+})
+
+
+  function tick(){
+
+    // console.log(simulation.alpha());
+    d3.selectAll('.pnt')
+        .attr('r', function(d){return r(d[year]['ntot_'+auth_pos])})
+        .attr('cx', function(d){return d.x;})
+        .attr('cy', function(d){return d.y;});
+
+  }
+
+
+
+
 
 
   var simulation = d3.forceSimulation(data)
       .force("x", d3.forceX(function(d) { 
-        return x(d[year]['prop_overall']); }).strength(0.9))
+        return x(d[year]['prop_'+auth_pos]); }).strength(0.9))
       .force("y", d3.forceY(height/2).strength(0.1))
-      .force("collide", d3.forceCollide(function(d){return r(d[year]['ntot_overall'])}))
+      .force("collide", d3.forceCollide(function(d){return r(d[year]['ntot_'+auth_pos])}))
       // .alphaTarget(0.2)
       .alphaDecay(0.014)
       .on('tick', tick);
@@ -195,15 +321,15 @@ console.log(r(5000))
 
 
   pnt.enter().append('circle').classed('pnt', true)
-      .attr('r', function(d){return r(d[year]['ntot_overall'])})
+      .attr('r', function(d){return r(d[year]['ntot_'+auth_pos])})
       .attr('cx', function(d){return d.x})
       .attr('cy', function(d){return height/2})
       .on('mouseover', function(d){
-        var perc = d[year]['prop_overall'];
-        var num = d[year]['ntot_overall'];
+        var perc = d[year]['prop_'+auth_pos];
+        var num = d[year]['ntot_'+auth_pos];
 
         tooltip.style('visibility', 'visible')
-                      .text(d.discipline+'\n'+perc.toFixed(2)+'%'+'\n' + num +' papers');
+                      .text(d.discipline+'\n'+d3.format(".0%")(perc)+'\n' + d3.format(',')(num) +' papers');
         console.log('mousever');
         d3.select(this)
             .style('opacity', 1);
@@ -221,430 +347,24 @@ console.log(r(5000))
             .style('opacity', 0.6);
 
       })
+      .on('click', function(){
+        if (d3.select(this).attr('val') != 1) {
+          d3.select(this).style('fill', 'red').attr('val', 1)
+        }
 
+        else {
+          d3.select(this).style('fill', '#ad3d8f').attr('val', 0)
 
-  console.log(pnt);
-
-//   var pnt = g.selectAll('.pnt').data(dat_arr, function(d){
-//     return d.discipline;
-//   });
-
-//   console.log(pnt);
-
-
-
-//   pnt.enter().append('circle')
-//               .classed('pnt', true)
-//               .attr('r', 8)
-//               .attr('cx', function(d){return d.x;})
-//               .attr('cy', function(d){return d.y;})
-//               .on('mouseover', function(d){
-//                 var perc = d[country][year_idx];
-
-//                 tooltip.style('visibility', 'visible')
-//                               .text(d.discipline+'\n'+perc.toFixed(2)+'%');
-//                 console.log('mousever');
-//                 d3.select(this)
-//                     .style('opacity', 1);
-//               })
-//               .on('mousemove', function() {
-//                 return tooltip
-//                         .style('top', (d3.event.pageY-10)+'px')
-//                         .style('left', (d3.event.pageX+10)+'px');
-
-
-//               })
-//               .on('mouseout', function(){
-//                 tooltip
-//                             .style('visibility', 'hidden');
-//                 d3.select(this)
-//                     .style('opacity', 0.6);
-
-//               })
-
-
-  var yr_txt = d3.select('#year_text')
-                  .style('font-family', 'sans-serif');
-
-  yr_txt.text('Year: ' + year);
-
-
-  d3.select("#year_slider").on("input", function () {
-          year = parseInt(this.value);
-          yr_txt.text('Year: ' + year);
-
-
-          // simulation.nodes(dat_arr);
-
-          simulation.force("x", d3.forceX(function(d) { 
-            return x(d[year]['prop_overall']); }).strength(1))
-                    .force('collide', d3.forceCollide(function(d){return r(d[year]['ntot_overall'])}))
-          
-          simulation
-            .alpha(0.07)
-            .restart();
-
-  });
+        }
+      })
 
 
 
-function tick(){
 
-  // console.log(simulation.alpha());
-  d3.selectAll('.pnt')
-      .attr('r', function(d){return r(d[year]['ntot_overall'])})
-      .attr('cx', function(d){return d.x;})
-      .attr('cy', function(d){return d.y;});
-
-}
 
 
 
 });
-
-// Making the nested data object from the 2d array of the CSV
-
-  // var disciplines = _.uniq(data.map(function(d){
-  //   return d.discipline;
-  // }));
-
-  // var countries = _.uniq(data.map(function(d){
-  //   return d.country;
-  // }))
-
-  // var years = _.uniq(data.map(function(d){
-  //   return d.year;
-  // }))
-
-  // var dat_obj = {};
-  // var dat_arr = [];
-
-  // for(var i=0; i < disciplines.length; i++) {
-
-  //   var disc_obj = {};
-
-  //   for(var j=0; j < countries.length; j++) {
-  //     for(var k=0; k< years.length; k++) {
-  //       var path = [disciplines[i], countries[j], years[k]];
-  //       var dat = data.filter(function(d){
-  //         return d.discipline==path[0] && d.country == path[1] && d.year==path[2];
-  //       });
-  //       // _.set(dat_obj, path, dat[0].percent_fem);
-  //       dat_arr[i] = _.set(disc_obj, path.slice(1), dat[0].percent_fem);
-  //       _.set(dat_arr[i], 'discipline', disciplines[i]);
-  //     }
-  //   }
-  // };
-
-
-
-
-//   var yr_txt = d3.select('#year_text')
-//                   .style('font-family', 'sans-serif');
-
-//   year_idx = parseInt(2002);
-//   yr_txt.text('Year: ' + year_idx);
-
-
-//   country = 'USA';
-
-
-//   // filt_data = data.filter(function(d){
-//   //       return d.year == year_idx;
-//   //     });
-
-
-
-//   x.domain([0, 100]);
-
-
-//   g.append("g")
-//       .attr("class", "axis axis--x")
-//       .attr("transform", "translate(0," + height + ")")
-//       .call(d3.axisBottom(x).ticks(20, ".0s"));
-
-
-
-//   d3.select("#year_slider").on("input", function () {
-//           year_idx = parseInt(this.value);
-//           yr_txt.text('Year: ' + year_idx);
-
-
-//           // simulation.nodes(dat_arr);
-
-//           simulation.force("x", d3.forceX(function(d) { 
-//             return x(d[country][year_idx]); }).strength(1))
-          
-//           simulation
-//             .alpha(0.2)
-//             .restart();
-
-//   });
-
-
-
-// // Adding country selector
-
-// var count_sel = d3.select('#count_sel');
-
-// for(var i=0; i <countries.length; i++) {
-//   count_sel.append('option')
-//             .property('value', countries[i])
-//             .text(countries[i]);
-
-// };
-
-
-// count_sel.on('change', function(){
-//   country = count_sel.property('value');
-
-
-
-//   simulation.force("x", d3.forceX(function(d) { 
-//     return x(d[country][year_idx]); }).strength(1));
-
-//   simulation
-//   .alpha(0.2)
-//   .restart();
-
-
-// })
-
-
-//   var simulation = d3.forceSimulation(dat_arr)
-//       .force("x", d3.forceX(function(d) { 
-//         return x(d[country][year_idx]); }).strength(1))
-//       .force("y", d3.forceY(height / 2))
-//       .force("collide", d3.forceCollide(10))
-//       // .alphaTarget(0.2)
-//       .on('tick', tick);
-//       // .stop();
-
-//   // var xforce = simulation.force('x');
-
-// var tooltip = d3.select('body')
-//                   .append('div')
-//                   .classed('tooltip', true)
-//                   .style('position', 'absolute')
-//                   .style('visibility', 'hidden')
-//                   .style('white-space', 'pre')
-//                   .style('font-family', 'sans-serif');
-
-
-
-//   var pnt = g.selectAll('.pnt').data(dat_arr, function(d){
-//     return d.discipline;
-//   });
-
-//   console.log(pnt);
-
-
-
-//   pnt.enter().append('circle')
-//               .classed('pnt', true)
-//               .attr('r', 8)
-//               .attr('cx', function(d){return d.x;})
-//               .attr('cy', function(d){return d.y;})
-//               .on('mouseover', function(d){
-//                 var perc = d[country][year_idx];
-
-//                 tooltip.style('visibility', 'visible')
-//                               .text(d.discipline+'\n'+perc.toFixed(2)+'%');
-//                 console.log('mousever');
-//                 d3.select(this)
-//                     .style('opacity', 1);
-//               })
-//               .on('mousemove', function() {
-//                 return tooltip
-//                         .style('top', (d3.event.pageY-10)+'px')
-//                         .style('left', (d3.event.pageX+10)+'px');
-
-
-//               })
-//               .on('mouseout', function(){
-//                 tooltip
-//                             .style('visibility', 'hidden');
-//                 d3.select(this)
-//                     .style('opacity', 0.6);
-
-//               })
-
-
-
-
-// function tick(){
-
-//   console.log(simulation.alpha());
-//   d3.selectAll('.pnt')
-//       .attr('cx', function(d){return d.x;})
-//       .attr('cy', function(d){return d.y;});
-
-// }
-
-
-//   // for (var i = 0; i < 120; ++i) simulation.tick();
-
-
-
-//   // simulation.nodes(filt_data);
-
-//   //   var pnt = g.selectAll('.pnt').data(filt_data, function(d){
-//   //   return d.country+d.discipline+d.year+'';
-//   // });
-
-//   //     pnt.exit().remove();
-
-
-//   // pnt.enter().append('circle')
-//   //             .classed('pnt', true)
-//   //             .attr('r', 8)
-//   //             .attr('cx', function(d){return d.x;})
-//   //             .attr('cy', function(d){return d.y;})
-
-
-
-
-
-//   // var simulation = d3.forceSimulation(data)
-//   //     .force("x", d3.forceX(function(d) { return x(d.percent_fem); }).strength(1))
-//   //     .force("y", d3.forceY(height / 2))
-//   //     .force("collide", d3.forceCollide(10))
-//   //     .stop();
-
-//   // for (var i = 0; i < 120; ++i) simulation.tick();
-
-
-//   // var pnt = g.selectAll('.pnt').data(data, function(d){
-//   //   return d.country+d.discipline+d.year+'';
-//   // });
-
-
-
-//   // pnt.enter().append('circle')
-//   //             .classed('pnt', true)
-//   //             .attr('r', 8)
-//   //             .attr('cx', function(d){return d.x;})
-//   //             .attr('cy', function(d){return d.y;})
-  
-
-
-
-
-
-
-
-
-
-
-// d3.select('#Anatomy').on('click', function(){
-
-
-
-//     var vis = d3.select(this).attr('value');
-//     var col = d3.select(this).attr('background-color');
-
-//     if (vis == 1){
-
-//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
-//           .transition(t)
-//           .style('fill', '#ad3d8f');
-
-//       d3.select(this).attr('value', 0).style('opacity', 0.4);
-//     }
-
-//     if (vis == 0){
-
-//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Anatomy'})
-//         .transition(t).style('fill', 'red');
-//       d3.select(this).attr('value', 1).style('opacity', 1);
-//     }
-
-
-
-
-// })
-
-
-// d3.select('#CellBiology').on('click', function(){
-
-
-//     var vis = d3.select(this).attr('value');
-//     var col = d3.select(this).attr('background-color');
-
-//     if (vis == 1){
-
-//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).transition(t).style('fill', '#ad3d8f');
-
-//       d3.select(this).attr('value', 0).style('opacity', 0.4);
-//     }
-
-//     if (vis == 0){
-
-//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Cell Biology'}).transition(t).style('fill', 'red');
-//       d3.select(this).attr('value', 1).style('opacity', 1);
-//     }
-// })
-
-
-// d3.select('#Neurosurgery').on('click', function(){
-
-
-
-//     var vis = d3.select(this).attr('value');
-//     var col = d3.select(this).attr('background-color');
-
-//     if (vis == 1){
-
-//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).transition(t).style('fill', '#ad3d8f');
-
-//       d3.select(this).attr('value', 0).style('opacity', 0.4);
-//     }
-
-//     if (vis == 0){
-
-//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Neurosurgery'}).transition(t).style('fill', 'red');
-//       d3.select(this).attr('value', 1).style('opacity', 1);
-//     }
-
-
-
-
-// })
-
-
-// d3.select('#Radiology').on('click', function(){
-
-
-//     var vis = d3.select(this).attr('value');
-//     var col = d3.select(this).attr('background-color');
-
-//     if (vis == 1){
-
-//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).transition(t).style('fill', '#ad3d8f');
-
-//       d3.select(this).attr('value', 0).style('opacity', 0.4);
-//     }
-
-//     if (vis == 0){
-
-//       d3.selectAll('.pnt').filter(function(d){return d.discipline == 'Radiology'}).transition(t).style('fill', 'red');
-//       d3.select(this).attr('value', 1).style('opacity', 1);
-//     }
-// })
-
-
-
-
-// });
-
-
-
-
-// function type(d) {
-//   if (!d.percent_fem) return;
-//   d.percent_fem = +d.percent_fem;
-//   return d;
-// }
 
 </script>
 </body>
