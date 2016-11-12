@@ -175,7 +175,7 @@ var x = d3.scaleLinear()
     .rangeRound([0, width]);
 
 var r = d3.scaleSqrt()
-          .range([5, 18]);
+          .range([5, 22]);
 
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -205,7 +205,7 @@ console.log(data);
         return vals.filter(function(v){return v!=undefined})
       })));
 
-  r.domain(ntot_overall_ext);
+  r.domain([0,ntot_overall_ext[1]]);
 
 
 
@@ -308,10 +308,10 @@ console.log(data);
   var simulation = d3.forceSimulation(data)
       .force("x", d3.forceX(function(d) { 
         return x(d[year]['prop_'+auth_pos]); }).strength(0.9))
-      .force("y", d3.forceY(height/2).strength(0.1))
+      .force("y", d3.forceY(height/2).strength(0.075))
       .force("collide", d3.forceCollide(function(d){return r(d[year]['ntot_'+auth_pos])}))
       // .alphaTarget(0.2)
-      .alphaDecay(0.014)
+      .alphaDecay(0.011)
       .on('tick', tick);
       // .stop();
 
