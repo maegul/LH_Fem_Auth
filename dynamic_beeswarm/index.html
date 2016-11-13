@@ -266,6 +266,15 @@ console.log(data);
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x).ticks(20, ".0%"));
 
+  g.append('line')
+    .attr('y1', 0)
+    .attr('y2', height)
+    .attr('x1', x(0.5))
+    .attr('x2', x(0.5))
+    .attr('stroke', 'gray')
+    .attr('stroke-width', 1)
+    .attr('opacity', 0.6);
+
 
   var tooltip = d3.select('body')
                     .append('div')
