@@ -453,13 +453,26 @@ console.log(data);
             .style('opacity', 0.6);
 
       })
-      .on('click', function(){
+      .on('click', function(p){
         if (d3.select(this).attr('val') != 1) {
           d3.select(this).style('fill', 'red').attr('val', 1)
+
+          var disc_sel_vals = $('.disc_sel').val();
+          disc_sel_vals.push(p.discipline);
+          $('.disc_sel').val(disc_sel_vals).trigger("change");
         }
 
         else {
           d3.select(this).style('fill', '#ad3d8f').attr('val', 0)
+
+          var disc_sel_vals = $('.disc_sel').val();
+
+          _.remove(disc_sel_vals, function(d){
+            return d == p.discipline;
+          })
+
+          $('.disc_sel').val(disc_sel_vals).trigger("change");
+
 
         }
       })
