@@ -48,3 +48,28 @@ function interpolate_years(data){
         }
     };
 };
+
+
+
+function n_range(data) {
+    return d3.extent(
+        _.flatten(
+            _.map(data, function(d){
+                return d3.extent(d['Points'], function(d){
+                    return d['n'];
+                    })
+            
+                    }
+            )
+        )
+    )
+}
+
+
+function pnt_by_yr(dat, year, att){
+    return _.filter(
+        dat['Points'], 
+        function(p){return p['Y'] == year;}
+        )[0][att];
+
+}
