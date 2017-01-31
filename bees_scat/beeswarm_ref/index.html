@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+<style>
+
+
+
+.page {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.cont {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 0 0 13em; 
+  width: 13em !important;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 2em;
+}
+
+.main {
+  flex: 0 0 70%;
+  display: flex;
+}
+
+.cont_inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth_sel_cont {
+  align-items: center;
+}
+
+.cont_desc {
+  font-size: 1em;
+  font-weight: bold;
+  font-family: sans-serif;
+  align-self: flex-start;
+  margin-top: 2em;
+  border-bottom: 1px solid;
+  width: 100%;
+}
+
+.disc_sel {
+/*  width: 100%;
+*/}
+
+.clear_sel {
+  width: 11em !important;
+}
+
+#year_text {
+  margin-top: 2px;
+  text-align: right;
+}
+
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.pnt {
+    fill: #ad3d8f;
+    opacity: 0.6;
+    stroke:black;
+    stroke-opacity:0.8;
+    stroke-width: 1px;
+}
+
+
+
+.cells path {
+  fill: none;
+  pointer-events: all;
+}
+
+
+.cells :hover circle {
+  fill: red;
+  r: 10px;
+}
+
+
+
+.auth_sel {
+    background-color: #008CBA;
+    margin-top: 12px;
+    width: 61.8%;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.8em;
+    opacity: 0.4;
+}
+
+
+.clear_sel {
+/*  align-self: flex-end;
+*/  width: 30%;
+margin-top: 2em;
+}
+
+#plot {
+  display: block;
+  margin: auto;
+} 
+
+
+
+.tooltip {
+  background-color: rgba(255, 255, 255, 0.6);
+  width: auto;
+
+}
+
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+</head>
+
+<body>
+
+
+<div class='page'>
+
+
+<div class='cont'>
+
+
+  <div class='cont_inner'>
+    <p class='cont_desc'>Highlight Discipline</p>
+    <select class='disc_sel' multiple='multiple' style='width: 10em !important;'>
+      <option></option>
+
+    </select>
+
+    <button class='clear_sel'>Clear Highlights</button>
+
+
+
+  </div>
+
+
+
+  <div class='cont_inner'>
+      <p class='cont_desc'>Year</p>
+      <input style='width:100%;' type="range" name="range" class="slider" id="year_slider" value="2002" min="2002" max="2016" step="1" >
+      <p id="year_text"></p>
+  </div>
+
+
+
+
+
+  <div class='cont_inner auth_sel_cont'>
+      <p class='cont_desc'>Author Position</p>
+      <button class='auth_sel' val='overall' value=0 type="button">All</button>
+      <button class='auth_sel' val='first' value=0 type="button">First Author</button>
+      <button class='auth_sel' val='last' value=0 type="button">Last Author</button>
+      <button class='auth_sel' val='single' value=0 type="button">Single Author</button>
+  </div>
+
+
+
+
+</div>
+
+
+<div class='main'>
+
+  <svg id='plot' width="950" height="300"></svg>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src='https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js'></script>
+<script>
+
+
+
+var svg = d3.select("svg"),
+    margin = {top: 40, right: 40, bottom: 40, left: 40},
+    width = svg.attr("width") - margin.left - margin.right,
+    height = svg.attr("height") - margin.top - margin.bottom;
+
+var formatValue = d3.format(",d");
+
+var x = d3.scaleLinear()
+    .rangeRound([0, width]);
+
+var r = d3.scaleSqrt()
+          .range([5, 22]);
+
+var g = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+var t = d3.transition()
+          .duration(2000)
+          .ease(d3.easeElastic);
+
+
+console.log('hello');
+
+d3.json("json_test.json", function(error, data) {
+  if (error) throw error;
+
+console.log(data);
+
+
+// X Axis
+
+  x.domain([0, 1]);
+
+  var ntot_overall_ext = d3.extent(
+    _.flattenDeep(
+      data.map(function(datobj){
+        var vals =  _.flatMapDeep(datobj, function(d){return d['ntot_overall'];})
+        return vals.filter(function(v){return v!=undefined})
+      })));
+
+  r.domain([0,ntot_overall_ext[1]]);
+
+
+
+
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).ticks(20, ".0%"));
+
+  g.append('line')
+    .attr('y1', 0)
+    .attr('y2', height)
+    .attr('x1', x(0.5))
+    .attr('x2', x(0.5))
+    .attr('stroke', 'gray')
+    .attr('stroke-width', 1)
+    .attr('opacity', 0.6);
+
+
+  var tooltip = d3.select('body')
+                    .append('div')
+                    .classed('tooltip', true)
+                    .style('position', 'absolute')
+                    .style('visibility', 'hidden')
+                    .style('white-space', 'pre')
+                    .style('font-family', 'sans-serif');
+
+
+
+
+  var year = 2002;
+
+  var auth_pos = 'overall';
+
+  d3.selectAll('.auth_sel')
+      .filter(function(b){return d3.select(this).attr('val')==auth_pos;})
+      .style('opacity', 1);
+
+
+  var yr_txt = d3.select('#year_text')
+                  .style('font-family', 'sans-serif');
+
+  yr_txt.text(year);
+
+
+  d3.select("#year_slider").on("input", function () {
+          year = parseInt(this.value);
+          yr_txt.text(year);
+
+
+          // simulation.nodes(dat_arr);
+
+          simulation.force("x", d3.forceX(function(d) { 
+            return x(d[year]['prop_'+auth_pos]); }).strength(1))
+                    .force('collide', d3.forceCollide(function(d){return r(d[year]['ntot_'+auth_pos])}))
+          
+          simulation
+            .alpha(0.07)
+            .restart();
+
+  });
+
+
+
+
+
+
+
+  d3.selectAll('.auth_sel').on('click', function(){
+
+    var butt_val = d3.select(this).attr('val')
+
+    if (butt_val != auth_pos) {
+      auth_pos = butt_val;
+
+      d3.selectAll('.auth_sel').style('opacity', 0.4)
+
+      d3.select(this).style('opacity', 1)
+
+
+      simulation.force("x", d3.forceX(function(d) { 
+        return x(d[year]['prop_'+auth_pos]); }).strength(1))
+                .force('collide', d3.forceCollide(function(d){return r(d[year]['ntot_'+auth_pos])}))
+      
+      simulation
+        .alpha(0.11)
+        .restart();
+  }
+
+
+
+})
+
+
+  function tick(){
+
+    // console.log(simulation.alpha());
+    d3.selectAll('.pnt')
+        .attr('r', function(d){return r(d[year]['ntot_'+auth_pos])})
+        .attr('cx', function(d){return d.x;})
+        .attr('cy', function(d){return d.y;});
+
+  }
+
+
+
+
+
+  $('.disc_sel').select2({
+    placeholder: 'Search for a discipline',
+    width: '100%',
+    data: data.map(function(d){
+      return {id: d.discipline,
+              text: d.discipline
+              }
+      })
+  });
+
+
+
+
+  $('.disc_sel').on('select2:select', function(e){
+
+    var sel_id = e.params.data.id;
+
+    d3.selectAll('.pnt').filter(function(p){
+      return p.discipline == sel_id;
+    })
+      .style('fill', '#ad3d8f')
+      .transition().duration(250).ease(d3.easeLinear)
+      .style('fill', 'white')
+      .transition().duration(500).ease(d3.easeLinear)
+      .style('fill', 'red')
+      .attr('val', 1)
+  })
+
+
+  $('.disc_sel').on('select2:unselect', function(e){
+
+    var sel_id = e.params.data.id;
+
+    d3.selectAll('.pnt').filter(function(p){
+      return p.discipline == sel_id;
+    })
+      .style('fill', 'red')
+      .transition().duration(250).ease(d3.easeLinear)
+      .style('fill', 'white')
+      .transition().duration(500).ease(d3.easeLinear)
+      .style('fill', '#ad3d8f')
+      .attr('val', 0)
+  })
+
+
+
+
+  d3.select('.clear_sel').on('click', function(){
+
+    d3.selectAll('.pnt').style('fill', '#ad3d8f').attr('val', 0);
+
+    $('.disc_sel').val([]).trigger("change");
+  })
+
+
+
+  var simulation = d3.forceSimulation(data)
+      .force("x", d3.forceX(function(d) { 
+        return x(d[year]['prop_'+auth_pos]); }).strength(0.9))
+      .force("y", d3.forceY(height/2).strength(0.075))
+      .force("collide", d3.forceCollide(function(d){return r(d[year]['ntot_'+auth_pos])}))
+      // .alphaTarget(0.2)
+      .alphaDecay(0.011)
+      .on('tick', tick);
+      // .stop();
+
+
+
+  var pnt = g.selectAll('.pnt').data(data, function(d){return d.discipline;})
+
+
+  pnt.enter().append('circle').classed('pnt', true)
+      .attr('r', function(d){return r(d[year]['ntot_'+auth_pos])})
+      .attr('cx', function(d){return d.x})
+      .attr('cy', function(d){return height/2})
+      .on('mouseover', function(d){
+        var perc = d[year]['prop_'+auth_pos];
+        var num = d[year]['ntot_'+auth_pos];
+
+        tooltip.style('visibility', 'visible')
+                      .text(d.discipline+'\n'+d3.format(".0%")(perc)+'\n' + d3.format(',')(num) +' papers');
+        d3.select(this)
+            .style('opacity', 1);
+      })
+      .on('mousemove', function() {
+        return tooltip
+                .style('top', (d3.event.pageY-80)+'px')
+                .style('left', (d3.event.pageX-35)+'px');
+
+
+      })
+      .on('mouseout', function(){
+        tooltip.style('visibility', 'hidden');
+        d3.select(this)
+            .style('opacity', 0.6);
+
+      })
+      .on('click', function(p){
+        if (d3.select(this).attr('val') != 1) {
+          d3.select(this).style('fill', 'red').attr('val', 1)
+
+          var disc_sel_vals = $('.disc_sel').val();
+          disc_sel_vals.push(p.discipline);
+          $('.disc_sel').val(disc_sel_vals).trigger("change");
+        }
+
+        else {
+          d3.select(this).style('fill', '#ad3d8f').attr('val', 0)
+
+          var disc_sel_vals = $('.disc_sel').val();
+
+          _.remove(disc_sel_vals, function(d){
+            return d == p.discipline;
+          })
+
+          $('.disc_sel').val(disc_sel_vals).trigger("change");
+
+
+        }
+      })
+
+
+
+
+
+
+
+});
+
+</script>
+</body>
