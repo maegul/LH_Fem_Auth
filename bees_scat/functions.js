@@ -1,19 +1,40 @@
 
 
-function curv(c,r,t){
-    return _.round(100 * Math.exp(0.5 * r * (t-2000)) / (2 * Math.exp(0.5 * r * (t-2000)) + c), 
-    				1
+function curv(c,r,t, dec){
+    return _.round(100 * Math.exp(0.5 * r * (t-2000)) / (2 * Math.exp(0.5 * r * (t-2000)) + c),
+                    dec
 				)
 }
+
+
+
+function ci_line_dat_gen(points){
+    
+
+    return _.map(points, function(p){
+        return [
+            {
+                year: p['Y'],
+                perc: p['lc']
+            },
+
+            {
+                year: p['Y'],
+                perc: p['uc']
+            }
+        ]
+    })
+}
+
 
 
 function line_dat_gen(curv_dat, yr_max){
 
 
-    var yrs = _.range(2002, yr_max, 0.5);
+    var yrs = _.range(2000, yr_max, 2);
 
     return _.map(yrs, function(y){
-        return {year: y, perc: curv(curv_dat['c'], curv_dat['r'], y)}
+        return {year: y, perc: curv(curv_dat['c'], curv_dat['r'], y, 3)}
     })
 
 
@@ -66,7 +87,7 @@ function interpolate_years(data){
                 var c = data[i]['Curve']['c']
 
                 data[i]['Points'].push(
-                    {Y: years[j], GR: curv(c, r, years[j]), intp: 1}
+                    {Y: years[j], GR: curv(c, r, years[j], 1), intp: 1}
                 )
             }
         }
