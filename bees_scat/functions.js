@@ -7,7 +7,19 @@ function curv(c,r,t){
 }
 
 
+function line_dat_gen(curv_dat, yr_max){
 
+
+    var yrs = _.range(2002, yr_max, 0.5);
+
+    return _.map(yrs, function(y){
+        return {year: y, perc: curv(curv_dat['c'], curv_dat['r'], y)}
+    })
+
+
+
+
+}
 
 // Presumes data file is "data"
 // Presumes lodash is loaded

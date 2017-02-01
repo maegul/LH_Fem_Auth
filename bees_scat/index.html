@@ -19,7 +19,16 @@
     stroke-opacity:0.8;
     stroke-width: 2px;
 
+}
 
+.scat {
+	stroke: black;
+	stroke-width: 1px;
+}
+
+
+.canvas {
+	display: inline-block;
 }
 
 .main {
@@ -37,8 +46,15 @@
 
 <div class='main'>
 
-  <svg id='plot' width="400" height="700"></svg>
 
+	<div class='canvas'>
+		<svg id='plot' width="400" height="700"></svg>
+	</div>
+
+	<div class='canvas'>
+		<svg id='line_plot' width="400" height="700"></svg>
+
+	</div>
 </div>
 
 

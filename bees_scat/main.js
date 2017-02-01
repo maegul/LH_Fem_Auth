@@ -15,29 +15,63 @@
 // start thinking about data constructor functions
 
 
+// Beeswarm set up
 
-var svg = d3.select("#plot"),
+var bee_swarm = d3.select("#plot"),
     margin = {top: 40, right: 40, bottom: 40, left: 40},
-    width = svg.attr("width") - margin.left - margin.right,
-    height = svg.attr("height") - margin.top - margin.bottom;
+    width = bee_swarm.attr("width") - margin.left - margin.right,
+    height = bee_swarm.attr("height") - margin.top - margin.bottom;
+
+
+
+var g_bee_swarm = bee_swarm.append("g")
+    .attr("transform", 
+    	"translate(" + margin.left + "," + margin.top + ")");
+
+
+
+// Line set up
+var line = d3.select('#line_plot'),
+	margin_line = {top:40, right:40, bottom:40, left:40},
+	width_line = line.attr('width') - margin_line.left-margin_line.right,
+	height_line = line.attr('height') - margin_line.top - margin_line.bottom;
+
+var g_line = line.append('g')
+		.attr('transform',
+			'translate('+margin.left+','+margin.top+')');
+
+
+// For curve plotting.  Max year to which it goes
+var yr_max = 2045
+
+var line_yr_scale = d3.scaleLinear()
+						.range([0, width_line])
+						.domain([2002, yr_max]); // may make flexible later
+
+g_line.append('g')
+		.classed('axis x', true)
+		.attr('transform', 'translate(0,'+height_line+')')
+		.call(d3.axisBottom(line_yr_scale).ticks(10, d3.format('.4')))
+		.selectAll("text")
+			.attr("y", 0)
+			.attr("x", 0)
+			.attr("dy", "1em")
+			.attr('dx', '0.7em')
+			.attr("transform", "rotate(45)")
+			.style("text-anchor", "start");
 
 
 // For axis tick text percentage
 var formatValue = d3.format(",d");
 
 var perc_scale = d3.scaleLinear()
-    .rangeRound([0, height]);
+    				.rangeRound([0, height]);
 
 var col_scale = d3.scaleSequential(d3.interpolateRdYlBu)
 					.domain([0, 100]);
 
 var radius = d3.scaleSqrt()
           .range([5, 22]);
-
-var g = svg.append("g")
-    .attr("transform", 
-    	"translate(" + margin.left + "," + margin.top + ")");
-
 
 
 d3.json('data_no_list_no_dup_disc.json', function(main_data){
@@ -104,7 +138,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	}
 
 
-	var pnt = g.selectAll('.pnt').data(dat, function(d){return d['Discipline'];})
+	var pnt = g_bee_swarm.selectAll('.pnt').data(dat, function(d){return d['Discipline'];})
+
+
+	var scat_line = d3.line()
+	    .x(function(d) { return line_yr_scale(d['year']); })
+	    .y(function(d) { return perc_scale(d['perc']); });
+
 
 
 	pnt.enter().append('circle').classed('pnt', true)
@@ -114,6 +154,45 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		.attr('cy', function(d){return height/2})
 		.style('fill', function(d){
 			return col_scale(pnt_by_yr(d, year, 'GR'))
+		})
+		.on('mouseover', function(d){
+
+			var point_dat = _.filter(d['Points'], 
+									function(o){return o['intp']==0}
+									)
+
+			var scat = g_line.selectAll('.scat')
+						.data(point_dat,
+						 	function(p){return p['Y']}
+						 	);
+
+			scat.enter().append('circle').classed('scat', true)
+				.attr('r', 5)
+				.attr('cx', function(d){
+					return line_yr_scale(d['Y']);
+				})
+				.attr('cy', function(d){
+					return perc_scale(d['GR'])
+				})
+				.style('fill', function(d){
+					return col_scale(d['GR'])
+				})
+
+			g_line.append("path").classed('scat_line', true)
+				.datum(line_dat_gen(d['Curve'], yr_max))
+				.attr("fill", "none")
+				.attr("stroke", "steelblue")
+				.attr("stroke-linejoin", "round")
+				.attr("stroke-linecap", "round")
+				.attr("stroke-width", 1.5)
+				.attr("d", scat_line);
+
+
+		})
+		.on('mouseout', function(d){
+			d3.selectAll('.scat').remove();
+
+			d3.selectAll('.scat_line').remove();
 		})
 
 
