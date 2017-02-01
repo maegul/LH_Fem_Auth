@@ -4,8 +4,11 @@
 // !! Some of the interpolated GR data is out of range? (beyond 100%)
 
 
+// Click to see deeper data
 
-// CI
+// Disp filters
+	// Overall Disp
+	// Filter of overall disp
 
 // select discipline to open journals underneath
 
@@ -104,6 +107,18 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				(o.Position == 'Overall')		
 	});
 
+	console.log(
+
+		_.filter(main_data, function(o){
+				return (o.Discipline == 'AIDS') & 
+						// (o.Country == 'United Kingdom') &
+						(o.Journal != 'allJournals') & 
+						(o.Position == 'Overall')		
+			})
+
+
+		)
+
 
 	radius.domain(n_range(dat));
 
@@ -166,6 +181,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		})
 		.on('mouseover', function(d){
 
+			console.log(
+					_.filter(main_data, function(md){
+						return (md['Discipline'] == d['Discipline']) &
+						(md['Discipline'] != 'allJournals')
+					}).map(function(md){return md['Journal']})
+					)
+
 			var point_dat = _.filter(d['Points'], 
 									function(o){return o['intp']==0}
 									)
@@ -177,7 +199,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			scat_ci.enter().append('path').classed('scat_ci', true)
 				.attr("fill", "none")
-				.attr("stroke", "black")
+				.attr("stroke", "#565556FF")
 				.attr("stroke-linejoin", "round")
 				.attr('stroke-miterlimit', 2)
 				.attr("stroke-linecap", "round")
