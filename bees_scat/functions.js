@@ -25,6 +25,18 @@ function interpolate_years(data){
         	return o['Y']
         });
 
+
+        // mean sample n for interpolated data points
+        var mean_n = _.mean(
+                _.map(data[i]['Points'], function(p){
+                    return p['n'];
+                    }
+                )
+            )
+
+        data[i]['mean_n'] = mean_n;
+
+
         for (var j=0; j<years.length; j++) {
 
 

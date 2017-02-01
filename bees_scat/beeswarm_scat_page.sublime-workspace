@@ -1,0 +1,1366 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pnt",
+				"pnt"
+			],
+			[
+				"mea",
+				"mean_n	(functions.js)"
+			],
+			[
+				"if",
+				"ife	if … else"
+			],
+			[
+				"year",
+				"year_slider	(index.html)"
+			],
+			[
+				"pn",
+				"pnt_by_yr	(functions.js)"
+			],
+			[
+				"main",
+				"main_data"
+			],
+			[
+				"int",
+				"interpolate_years"
+			],
+			[
+				"per",
+				"perc_scale"
+			],
+			[
+				"disc",
+				"disciplines"
+			],
+			[
+				"fo",
+				"for	for (…) {…} (Improved Native For-Loop)"
+			],
+			[
+				"dis",
+				"disciplines"
+			],
+			[
+				"pl",
+				"plotly-graph-div"
+			],
+			[
+				"co",
+				"code	Tag"
+			],
+			[
+				"for",
+				"for	for (…) {…}"
+			],
+			[
+				"ani",
+				"anim_butt"
+			],
+			[
+				"a",
+				"a"
+			],
+			[
+				"graph",
+				"graph_location"
+			],
+			[
+				"rand_",
+				"rand_x_data"
+			],
+			[
+				"fon",
+				"font-family"
+			],
+			[
+				"gra",
+				"graph_location"
+			],
+			[
+				"li",
+				"lifeExpectancy"
+			],
+			[
+				"cl",
+				"clear_butt"
+			],
+			[
+				"in",
+				"income_max"
+			],
+			[
+				"inco",
+				"income_max"
+			],
+			[
+				"hea",
+				"head	Tag"
+			],
+			[
+				"disc_sel",
+				"disc_sel_vals"
+			],
+			[
+				"disc_se",
+				"disc_sel_vals"
+			],
+			[
+				"di",
+				"discipline"
+			],
+			[
+				"sele",
+				"selectAll"
+			],
+			[
+				"selec",
+				"select2"
+			],
+			[
+				"auth",
+				"auth_sel"
+			],
+			[
+				"au",
+				"auth_sel"
+			],
+			[
+				"cont_",
+				"cont_inner"
+			],
+			[
+				"ma",
+				"main"
+			],
+			[
+				"con",
+				"cont"
+			],
+			[
+				"ntot_ov",
+				"ntot_overall_all"
+			],
+			[
+				"pr",
+				"prop_overall"
+			],
+			[
+				"margin",
+				"margin-right"
+			],
+			[
+				"er",
+				"err_journ"
+			],
+			[
+				"font-",
+				"font-family"
+			],
+			[
+				"font",
+				"font-weight"
+			],
+			[
+				"cont",
+				"cont_desc"
+			],
+			[
+				"ye",
+				"year_text"
+			],
+			[
+				"marg",
+				"margin-right"
+			],
+			[
+				"mar",
+				"margin-bottom"
+			],
+			[
+				"padd",
+				"padding-top"
+			],
+			[
+				"border-c",
+				"border-color"
+			],
+			[
+				"upd",
+				"update_journ"
+			],
+			[
+				"up",
+				"update_journ"
+			],
+			[
+				"select",
+				"selectAll"
+			],
+			[
+				"vi",
+				"vis_journ"
+			],
+			[
+				"vis",
+				"vis_journ"
+			],
+			[
+				"p",
+				"pnt"
+			],
+			[
+				"u",
+				"uCI"
+			],
+			[
+				"ease",
+				"easeLinear"
+			],
+			[
+				"se",
+				"selectAll"
+			],
+			[
+				"op",
+				"option	Tag"
+			],
+			[
+				"coun",
+				"countries"
+			],
+			[
+				"count",
+				"count_sel"
+			],
+			[
+				"cou",
+				"count_sel"
+			],
+			[
+				"yea",
+				"year_idx"
+			],
+			[
+				"dat_",
+				"dat_arr"
+			],
+			[
+				"dat",
+				"dat_obj"
+			],
+			[
+				"update",
+				"update_graph"
+			],
+			[
+				"no",
+				"node_update"
+			],
+			[
+				"forc",
+				"forceSimulation"
+			],
+			[
+				"fi",
+				"filt_data"
+			],
+			[
+				"ve",
+				"ven_tog"
+			],
+			[
+				"ar",
+				"art_tog"
+			],
+			[
+				"ki",
+				"kid_vis"
+			],
+			[
+				"tu",
+				"tum_tog"
+			],
+			[
+				"background",
+				"background-color"
+			],
+			[
+				"ba",
+				"background-div6"
+			],
+			[
+				"back",
+				"backbutton"
+			],
+			[
+				"mou",
+				"mouseover"
+			],
+			[
+				"wait",
+				"waittime"
+			],
+			[
+				"my_cats",
+				"my_cats_data"
+			],
+			[
+				"outline",
+				"outline-width"
+			],
+			[
+				"svg_a",
+				"svg_a_en"
+			],
+			[
+				"svg",
+				"svg_a"
+			],
+			[
+				"sv",
+				"svg_a"
+			],
+			[
+				"ch",
+				"chart_area_height_scat"
+			],
+			[
+				"wid",
+				"width_scat"
+			],
+			[
+				"sca",
+				"scat_sel"
+			],
+			[
+				"sc",
+				"scat_fade"
+			],
+			[
+				"stro",
+				"stroke-opacity"
+			],
+			[
+				"mouse",
+				"mouseout"
+			],
+			[
+				"c_cell",
+				"c_cell_dat"
+			],
+			[
+				"scat",
+				"scat_en"
+			],
+			[
+				"ci",
+				"circ_var"
+			],
+			[
+				"ori",
+				"ori"
+			],
+			[
+				"plot_sc",
+				"plot_scat_en"
+			],
+			[
+				"circ_v",
+				"circ_var_axis"
+			],
+			[
+				"plot",
+				"plot_scat_en"
+			],
+			[
+				"circ",
+				"circ_var_axis"
+			],
+			[
+				"wi",
+				"width_scat"
+			],
+			[
+				"hei",
+				"height_scat"
+			],
+			[
+				"c_",
+				"c_data_tun_data"
+			],
+			[
+				"tran",
+				"translate"
+			],
+			[
+				"char",
+				"chart_area_height_scat"
+			],
+			[
+				"tun",
+				"tun_cont"
+			],
+			[
+				"grid",
+				"gridsize_c"
+			],
+			[
+				"gridsi",
+				"gridsize_a"
+			],
+			[
+				"leg_",
+				"leg_2d_width_buffer"
+			],
+			[
+				"col_leg",
+				"col_leg_axis_ori"
+			],
+			[
+				"lege",
+				"legend_canv"
+			],
+			[
+				"col_leg_s",
+				"col_leg_scale_ori"
+			],
+			[
+				"le",
+				"leg_n"
+			],
+			[
+				"chart",
+				"chart_area_height"
+			],
+			[
+				"leg",
+				"leg_wt"
+			],
+			[
+				"col_leg_",
+				"col_leg_scale_ori"
+			],
+			[
+				"scal",
+				"scale_ori"
+			],
+			[
+				"ace",
+				"acellCon"
+			],
+			[
+				"col_scal_a",
+				"col_scal_a_ori"
+			],
+			[
+				"col_scal_a_en",
+				"col_scal_a_en_ori"
+			],
+			[
+				"col_scal_a_",
+				"col_scal_a_en_ori"
+			],
+			[
+				"max",
+				"max_wt_en"
+			],
+			[
+				"acell",
+				"acellCon"
+			],
+			[
+				"lay",
+				"lay_c_cont"
+			],
+			[
+				"la",
+				"lay_c"
+			],
+			[
+				"legen",
+				"legend_width"
+			],
+			[
+				"chart_",
+				"chart_area_wigth"
+			],
+			[
+				"BIPH",
+				"biphas_split_point"
+			],
+			[
+				"biph",
+				"biphas_split_point"
+			],
+			[
+				"cond",
+				"conditions2"
+			],
+			[
+				"feed",
+				"feed_button"
+			],
+			[
+				"bisect",
+				"bisectVal"
+			],
+			[
+				"char_",
+				"chart_area_width"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 873,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "main.js",
+			"settings":
+			{
+				"buffer_size": 4607,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "functions.js",
+			"settings":
+			{
+				"buffer_size": 1688,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "search_test.js",
+			"settings":
+			{
+				"buffer_size": 3012,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "beeswarm_ref/index.html",
+			"settings":
+			{
+				"buffer_size": 9668,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 247.0,
+		"selected_items":
+		[
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Install",
+				"Package Control: Install Package"
+			],
+			[
+				"Install Package",
+				"Package Control: Install Package"
+			],
+			[
+				"Add R",
+				"Package Control: Add Repository"
+			],
+			[
+				"Package",
+				"Package Control: List Packages"
+			],
+			[
+				"ssh",
+				"Set Syntax: HTML"
+			],
+			[
+				"Set Syntax: H",
+				"Set Syntax: HTML"
+			]
+		],
+		"width": 521.0
+	},
+	"console":
+	{
+		"height": 50.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/index.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/main.js",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/functions.js",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/search_test.js",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/beeswarm_ref/index.html",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/BracketHighlighter/bh_core.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/GitGutter/GitGutter.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/Terminal/Terminal.sublime-settings",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/data/new_JSON_format/zip_test.HTML",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/Color Highlighter/ColorHighlighter.sublime-settings",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/dynamic_beeswarm/index.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/data/new_JSON_format/search_test.js",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/bh_core.sublime-settings",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/beeswarm/index.html",
+		"/Users/errollloyd/Desktop/test.js",
+		"/tmp/subl stdin 3bLdPN.txt",
+		"/Users/errollloyd/.vimrc",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/disc_journ_scatter/index.html",
+		"/Users/errollloyd/Developer/c_play/moffat/1/helloworld.c",
+		"/Users/errollloyd/Developer/c_play/moffat/1/sphere_volume.c",
+		"/Users/errollloyd/Developer/c_play/lcthw/ex1",
+		"/Users/errollloyd/Desktop/random_test.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/ResPitch_Plotly/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Plotly/transitions/test_run_through.html",
+		"/Users/errollloyd/Desktop/ANS_2016_comp.svg",
+		"/Users/errollloyd/Downloads/pandas-3d-iris.svg",
+		"/Users/errollloyd/Desktop/kim_js_crash_course.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Plotly/transitions/transition_play.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Plotly/transitions/index.html",
+		"/Users/errollloyd/Downloads/plotly_chall_test_dat.json",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Plotly/interactive/restyle.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/selector/select2_dynamic_update.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/selector/select2_play.html",
+		"/Users/errollloyd/Developer/CSS_play/layout_play_flexbox.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/gallery/jas_kidney/index.html",
+		"/Users/errollloyd/Developer/CSS_play/html5_sections.html",
+		"/Users/errollloyd/Developer/CSS_play/select2_play.html",
+		"/Users/errollloyd/Developer/CSS_play/flex_play_column.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/sc_d3_course/d3/New Folder With Items/main.js",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/drop_down_proto.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/misc/std_update_pattern.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/beeswarm/sliding_dynamic/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/sc_d3_course/d3/New Folder With Items/index.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/general_force_eg/index.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/general_force_eg_v4/index.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/beeswarm/basics/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/sc_d3_course/d3/New Folder With Items/main.css",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/beeswarm/time_slider_proto/index.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/beeswarm/data.csv",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Neural_net_D3/net5_scatter/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/sc_d3_course/d3/slider_only_play/main.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/jas_data/transparent_kid_tum_noJS.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/jas_data/json_test/index.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/beeswarm/index_proto.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/speed dating/circles.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Plotly/temp-plot.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Plotly/interactive/plotly_int_test.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/jas_data/json_test/isakiko_test/json_test.json",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/jas_data/json_test/isakiko_test/main.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/jas_data/json_test/isakiko_test/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/sc_d3_course/d3/slider_only_play/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/jas_data/json_test/json_test.json",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/jas_data/json_plotly_test.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/gallery/flex_text.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/jas_data/opaque_kid_tum.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Neural_net_D3/net1/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/simple_play/canvas_conventions.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/simple_play/line.html",
+		"/Users/errollloyd/Desktop/SDL_STIM_SCRIPTS/bar_rf",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Neural_net_D3/net5_scatter/c_data_tun_data.json",
+		"/Users/errollloyd/Downloads/Tumour VTK_292_region_0.vtk",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Plotly/temp-plot.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/sc_d3_course/d3/slider_only_play/main.css",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/intro_JS/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/intro_JS/interaction.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/intro_JS/styles.css",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/sc_d3_course/d3/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/sc_d3_course/d3/main.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/intro_JS/practice.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/intro_JS/practice_interaction.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/intro_JS/main.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/intro_JS/cat_img.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/misc/index.html",
+		"/Users/errollloyd/Developer/temp-plot.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/quick_button/index.html",
+		"/Users/errollloyd/Desktop/d3_flex_play.html",
+		"/Users/errollloyd/Desktop/fiatFlex.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/simple_play/width_test.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/simple_play/flex_box_play.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Neural_net_D3/excit_test tun/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/simple_play/canvas_conventions_floating_axes.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/excit_test tun_for_katie/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Neural_net_D3/net2/a_data.json",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Neural_net_D3/hrs_eg/index.html",
+		"/Users/errollloyd/Dropbox/Science/scripts/computational/VC_Sim_code_2015_12_24/wt_ori_tunung_errol/lin2squ_coord_trans.m",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_src/colorbrewer.js",
+		"/Users/errollloyd/Dropbox/Science/scripts/pyth/zeus/zeus.py",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Neural_net_D3/data.tsv",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Neural_net_D3/data2.tsv",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Neural_net_D3/index.html",
+		"/Users/errollloyd/vispy/mandelbrot_demo.py",
+		"/Users/errollloyd/Desktop/vispy_demo.py",
+		"/Users/errollloyd/Desktop/ARC_comp_fig.svg",
+		"/Applications/PsychoPy2.app/Contents/Resources/lib/python2.7/psychopy/data.py",
+		"/Users/errollloyd/Dropbox/Science/PhD/grants/ARC_2016/cardinal_cortex_inputs3.svg",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Plotly/temp-plot-inter.html",
+		"/Users/errollloyd/temp-plot.html",
+		"/Users/errollloyd/temp-plot-inter.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/sc_d3_course/basic/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/materials/D3-visualising-data/code/interaction.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/materials/D3-visualising-data/code/styles.css",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/materials/D3-visualising-data/code/interaction_d3.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/materials/D3-visualising-data/code/meow.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/materials/D3-visualising-data/code/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/quick_button/eg",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/materials/D3-visualising-data/05-javascript.md",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/materials/D3-visualising-data/code/main.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/materials/D3-visualising-data/index.md",
+		"/Users/errollloyd/Documents/latex_test_delete/latex_test.tex",
+		"/Users/errollloyd/Developer/node_test/hello_world2.js",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/mouseover/date close.tsv",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/mouseover/index.html",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/simple_play/line_simple_animated_mouseover_interact.html",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/Default/Default (OSX).sublime-keymap",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/simple_play/canvas_conventions",
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Plotly/scatter_plots/basic.html"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"tick",
+			"auto",
+			"tick",
+			"reverse",
+			"data",
+			"main_data",
+			"data",
+			"y",
+			"Y",
+			"y",
+			"content",
+			"brackethighlighter.default",
+			"dat",
+			" i",
+			"i",
+			"]",
+			"button",
+			"div",
+			"<div",
+			"div",
+			"select",
+			"input",
+			"'",
+			"magenta",
+			"b",
+			", \"",
+			"\":",
+			"graph",
+			"b",
+			"m",
+			"data.r",
+			"data.h",
+			"data.s",
+			"data.space",
+			"data.x",
+			"data.w",
+			"data.c",
+			"data.w",
+			"data.b",
+			"data.a",
+			"data[2]",
+			"data[1]",
+			"data[0]",
+			"<div",
+			"div",
+			"250",
+			"0",
+			"100",
+			"750",
+			"300",
+			"min",
+			"life_min",
+			"data",
+			"butt",
+			"disc_sel",
+			"cont",
+			"'.disc'",
+			".disc_se",
+			".disc_sel",
+			".disc_sel\n",
+			"    \n",
+			"disc_sel",
+			"console",
+			"transition",
+			"filter",
+			"$('.",
+			"attr",
+			"ntot",
+			"prop",
+			"ntot",
+			"prop",
+			"overall'",
+			"overall",
+			"id",
+			"Radiology",
+			"Neurosurgery",
+			"CellBiology",
+			"id=",
+			"year_control",
+			"width",
+			"tick",
+			"alpha",
+			"$",
+			"$input",
+			"WY",
+			"display",
+			"year_text",
+			"style('fill'",
+			"attr('fill'",
+			"black",
+			"cells",
+			"flex",
+			"ANS",
+			"3c6d95",
+			"ea0064",
+			"#007dbd",
+			"#b02fff",
+			"#a43cff",
+			"#6d5eff",
+			"classed",
+			"update",
+			".err",
+			".pnt",
+			"pnt",
+			"vis",
+			"discipline",
+			"count_sel",
+			"year_slider",
+			"plot",
+			"discipline",
+			"count_se",
+			"plot",
+			"year",
+			";\n",
+			"dat_obj",
+			"type",
+			"disciplines",
+			"tooltip",
+			"classed",
+			"tooltip",
+			"country",
+			"update_gr",
+			"console.log",
+			"ex",
+			"pnt",
+			"filter",
+			".filter",
+			"d.data"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.html",
+					"settings":
+					{
+						"buffer_size": 873,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								172,
+								172
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
+							"git_gutter_enabled": true,
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "main.js",
+					"settings":
+					{
+						"buffer_size": 4607,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2183,
+								2183
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
+							"git_gutter_enabled": true,
+							"rulers":
+							[
+								80
+							],
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 743.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "functions.js",
+					"settings":
+					{
+						"buffer_size": 1688,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								499,
+								499
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
+							"git_gutter_enabled": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 383.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "search_test.js",
+					"settings":
+					{
+						"buffer_size": 3012,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								765,
+								1715
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
+							"git_gutter_enabled": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1327.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "beeswarm_ref/index.html",
+					"settings":
+					{
+						"buffer_size": 9668,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2422,
+								2286
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close"
+							],
+							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
+							"git_gutter_enabled": true,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 158.0,
+	"status_bar_visible": true
+}

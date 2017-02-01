@@ -1,9 +1,10 @@
 
 
 //
+// !! Some of the interpolated GR data is out of range? (beyond 100%)
 
-// Vertical Beeswarm for Disciplines with Overall-allCount
-// With interpolated data into the future
+
+
 
 // Get adjacent line plot
 
@@ -26,6 +27,9 @@ var formatValue = d3.format(",d");
 
 var perc_scale = d3.scaleLinear()
     .rangeRound([0, height]);
+
+var col_scale = d3.scaleSequential(d3.interpolateRdYlBu)
+					.domain([0, 100]);
 
 var radius = d3.scaleSqrt()
           .range([5, 22]);
@@ -65,10 +69,6 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 	radius.domain(n_range(dat));
 
-	console.log(
-			pnt_by_yr(dat[0], year, 'Y')
-
-		)
 
 
 	var simulation = d3.forceSimulation(dat)
@@ -93,37 +93,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 	function tick(){
+		// console.log(simulation.alpha());
+		d3.selectAll('.pnt')
 
-	// console.log(simulation.alpha());
-	d3.selectAll('.pnt')
-		.attr('r', function(d){
-				if(pnt_by_yr(d, year, 'intp')==0){
-					return radius(
-						pnt_by_yr(d, year, 'n')
-							)
-						}
-				else {
-					return radius(
-						pnt_by_yr(d, 2002, 'n')
-							)
 
-				}
-				}
-			)
+			.attr('cx', function(d){return d.x})
+			.attr('cy', function(d){return d.y})
 
-		.attr('cx', function(d){return d.x})
-		.attr('cy', function(d){return d.y})
-		.style('opacity', function(d){
-				if(pnt_by_yr(d, year, 'intp')==0){
-					return 0.6
-						}
-				else {
-					return 0.4;
-
-				}
-				}
-
-		)
 
 	}
 
@@ -136,12 +112,71 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			return radius(pnt_by_yr(d, year, 'n'))})
 		.attr('cx', function(d){return d.x})
 		.attr('cy', function(d){return height/2})
+		.style('fill', function(d){
+			return col_scale(pnt_by_yr(d, year, 'GR'))
+		})
 
 
 
 	d3.select('#year_slider').on("input", function(){
 
 		year = parseInt(this.value);
+
+		d3.selectAll('.pnt')
+			.attr('r', function(d){
+				if(pnt_by_yr(d, year, 'intp')==0){
+					return radius(
+						pnt_by_yr(d, year, 'n')
+							)
+						}
+				else {
+					return radius(
+						d['mean_n']
+							)
+
+					}
+				}
+			)
+			.style('stroke-dasharray', function(d){
+
+				if(pnt_by_yr(d, year, 'intp')==1){
+					return '3 1';
+						}
+				else {
+					return 'initial';
+
+					}
+
+				}
+			)
+			.style('stroke-dashoffset', function(d){
+
+				if(pnt_by_yr(d, year, 'intp')==1){
+					return '3';
+						}
+				else {
+					return 'initial';
+
+					}
+
+				}
+			)
+			.style('fill', function(d){
+					return col_scale(pnt_by_yr(d, year, 'GR'))
+					}
+			)
+			// .style('opacity', function(d){
+			// 		if(pnt_by_yr(d, year, 'intp')==0){
+			// 			return 0.6
+			// 				}
+			// 		else {
+			// 			return 0.4;
+
+			// 		}
+			// 		}
+
+			// )
+
 
 		simulation.force("y", 
 			d3.forceY(function(d){
@@ -160,7 +195,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						}
 				else {
 					return radius(
-						pnt_by_yr(d, 2002, 'n')
+						d['mean_n']
 							)
 
 
