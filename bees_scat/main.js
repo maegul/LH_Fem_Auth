@@ -3,6 +3,7 @@
 //
 // !! Some of the interpolated GR data is out of range? (beyond 100%)
 
+// Restyle scatter
 
 // Click to see deeper data
 
@@ -34,17 +35,20 @@ var g_bee_swarm = bee_swarm.append("g")
 
 // Line set up
 var line = d3.select('#line_plot'),
-	margin_line = {top:40, right:40, bottom:40, left:40},
+	margin_line = {top:40, right:140, bottom:40, left:140},
 	width_line = line.attr('width') - margin_line.left-margin_line.right,
 	height_line = line.attr('height') - margin_line.top - margin_line.bottom;
 
 var g_line = line.append('g')
 		.attr('transform',
-			'translate('+margin.left+','+margin.top+')');
+			'translate('+margin_line.left+','+margin_line.top+')');
 
 
 
 
+var border_plot_cols = [
+'#501727', '#352a16', '#233015', '#1c2a51', '#431b49'
+]
 
 
 // For axis tick text percentage
@@ -54,31 +58,70 @@ var perc_scale = d3.scaleLinear()
     				.rangeRound([0, height]);
 
 var col_scale = d3.scaleSequential(d3.interpolateRdYlBu)
-					.domain([0, 100]);
+					.domain([100, 0]);
 
 var radius = d3.scaleSqrt()
           .range([5, 22]);
 
 
 // For curve plotting.  Max year to which it goes
-var yr_max = 2045
+var yr_max = 2045,
+	yr_min = 2000;
 
 var line_yr_scale = d3.scaleLinear()
 						.range([0, width_line])
-						.domain([2000, yr_max]); // may make flexible later
+						.domain([yr_min, yr_max]); // may make flexible later
 
 
-g_line.append('g')
-		.classed('axis x', true)
-		.attr('transform', 'translate(0,'+height_line+')')
-		.call(d3.axisBottom(line_yr_scale).ticks(10, d3.format('.4')))
-		.selectAll("text")
-			.attr("y", 0)
-			.attr("x", 0)
-			.attr("dy", "1em")
-			.attr('dx', '0.7em')
-			.attr("transform", "rotate(45)")
-			.style("text-anchor", "start");
+// g_line.append('g')
+// 		.classed('axis x', true)
+// 		.attr('transform', 'translate(0,'+height_line+')')
+// 		.call(d3.axisBottom(line_yr_scale).ticks(10, d3.format('.4')))
+// 		.selectAll("text")
+// 			.attr("y", 0)
+// 			.attr("x", 0)
+// 			.attr("dy", "1em")
+// 			.attr('dx', '0.7em')
+// 			.attr("transform", "rotate(45)")
+// 			.style("text-anchor", "start");
+
+
+// Line plot Year Text elements
+
+line.append('text')
+	.text(''+yr_min)
+	.attr('y', height_line/2)
+	.attr('x', margin_line.left)
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "20px")
+	.attr('dy', '1em')
+	.attr('font-weight', 900)
+	.attr("fill", "#A3A0A6")
+	// .attr('stroke', '#A3A0A6')
+	.attr('text-anchor', 'end');
+
+line.append('text')
+	.text(''+yr_max)
+	.attr('y', height_line/2)
+	.attr('x', width_line + margin_line.left)
+	.attr('dy', '1em')
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "20px")
+	.attr('font-weight', 900)
+	.attr("fill", "#A3A0A6")
+	// .attr('stroke', '#A3A0A6')
+	.attr('text-anchor', 'start');
+
+
+
+line.append()
+// append("line")
+//   .attr("x1", 5)
+//   .attr("y1", 5)
+//  .attr("x2", 50)
+//  .attr("y2", 50)
+//  .attr("stroke-width", 2)
+//  .attr("stroke", "black");
 
 
 d3.json('data_no_list_no_dup_disc.json', function(main_data){
@@ -125,7 +168,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 	var simulation = d3.forceSimulation(dat)
-		.force("x", d3.forceX(width/2).strength(0.075))
+		.force("x", d3.forceX(width/2).strength(0.05))
 		.force("y", d3.forceY(function(d){
 			return perc_scale(
 				pnt_by_yr(d, year, 'GR')
