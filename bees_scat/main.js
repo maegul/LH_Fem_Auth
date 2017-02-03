@@ -328,6 +328,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		})
 		.on('mouseover', function(d){
 
+			//Tool-Tip
+
+			d3.select(this).style('stroke-width', '3px');
 
 			tooltip.style('visibility', 'visible');
       		tooltip.append('p').classed('tt_main', true)
@@ -339,7 +342,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
           	if (pnt_by_yr(d, year, 'intp') == 0) {
 
   				tooltip.append('p').classed('tt_n', true)
-      				.text(d3.format(',')(pnt_by_yr(d, year, 'n')) +' papers');
+      				.text(d3.format(',')(pnt_by_yr(d, year, 'n')) +' Papers');
   				tooltip.append('p').classed('tt_nf', true)
       				.text(d3.format(',')(pnt_by_yr(d, year, 'F')) + ' Female')
       				.style('color', col_scale(85));
@@ -353,6 +356,14 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
           			.text('Interpolated')
           	};
 
+
+          	// Scat Plot
+
+          		// On hover - plot with year selected
+
+          		// add to a g for each plot
+          		// apply border colour
+          		// thin border of all except plotted
 
 			var point_dat = _.filter(d['Points'], 
 									function(o){return o['intp']==0}
@@ -381,7 +392,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						 	);
 
 			scat.enter().append('circle').classed('scat', true)
-				.attr('r', 5)
+				.attr('r', function(d){
+					return radius(d['n'])})
 				.attr('cx', function(d){
 					return line_yr_scale(d['Y']);
 				})
@@ -390,7 +402,11 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				})
 				.style('fill', function(d){
 					return col_scale(d['GR'])
-				})
+				});
+
+			d3.selectAll('.scat').filter(function(d){return d['Y'] == year})
+				.raise()
+				.style('stroke-width', '2px');
 
 
 			g_line.append("path").classed('scat_line', true)
@@ -412,6 +428,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 		})
 		.on('mouseout', function(d){
+
+			d3.selectAll('.pnt').style('stroke-width', '1px');
+
 			d3.selectAll('.scat').remove();
 
 			d3.selectAll('.scat_line').remove();
@@ -422,6 +441,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		})
 
 
+
+// Year Slider
 
 	d3.select('#year_slider').on("input", function(){
 
