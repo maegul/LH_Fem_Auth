@@ -12,8 +12,22 @@
 
 <style type="text/css">
 
-* {
+/** {
 	border: 1px solid red;
+}*/
+
+.canvas {
+/*	display: inline-block;
+	width:80%;*/
+}
+
+.main {
+	margin: auto;
+	width: 900;
+}
+
+.background {
+	position: absolute;
 }
 
 .pnt {
@@ -31,13 +45,52 @@
 }
 
 
-.canvas {
-	display: inline-block;
+.tooltip {
+  background-color: rgba(255, 255, 255, 0.95);
+  width: auto;
+  padding: 0.5em;
+
 }
 
-.main {
-	border:1px solid red;
+
+
+.tt_main {
+	text-decoration: underline;
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+
 }
+
+.tt_perc {
+	margin-top: 0.25em;
+	margin-bottom: 0.1em;
+
+
+}
+
+.tt_n{
+	margin-top: 1em;
+	margin-bottom: 0.1em;
+
+}
+
+.tt_nf, .tt_nm {
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+
+}
+
+.tt_int {
+	margin-top: 1em;
+	margin-bottom: 0.1em;
+	font-style: italic;
+}
+
+/*.tt_nm {
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+
+}*/
 
 </style>
 
@@ -45,13 +98,33 @@
 
 <div>
 
-  <input style='width:100%;' type="range" name="range" class="slider" id="year_slider" value="2016" min="2002" max="2030" step="1" >
+  <input style='width:20%;' type="range" name="range" class="slider" id="year_slider" value="2016" min="2002" max="2030" step="1" >
 </div>
 
 <div class='main'>
 
 
+
+<!-- 	<div class='background'>
+		<svg id='background' width="100%" height="700"></svg>
+	</div>
+ -->
+
+
 	<div class='canvas'>
+		<svg id='background' width="100%" height="700">
+
+			<svg id='plot' width="400" height="700"></svg>
+
+			<svg id='line_plot' width="600" height="700"></svg>
+
+		</svg>
+
+	</div>
+
+
+
+<!-- 	<div class='canvas'>
 		<svg id='plot' width="400" height="700"></svg>
 	</div>
 
@@ -60,7 +133,7 @@
 		<svg id='line_plot' width="600" height="700"></svg>
 
 	</div>
-</div>
+ --></div>
 
 
 

@@ -45,6 +45,8 @@ function line_dat_gen(curv_dat, yr_max){
 // Presumes data file is "data"
 // Presumes lodash is loaded
 function interpolate_years(data){
+
+    // Adds interpolated data points to data
 	
     var years = _.range(2002, 2030+1);
 

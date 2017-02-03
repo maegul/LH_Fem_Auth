@@ -3,7 +3,17 @@
 //
 // !! Some of the interpolated GR data is out of range? (beyond 100%)
 
-// Restyle scatter
+// Restyle scatter and multi highlight
+
+	// On hover -- tool tip
+	// Suggestion to click for plot (cond: scat plot)
+	// on click - plot, dark color highlight, legend
+	// Max 5(?)
+	// Clear
+
+// Display modes
+
+// Filters (+ highlight)
 
 // Click to see deeper data
 
@@ -11,12 +21,14 @@
 	// Overall Disp
 	// Filter of overall disp
 
-// select discipline to open journals underneath
 
-// Have journls with same line plot (layout?!)
 
-// start thinking about data constructor functions
 
+
+
+
+
+var bckg = d3.select('#background');
 
 // Beeswarm set up
 
@@ -39,6 +51,9 @@ var line = d3.select('#line_plot'),
 	width_line = line.attr('width') - margin_line.left-margin_line.right,
 	height_line = line.attr('height') - margin_line.top - margin_line.bottom;
 
+// To move line svg element across as needed
+line.attr('x', width)
+
 var g_line = line.append('g')
 		.attr('transform',
 			'translate('+margin_line.left+','+margin_line.top+')');
@@ -56,15 +71,31 @@ var formatValue = d3.format(",d");
 
 var perc_scale = d3.scaleLinear()
     				.rangeRound([0, height]);
+ 	perc_scale.domain([100, 0])
 
 var col_scale = d3.scaleSequential(d3.interpolateRdYlBu)
 					.domain([100, 0]);
+
+
+// TO use a single hue sequential col scale
+
+// function col_scale(v){
+// 	var cs = d3.scaleSequential(d3.interpolateGnBu)
+// 					.domain([0, 50])
+// 	return cs(Math.abs(v-50))
+
+// }
 
 var radius = d3.scaleSqrt()
           .range([5, 22]);
 
 
 // For curve plotting.  Max year to which it goes
+
+var year = 2016;
+
+d3.select('#year_slider').attr('value', year);
+
 var yr_max = 2045,
 	yr_min = 2000;
 
@@ -90,11 +121,11 @@ var line_yr_scale = d3.scaleLinear()
 
 line.append('text')
 	.text(''+yr_min)
-	.attr('y', height_line/2)
+	.attr('y', perc_scale(50))
 	.attr('x', margin_line.left)
 	.attr("font-family", "sans-serif")
 	.attr("font-size", "20px")
-	.attr('dy', '1em')
+	.attr('dy', '0em')
 	.attr('font-weight', 900)
 	.attr("fill", "#A3A0A6")
 	// .attr('stroke', '#A3A0A6')
@@ -102,9 +133,9 @@ line.append('text')
 
 line.append('text')
 	.text(''+yr_max)
-	.attr('y', height_line/2)
+	.attr('y', perc_scale(50))
 	.attr('x', width_line + margin_line.left)
-	.attr('dy', '1em')
+	.attr('dy', '0em')
 	.attr("font-family", "sans-serif")
 	.attr("font-size", "20px")
 	.attr('font-weight', 900)
@@ -113,15 +144,94 @@ line.append('text')
 	.attr('text-anchor', 'start');
 
 
+var g_bckg = bckg.insert('g', 'svg')
+				.attr('transform',
+					'translate(0,'+margin.top+')');
 
-line.append()
-// append("line")
-//   .attr("x1", 5)
-//   .attr("y1", 5)
-//  .attr("x2", 50)
-//  .attr("y2", 50)
-//  .attr("stroke-width", 2)
-//  .attr("stroke", "black");
+
+g_bckg.insert('rect', 'svg')
+	.attr('height', (perc_scale(37.5)-perc_scale(62.5)))
+	.attr('width', bckg.attr('width'))
+	.attr('y', perc_scale(62.5))
+	.attr('fill', '#EEE')
+
+
+g_bckg.insert("line", 'svg')
+	.attr("x1", 0)
+	.attr("y1", perc_scale(50))
+	.attr("x2", bckg.attr('width'))
+	.attr("y2", perc_scale(50))
+	.attr("stroke-width", 1)
+	.attr("stroke", "#A3A0A6");
+
+
+g_bckg.insert("line", 'svg')
+	.attr("x1", 0)
+	.attr("y1", perc_scale(25))
+	.attr("x2", bckg.attr('width'))
+	.attr("y2", perc_scale(25))
+	.attr("stroke-width", 1)
+	.attr("stroke", "#A3A0A6")
+	.attr('d')
+
+g_bckg.insert("line", 'svg')
+	.attr("x1", 0)
+	.attr("y1", perc_scale(75))
+	.attr("x2", bckg.attr('width'))
+	.attr("y2", perc_scale(75))
+	.attr("stroke-width", 1)
+	.attr("stroke", "#A3A0A6");
+
+
+
+g_bckg.insert('text', 'svg')
+	.text('50%')
+	.attr('y', perc_scale(50))
+	// .attr('x',)
+	.attr('dy', '-0.5em')
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "15px")
+	// .attr('font-weight', 900)
+	.attr("fill", "#A3A0A6")
+	// .attr('stroke', '#A3A0A6')
+	.attr('text-anchor', 'start');
+
+g_bckg.insert('text', 'svg')
+	.text('75% Male')
+	.attr('y', perc_scale(25))
+	// .attr('x',)
+	.attr('dy', '-0.5em')
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "15px")
+	// .attr('font-weight', 900)
+	.attr("fill", "#A3A0A6")
+	// .attr('stroke', '#A3A0A6')
+	.attr('text-anchor', 'start');
+
+g_bckg.insert('text', 'svg')
+	.text('75% Female')
+	.attr('y', perc_scale(75))
+	// .attr('x',)
+	.attr('dy', '-0.5em')
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "15px")
+	// .attr('font-weight', 900)
+	.attr("fill", "#A3A0A6")
+	// .attr('stroke', '#A3A0A6')
+	.attr('text-anchor', 'start');	
+
+
+var year_text = bckg.insert('text', 'svg')
+	.text(''+year)
+	.attr('y', perc_scale(95))
+	// .attr('x',)
+	.attr('dy', '+1em')
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "35px")
+	.attr('font-weight', 700)
+	.attr("fill", "#A3A0A6")
+	// .attr('stroke', '#A3A0A6')
+	.attr('text-anchor', 'start');
 
 
 d3.json('data_no_list_no_dup_disc.json', function(main_data){
@@ -132,13 +242,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	console.log(main_data)
 
 
-	// Core Variables
 
-	perc_scale.domain([100, 0])
 
-	var year = 2016;
 
-	// For proto - display Discipline, Overall, allCountry
+
+	// var disp = {
+	// 	D: 
+	// }
 
 
 
@@ -150,20 +260,20 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				(o.Position == 'Overall')		
 	});
 
-	console.log(
-
-		_.filter(main_data, function(o){
-				return (o.Discipline == 'AIDS') & 
-						// (o.Country == 'United Kingdom') &
-						(o.Journal != 'allJournals') & 
-						(o.Position == 'Overall')		
-			})
-
-
-		)
-
 
 	radius.domain(n_range(dat));
+
+
+	// For generating curve and CI lines
+
+	var scat_line = d3.line().curve(d3.curveBasis)
+	    .x(function(d) { return parseFloat(line_yr_scale(d['year'])); })
+	    .y(function(d) { return parseFloat(perc_scale(d['perc'])); });
+
+    var scat_ci_line = d3.line()
+    	.x(function(d){return line_yr_scale(d['year'])})
+    	.y(function(d){return perc_scale(d['perc'])})
+
 
 
 
@@ -173,7 +283,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			return perc_scale(
 				pnt_by_yr(d, year, 'GR')
 				)
-			}).strength(0.9)
+			}).strength(0.99)
 		)
 		.force("collide", 
 			d3.forceCollide(function(d){
@@ -191,26 +301,34 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	function tick(){
 		// console.log(simulation.alpha());
 		d3.selectAll('.pnt')
-
-
 			.attr('cx', function(d){return d.x})
 			.attr('cy', function(d){return d.y})
-
-
 	}
 
 
 	var pnt = g_bee_swarm.selectAll('.pnt')
 				.data(dat, function(d){return d['Discipline'];})
 
+	console.log('filt test')
+	console.log(
 
-	var scat_line = d3.line().curve(d3.curveBasis)
-	    .x(function(d) { return parseFloat(line_yr_scale(d['year'])); })
-	    .y(function(d) { return parseFloat(perc_scale(d['perc'])); });
+			_.filter(main_data, function(md){
+				return (md['Discipline'] == 'allDisciplines') &
+				(md['Position'] == 'Overall') &
+				(md['Country'] != 'allCountries')
+			})
 
-    var scat_ci_line = d3.line()
-    	.x(function(d){return line_yr_scale(d['year'])})
-    	.y(function(d){return perc_scale(d['perc'])})
+		)
+
+
+	// Tool TIp set up
+	var tooltip = d3.select('body')
+		.append('div')
+		.classed('tooltip', true)
+		.style('position', 'absolute')
+		.style('visibility', 'hidden')
+		.style('white-space', 'pre')
+		.style('font-family', 'sans-serif');
 
 
 
@@ -227,9 +345,41 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			console.log(
 					_.filter(main_data, function(md){
 						return (md['Discipline'] == d['Discipline']) &
-						(md['Discipline'] != 'allJournals')
+						(md['Journal'] != 'allJournals') &
+						(md['Country'] == 'allCountries') &
+						(md['Position'] == 'Overall')
 					}).map(function(md){return md['Journal']})
 					)
+
+			tooltip.style('visibility', 'visible');
+      		tooltip.append('p').classed('tt_main', true)
+          			.text(d['Discipline']);
+  			tooltip.append('p').classed('tt_perc', true)
+      				.text((pnt_by_yr(d, year, 'GR'))+'\% Female');
+
+			// tooltip.selectAll('*').style('visibility', 'visible');
+			// d3.select('#tt_main')
+			// 	.text(d['Discipline']);
+   //        	d3.select('#tt_perc')
+   //        		.text((pnt_by_yr(d, year, 'GR'))+'\% Female');
+
+          	if (pnt_by_yr(d, year, 'intp') == 0) {
+
+  				tooltip.append('p').classed('tt_n', true)
+      				.text(d3.format(',')(pnt_by_yr(d, year, 'n')) +' papers');
+  				tooltip.append('p').classed('tt_nf', true)
+      				.text(d3.format(',')(pnt_by_yr(d, year, 'F')) + ' Female')
+      				.style('color', col_scale(85));
+  				tooltip.append('p').classed('tt_nm', true)
+      				.text(d3.format(',')(pnt_by_yr(d, year, 'M')) + ' Male')
+      				.style('color', col_scale(15));
+
+
+          	} else{
+          		tooltip.append('p').classed('tt_int', true)
+          			.text('Interpolated')
+          	};
+
 
 			var point_dat = _.filter(d['Points'], 
 									function(o){return o['intp']==0}
@@ -282,11 +432,20 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 		})
+		.on('mousemove', function(){
+	        tooltip
+                .style('top', (d3.event.pageY-40)+'px')
+                .style('left', (d3.event.pageX+35)+'px');
+
+		})
 		.on('mouseout', function(d){
 			d3.selectAll('.scat').remove();
 
 			d3.selectAll('.scat_line').remove();
 			d3.selectAll('.scat_ci').remove();
+
+			tooltip.style('visibility', 'hidden');
+			tooltip.selectAll('*').remove();
 		})
 
 
@@ -294,6 +453,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	d3.select('#year_slider').on("input", function(){
 
 		year = parseInt(this.value);
+
+		year_text.text(year);
 
 		d3.selectAll('.pnt')
 			.attr('r', function(d){
@@ -356,7 +517,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				return perc_scale(
 					pnt_by_yr(d, year, 'GR')
 					)
-			}).strength(0.9)
+			}).strength(0.99)
 		)
 		.force("collide", 
 			d3.forceCollide(function(d){
@@ -375,10 +536,15 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				}
 				}
 		))
+		.force('repulsion', d3.forceManyBody().strength(-12))
 
 
 		simulation.alpha(0.07)
 					.restart();
+
+		setTimeout(function(){
+			simulation.force('repulsion', d3.forceManyBody().strength(0))
+		}, 500)
 
 
 	})
