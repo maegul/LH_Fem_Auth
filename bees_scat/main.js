@@ -104,17 +104,6 @@ var line_yr_scale = d3.scaleLinear()
 						.domain([yr_min, yr_max]); // may make flexible later
 
 
-// g_line.append('g')
-// 		.classed('axis x', true)
-// 		.attr('transform', 'translate(0,'+height_line+')')
-// 		.call(d3.axisBottom(line_yr_scale).ticks(10, d3.format('.4')))
-// 		.selectAll("text")
-// 			.attr("y", 0)
-// 			.attr("x", 0)
-// 			.attr("dy", "1em")
-// 			.attr('dx', '0.7em')
-// 			.attr("transform", "rotate(45)")
-// 			.style("text-anchor", "start");
 
 
 // Line plot Year Text elements
@@ -144,17 +133,17 @@ line.append('text')
 	.attr('text-anchor', 'start');
 
 
+// Background percentage lines
+
 var g_bckg = bckg.insert('g', 'svg')
 				.attr('transform',
 					'translate(0,'+margin.top+')');
-
 
 g_bckg.insert('rect', 'svg')
 	.attr('height', (perc_scale(37.5)-perc_scale(62.5)))
 	.attr('width', bckg.attr('width'))
 	.attr('y', perc_scale(62.5))
 	.attr('fill', '#EEE')
-
 
 g_bckg.insert("line", 'svg')
 	.attr("x1", 0)
@@ -163,7 +152,6 @@ g_bckg.insert("line", 'svg')
 	.attr("y2", perc_scale(50))
 	.attr("stroke-width", 1)
 	.attr("stroke", "#A3A0A6");
-
 
 g_bckg.insert("line", 'svg')
 	.attr("x1", 0)
@@ -181,8 +169,6 @@ g_bckg.insert("line", 'svg')
 	.attr("y2", perc_scale(75))
 	.attr("stroke-width", 1)
 	.attr("stroke", "#A3A0A6");
-
-
 
 g_bckg.insert('text', 'svg')
 	.text('50%')
@@ -342,14 +328,6 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		})
 		.on('mouseover', function(d){
 
-			console.log(
-					_.filter(main_data, function(md){
-						return (md['Discipline'] == d['Discipline']) &
-						(md['Journal'] != 'allJournals') &
-						(md['Country'] == 'allCountries') &
-						(md['Position'] == 'Overall')
-					}).map(function(md){return md['Journal']})
-					)
 
 			tooltip.style('visibility', 'visible');
       		tooltip.append('p').classed('tt_main', true)
@@ -357,11 +335,6 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
   			tooltip.append('p').classed('tt_perc', true)
       				.text((pnt_by_yr(d, year, 'GR'))+'\% Female');
 
-			// tooltip.selectAll('*').style('visibility', 'visible');
-			// d3.select('#tt_main')
-			// 	.text(d['Discipline']);
-   //        	d3.select('#tt_perc')
-   //        		.text((pnt_by_yr(d, year, 'GR'))+'\% Female');
 
           	if (pnt_by_yr(d, year, 'intp') == 0) {
 
