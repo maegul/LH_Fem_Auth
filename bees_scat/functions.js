@@ -31,7 +31,7 @@ function ci_line_dat_gen(points){
 function line_dat_gen(curv_dat, yr_max){
 
 
-    var yrs = _.range(2000, yr_max, 2);
+    var yrs = _.range(2000, yr_max, 1);
 
     return _.map(yrs, function(y){
         return {year: y, perc: curv(curv_dat['c'], curv_dat['r'], y, 3)}
