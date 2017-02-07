@@ -120,3 +120,33 @@ function pnt_by_yr(dat, year, att){
         )[0][att];
 
 }
+
+function tt_fill(d, tooltip){
+
+    tooltip.style('visibility', 'visible');
+    tooltip.append('p').classed('tt_main', true)
+            .text(d['Discipline']);
+    tooltip.append('p').classed('tt_perc', true)
+            .text((pnt_by_yr(d, year, 'GR'))+'\% Female');
+
+
+    if (pnt_by_yr(d, year, 'intp') == 0) {
+
+        tooltip.append('p').classed('tt_n', true)
+            .text(d3.format(',')(pnt_by_yr(d, year, 'n')) +' Papers');
+        tooltip.append('p').classed('tt_nf', true)
+            .text(d3.format(',')(pnt_by_yr(d, year, 'F')) + ' Female')
+            .style('color', col_scale(85));
+        tooltip.append('p').classed('tt_nm', true)
+            .text(d3.format(',')(pnt_by_yr(d, year, 'M')) + ' Male')
+            .style('color', col_scale(15));
+
+
+    } else{
+        tooltip.append('p').classed('tt_int', true)
+            .text('Interpolated')
+    };
+
+
+
+}

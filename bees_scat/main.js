@@ -139,7 +139,7 @@ g_bckg.insert('rect', 'svg')
 	.attr('height', (perc_scale(37.5)-perc_scale(62.5)))
 	.attr('width', bckg.attr('width'))
 	.attr('y', perc_scale(62.5))
-	.attr('fill', '#EEE')
+	.attr('fill', '#F6F4F8')
 
 g_bckg.insert("line", 'svg')
 	.attr("x1", 0)
@@ -215,6 +215,11 @@ var year_text = bckg.insert('text', 'svg')
 	// .attr('stroke', '#A3A0A6')
 	.attr('text-anchor', 'start');
 
+
+var border_plot_col_angles = [
+0.0, 22, 124, 200, 285, 
+
+];
 
 d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
@@ -319,16 +324,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	var pnt = g_bee_swarm.selectAll('.pnt')
 				.data(dat, function(d){return d['Discipline'];})
 
-	console.log('filt test')
-	console.log(
 
-			_.filter(main_data, function(md){
-				return (md['Discipline'] == 'allDisciplines') &
-				(md['Position'] == 'Overall') &
-				(md['Country'] != 'allCountries')
-			})
-
-		)
 
 
 	// Tool TIp set up
@@ -356,94 +352,32 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			d3.select(this).style('stroke-width', '3px');
 
-			tooltip.style('visibility', 'visible');
-      		tooltip.append('p').classed('tt_main', true)
-          			.text(d['Discipline']);
-  			tooltip.append('p').classed('tt_perc', true)
-      				.text((pnt_by_yr(d, year, 'GR'))+'\% Female');
+			tt_fill(d, tooltip);
+
+			// tooltip.style('visibility', 'visible');
+   //    		tooltip.append('p').classed('tt_main', true)
+   //        			.text(d['Discipline']);
+  	// 		tooltip.append('p').classed('tt_perc', true)
+   //    				.text((pnt_by_yr(d, year, 'GR'))+'\% Female');
 
 
-          	if (pnt_by_yr(d, year, 'intp') == 0) {
+   //        	if (pnt_by_yr(d, year, 'intp') == 0) {
 
-  				tooltip.append('p').classed('tt_n', true)
-      				.text(d3.format(',')(pnt_by_yr(d, year, 'n')) +' Papers');
-  				tooltip.append('p').classed('tt_nf', true)
-      				.text(d3.format(',')(pnt_by_yr(d, year, 'F')) + ' Female')
-      				.style('color', col_scale(85));
-  				tooltip.append('p').classed('tt_nm', true)
-      				.text(d3.format(',')(pnt_by_yr(d, year, 'M')) + ' Male')
-      				.style('color', col_scale(15));
-
-
-          	} else{
-          		tooltip.append('p').classed('tt_int', true)
-          			.text('Interpolated')
-          	};
+  	// 			tooltip.append('p').classed('tt_n', true)
+   //    				.text(d3.format(',')(pnt_by_yr(d, year, 'n')) +' Papers');
+  	// 			tooltip.append('p').classed('tt_nf', true)
+   //    				.text(d3.format(',')(pnt_by_yr(d, year, 'F')) + ' Female')
+   //    				.style('color', col_scale(85));
+  	// 			tooltip.append('p').classed('tt_nm', true)
+   //    				.text(d3.format(',')(pnt_by_yr(d, year, 'M')) + ' Male')
+   //    				.style('color', col_scale(15));
 
 
-          	// Scat Plot
+   //        	} else{
+   //        		tooltip.append('p').classed('tt_int', true)
+   //        			.text('Interpolated')
+   //        	};
 
-          		// On hover - plot with year selected
-
-          		// add to a g for each plot
-          		// apply border colour
-          		// thin border of all except plotted
-
-      		
-
-			// var point_dat = _.filter(d['Points'], 
-			// 						function(o){return o['intp']==0}
-			// 						)
-
-			// var scat_ci = g_line.selectAll('.scat_ci')
-			// 			.data(ci_line_dat_gen(point_dat),
-			// 			 	function(p){return p['Y']}
-			// 			 	);
-
-			// scat_ci.enter().append('path').classed('scat_ci', true)
-			// 	.attr("fill", "none")
-			// 	.attr("stroke", "#565556FF")
-			// 	.attr("stroke-linejoin", "round")
-			// 	.attr('stroke-miterlimit', 2)
-			// 	.attr("stroke-linecap", "round")
-			// 	.attr("stroke-width", 1.5)
-			// 	.attr('d', scat_ci_line)
-				
-
-
-
-			// var scat = g_line.selectAll('.scat')
-			// 			.data(point_dat,
-			// 			 	function(p){return p['Y']}
-			// 			 	);
-
-			// scat.enter().append('circle').classed('scat', true)
-			// 	.attr('r', function(d){
-			// 		return radius(d['n'])})
-			// 	.attr('cx', function(d){
-			// 		return line_yr_scale(d['Y']);
-			// 	})
-			// 	.attr('cy', function(d){
-			// 		return perc_scale(d['GR'])
-			// 	})
-			// 	.style('fill', function(d){
-			// 		return col_scale(d['GR'])
-			// 	});
-
-			// d3.selectAll('.scat').filter(function(d){return d['Y'] == year})
-			// 	.raise()
-			// 	.style('stroke-width', '2px');
-
-
-			// g_line.append("path").classed('scat_line', true)
-			// 	.datum(line_dat_gen(d['Curve'], yr_max))
-			// 	.attr("fill", "none")
-			// 	.attr("stroke", "steelblue")
-			// 	.attr("stroke-linejoin", "round")
-			// 	.attr('stroke-miterlimit', 2)
-			// 	.attr("stroke-linecap", "round")
-			// 	.attr("stroke-width", 3)
-			// 	.attr("d", scat_line);
 
 	
 
@@ -461,7 +395,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			if (d3.select(this).attr('value') != 'clicked'){
 
-				d3.selectAll('.pnt').style('stroke-width', '1px');
+				d3.select(this).style('stroke-width', '1px');
 
 		}
 
@@ -469,26 +403,52 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			tooltip.selectAll('*').remove();
 		})
 		.on('click', function(d){
-			d3.select(this).attr('value', 'clicked')
-			d3.select(this).style('stroke-width', '3px');
 
 
-			          	// Scat Plot
+			if (d3.select(this).attr('value')=='clicked') {
 
-          		// On hover - plot with year selected
 
-          		// add to a g for each plot
-          		// apply border colour
-          		// thin border of all except plotted
+			d3.select(this).attr('value', 'not_clicked');
+			d3.select(this)
+				.style('stroke-width', '')
+				.style('stroke', '');
+
+			g_line.selectAll('.scat_plot')
+				.filter(function(od){return od==d})
+				.remove();
+
+
+			} 
+
+			else {
+
+			var uniq_hue = _.sample(border_plot_col_angles);
+
+			// var uniq_hue = _.random(0, 310);
+
+			var uniq_cols = {			// H, Sat, Light
+				line: hsluv.hsluvToHex([uniq_hue, 90, 50]),
+				border: hsluv.hsluvToHex([uniq_hue, 90, 20]),
+				null_fill: hsluv.hsluvToHex([uniq_hue, 20, 90])
+			};
+
+			
+			d3.select(this).attr('value', 'clicked');
+			d3.select(this)
+				.style('stroke-width', '3px')
+				.style('stroke', uniq_cols.border);
+
+      		var scat_plot = g_line.append('g').classed('scat_plot', true).datum(d);
 
       		
 
 			var point_dat = _.filter(d['Points'], 
 									function(o){return o['intp']==0}
 									)
+			var line_dat = line_dat_gen(d['Curve'], yr_max);
 
 			// Con Interval error bars - line generator
-			var scat_ci = g_line.selectAll('.scat_ci')
+			var scat_ci = scat_plot.selectAll('.scat_ci')
 						.data(ci_line_dat_gen(point_dat),
 						 	function(p){return p['Y']}
 						 	);
@@ -505,7 +465,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-			var scat = g_line.selectAll('.scat')
+			var scat = scat_plot.selectAll('.scat')
 						.data(point_dat,
 						 	function(p){return p['Y']}
 						 	);
@@ -520,29 +480,85 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				.attr('cy', function(d){
 					return perc_scale(d['GR'])
 				})
-				.style('fill', function(d){
-					return '#E1DFE3';});
+				.style('fill', '#E1DFE3')
+				.style('stroke', uniq_cols.border)
+				.on('click', function(){
+					d3.select(this.parentNode).remove();
+					swarmAtt = d3.select(this).attr('data-swarmDisp');
+					d3.selectAll('.pnt').filter(function(p){
+						return p['Discipline'] == swarmAtt;
+					})
+					.style('stroke', '')
+					.style('stroke-width', '')
+					.attr('value', 'not_clicked');
+				})
+				.on('mouseover', function(d){
 
-			var current_point = d3.selectAll('.scat')
+					swarmAtt = d3.select(this).attr('data-swarmDisp');
+					d3.selectAll('.pnt').filter(function(p){
+						return p['Discipline'] != swarmAtt;
+					}).style('fill', '#E1DFE3');
+
+					var swarm_point = d3.selectAll('.pnt').filter(function(p){
+									return p['Discipline'] == swarmAtt;
+							})
+
+					tt_fill(
+						swarm_point.datum(),
+						tooltip
+						);
+
+			        tooltip
+		                .style('top', (d3.event.pageY-40)+'px')
+		                .style('left', (d3.event.pageX+35)+'px');
+				})
+				.on('mouseout', function(d){
+					d3.selectAll('.pnt')
+						.style('fill', function(d){
+							return col_scale(pnt_by_yr(d, year, 'GR'))
+						});
+
+					tooltip.style('visibility', 'hidden');
+					tooltip.selectAll('*').remove();
+
+
+				});
+
+			var current_point = scat_plot.selectAll('.scat')
 								.filter(function(d){return d['Y'] == year});
 
 
 			if (current_point.size() == 1)
 			{
-			d3.selectAll('.scat').filter(function(d){return d['Y'] == year})
+			scat_plot.selectAll('.scat').filter(function(d){return d['Y'] == year})
 				.raise()
-				.style('stroke-width', '2px')
+				.style('stroke-width', '3px')
 				.style('fill', 
-					col_scale(d3.selectAll('.scat').filter(function(d){return d['Y'] == year})
+					col_scale(scat_plot.selectAll('.scat').filter(function(d){return d['Y'] == year})
 						.datum()['GR'])
 					);
 			}
+			else {
 
-			g_line.append("path").classed('scat_line', true)
-				.datum(line_dat_gen(d['Curve'], yr_max))
+
+			scat_plot.append('circle').classed('scat_inter', true)
+				.attr('r', radius(d['mean_n']))
+				.attr('cy', perc_scale(_.filter(line_dat, function(o){
+					return o['year'] == year;
+				})[0]['perc']))
+				.attr('cx', line_yr_scale(year))
+				.attr('stroke-width', 1)
+				.attr('stroke', 'black')
+				.style('stroke-dasharray', '3 1')
+				.style('fill-opacity', '0');
+		};
+
+
+			scat_plot.append("path").classed('scat_line', true)
+				.datum(line_dat)
 				.attr('data-swarmDisp', d['Discipline']+'')
 				.attr("fill", "none")
-				.attr("stroke", "steelblue")
+				.attr("stroke", uniq_cols.line)
 				.attr("stroke-linejoin", "round")
 				.attr('stroke-miterlimit', 2)
 				.attr("stroke-linecap", "round")
@@ -550,9 +566,52 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				.style('stroke-dasharray', '4 6')
 				.attr("d", scat_line)
 				.style('opacity', '0.65')
-				.raise();
+				.raise()
+				.on('click', function(){
+					d3.select(this.parentNode).remove();
+					swarmAtt = d3.select(this).attr('data-swarmDisp');
+					d3.selectAll('.pnt').filter(function(p){
+						return p['Discipline'] == swarmAtt;
+					})
+					.style('stroke', '')
+					.style('stroke-width', '')
+					.attr('value', 'not_clicked');
+				})
+				.on('mouseover', function(d){
+
+					swarmAtt = d3.select(this).attr('data-swarmDisp');
+					d3.selectAll('.pnt').filter(function(p){
+						return p['Discipline'] != swarmAtt;
+					}).style('fill', '#E1DFE3');
+
+					var swarm_point = d3.selectAll('.pnt').filter(function(p){
+									return p['Discipline'] == swarmAtt;
+							})
+
+					tt_fill(
+						swarm_point.datum(),
+						tooltip
+						);
+
+			        tooltip
+		                .style('top', (d3.event.pageY-40)+'px')
+		                .style('left', (d3.event.pageX+35)+'px');
+				})
+				.on('mouseout', function(d){
+					d3.selectAll('.pnt')
+						.style('fill', function(d){
+							return col_scale(pnt_by_yr(d, year, 'GR'))
+						});
+
+					tooltip.style('visibility', 'hidden');
+					tooltip.selectAll('*').remove();
 
 
+				});
+;
+
+
+		}
 
 
 
@@ -572,44 +631,54 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 	d3.selectAll('.scat_inter').remove();
 
-	var current_point = d3.selectAll('.scat').filter(function(d){return d['Y'] == year});
+	d3.selectAll('.scat_plot').each(function(d){
 
-	if (current_point.size() == 1){
 
-		d3.selectAll('.scat').order()
-			.style('fill', '#E1DFE3')
-			.style('stroke-width', 0.3);
+		var this_scat = d3.select(this);
 
-		current_point
-			.raise()
-			.style('stroke-width', '2px')
-			.style('fill', 
-			col_scale(current_point.datum()['GR'])
-			);
+		var current_point = this_scat.selectAll('.scat').filter(function(d){return d['Y'] == year});
 
-		d3.selectAll('.scat_line').raise();
-	} 
-	else {
+		if (current_point.size() == 1){
 
-		interp_dat = d3.select('.scat_line').datum();
+			this_scat.selectAll('.scat')
+				.sort(function(a, b) {
+				  return a['Y'] < b['Y'] ? -1 : a['Y'] > b['Y'] ? 1 : a['Y'] >= b['Y'] ? 0 : NaN;
+				})
+				.style('fill', '#E1DFE3')
+				.style('stroke-width', 'initial');
 
-		g_line.append('circle').classed('scat_inter', true)
-			.attr('r', radius(
-					_.filter(dat, 
-						function(o){return o['Discipline'] == d3.select('.scat_line').attr('data-swarmDisp')})[0]['mean_n'])
-			)
-			.attr('cy', perc_scale(_.filter(interp_dat, function(o){
-				return o['year'] == year;
-			})[0]['perc']))
-			.attr('cx', line_yr_scale(year))
-			.attr('stroke-width', 1)
-			.attr('stroke', 'black')
-			.style('stroke-dasharray', '3 1')
-			.style('fill-opacity', '0');
-	};
+			current_point
+				.raise()
+				.style('stroke-width', '3px')
+				.style('fill', 
+				col_scale(current_point.datum()['GR'])
+				);
+
+			this_scat.selectAll('.scat_line').raise();
+		} 
+		else {
+
+			this_scat.selectAll('.scat')
+				.style('fill', '#E1DFE3')
+				.style('stroke-width', 1);
+			interp_dat = this_scat.selectAll('.scat_line').datum();
 
 
 
+			this_scat.append('circle').classed('scat_inter', true)
+				.attr('r', radius(d['mean_n']))
+				.attr('cy', perc_scale(_.filter(interp_dat, function(o){
+					return o['year'] == year;
+				})[0]['perc']))
+				.attr('cx', line_yr_scale(year))
+				.attr('stroke-width', 1)
+				.attr('stroke', 'black')
+				.style('stroke-dasharray', '3 1')
+				.style('fill-opacity', '0');
+		};
+
+
+	});
 
 		d3.selectAll('.pnt')
 			.attr('r', function(d){
@@ -757,9 +826,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-var border_plot_cols = [
-'#501727', '#352a16', '#233015', '#1c2a51', '#431b49'
-];
+
 
 
 
