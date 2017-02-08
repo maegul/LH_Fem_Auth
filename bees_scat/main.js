@@ -218,8 +218,9 @@ var year_text = bckg.insert('text', 'svg')
 
 var border_plot_col_angles = [
 0.0, 22, 124, 200, 285, 
-
 ];
+
+var border_plot_col_count = 0;
 
 d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
@@ -414,21 +415,25 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				.style('stroke', '');
 
 			g_line.selectAll('.scat_plot')
-				.filter(function(od){return od==d})
+				.filter(function(od){return od['Discipline']==d['Discipline']})
 				.remove();
+
+			border_plot_col_count -= 1
 
 
 			} 
 
 			else {
 
-			var uniq_hue = _.sample(border_plot_col_angles);
+			var uniq_hue = border_plot_col_angles[(border_plot_col_count % border_plot_col_angles.length)];
+			border_plot_col_count += 1;
+
 
 			// var uniq_hue = _.random(0, 310);
 
 			var uniq_cols = {			// H, Sat, Light
 				line: hsluv.hsluvToHex([uniq_hue, 90, 50]),
-				border: hsluv.hsluvToHex([uniq_hue, 90, 20]),
+				border: hsluv.hsluvToHex([uniq_hue, 90, 40]),
 				null_fill: hsluv.hsluvToHex([uniq_hue, 20, 90])
 			};
 
@@ -482,19 +487,20 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				})
 				.style('fill', '#E1DFE3')
 				.style('stroke', uniq_cols.border)
-				.on('click', function(){
-					d3.select(this.parentNode).remove();
-					swarmAtt = d3.select(this).attr('data-swarmDisp');
-					d3.selectAll('.pnt').filter(function(p){
-						return p['Discipline'] == swarmAtt;
-					})
-					.style('stroke', '')
-					.style('stroke-width', '')
-					.attr('value', 'not_clicked');
-				})
+				// .on('click', function(){
+				// 	d3.select(this.parentNode).remove();
+				// 	swarmAtt = d3.select(this).attr('data-swarmDisp');
+				// 	d3.selectAll('.pnt').filter(function(p){
+				// 		return p['Discipline'] == swarmAtt;
+				// 	})
+				// 	.style('stroke', '')
+				// 	.style('stroke-width', '')
+				// 	.attr('value', 'not_clicked');
+				// })
 				.on('mouseover', function(d){
 
 					swarmAtt = d3.select(this).attr('data-swarmDisp');
+
 					d3.selectAll('.pnt').filter(function(p){
 						return p['Discipline'] != swarmAtt;
 					}).style('fill', '#E1DFE3');
@@ -508,6 +514,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						tooltip
 						);
 
+					g_line.selectAll('.scat_plot')
+						.filter(function(od){return od['Discipline']!=swarmAtt})
+						.style('opacity', '0.2');					
+
 			        tooltip
 		                .style('top', (d3.event.pageY-40)+'px')
 		                .style('left', (d3.event.pageX+35)+'px');
@@ -517,6 +527,11 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.style('fill', function(d){
 							return col_scale(pnt_by_yr(d, year, 'GR'))
 						});
+
+					g_line.selectAll('.scat_plot')
+						.filter(function(od){return od['Discipline']!=swarmAtt})
+						.style('opacity', '');					
+
 
 					tooltip.style('visibility', 'hidden');
 					tooltip.selectAll('*').remove();
@@ -547,7 +562,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					return o['year'] == year;
 				})[0]['perc']))
 				.attr('cx', line_yr_scale(year))
-				.attr('stroke-width', 1)
+				.attr('stroke-width', 3)
 				.attr('stroke', 'black')
 				.style('stroke-dasharray', '3 1')
 				.style('fill-opacity', '0');
@@ -567,16 +582,16 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				.attr("d", scat_line)
 				.style('opacity', '0.65')
 				.raise()
-				.on('click', function(){
-					d3.select(this.parentNode).remove();
-					swarmAtt = d3.select(this).attr('data-swarmDisp');
-					d3.selectAll('.pnt').filter(function(p){
-						return p['Discipline'] == swarmAtt;
-					})
-					.style('stroke', '')
-					.style('stroke-width', '')
-					.attr('value', 'not_clicked');
-				})
+				// .on('click', function(){
+				// 	d3.select(this.parentNode).remove();
+				// 	swarmAtt = d3.select(this).attr('data-swarmDisp');
+				// 	d3.selectAll('.pnt').filter(function(p){
+				// 		return p['Discipline'] == swarmAtt;
+				// 	})
+				// 	.style('stroke', '')
+				// 	.style('stroke-width', '')
+				// 	.attr('value', 'not_clicked');
+				// })
 				.on('mouseover', function(d){
 
 					swarmAtt = d3.select(this).attr('data-swarmDisp');
@@ -587,6 +602,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					var swarm_point = d3.selectAll('.pnt').filter(function(p){
 									return p['Discipline'] == swarmAtt;
 							})
+
+					g_line.selectAll('.scat_plot')
+						.filter(function(od){return od['Discipline']!=swarmAtt})
+						.style('opacity', '0.2');						
 
 					tt_fill(
 						swarm_point.datum(),
@@ -602,6 +621,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.style('fill', function(d){
 							return col_scale(pnt_by_yr(d, year, 'GR'))
 						});
+
+					g_line.selectAll('.scat_plot')
+						.filter(function(od){return od['Discipline']!=swarmAtt})
+						.style('opacity', '');							
 
 					tooltip.style('visibility', 'hidden');
 					tooltip.selectAll('*').remove();
@@ -671,7 +694,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					return o['year'] == year;
 				})[0]['perc']))
 				.attr('cx', line_yr_scale(year))
-				.attr('stroke-width', 1)
+				.attr('stroke-width', 3)
 				.attr('stroke', 'black')
 				.style('stroke-dasharray', '3 1')
 				.style('fill-opacity', '0');
