@@ -2,12 +2,16 @@
 
 
 
+
+
+
 function dispDatGen(data, disp){
     if (disp=='J') {
         var dat = _.filter(data, function(o){
             return  (o.Country == 'allCountries') &
                     (o.Journal != 'allJournals') & 
-                    (o.Position == 'Overall')       
+                    (o.Position == 'Overall') &
+                    (o.Discipline == 'Medicine') // just for demo, will need to filter by Disc       
             });
     };
 
@@ -38,6 +42,7 @@ function dispDatGen(data, disp){
 
     return dat;
 }
+
 
 
 function curv(c,r,t, dec){
