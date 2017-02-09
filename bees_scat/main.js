@@ -217,7 +217,7 @@ var year_text = bckg.insert('text', 'svg')
 
 
 var border_plot_col_angles = [
-0.0, 22, 124, 200, 285, 
+0.0, 30, 124, 258, 280, 310 
 ];
 
 var border_plot_col_count = 0;
@@ -227,7 +227,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 	interpolate_years(main_data)
-	console.log(main_data)
+	// console.log(main_data)
 
 
 
@@ -249,6 +249,37 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	});
 
 	console.log(dat);
+
+	// var field_idx = {
+	// 	D: {
+	// 		allX: 'allDisciplines',
+	// 		list: != allX
+	// 	}
+
+	// }
+
+
+
+	var dat_test = _.filter(main_data, function(o){
+
+		return (o.Discipline != 'allDisciplines') & 
+				(o.Country == 'allCountries') &
+				(o.Journal != 'allJournals') & 
+				(o.Position == 'Overall')		
+	})
+
+
+	// Filt D: C, P
+	// Filt J: D, C, P
+	// Filt C: P, D
+	// Filt P: C, D
+
+	console.log('dat test')
+	console.log(dat_test)
+
+	console.log('length of unique')
+	console.log(_.uniq(dat_test.map(function(d){return d['Journal']})).length)
+
 
 	var dat_length = dat.length;
 
@@ -279,6 +310,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	// 		})))
 
 
+
 	// For generating curve and CI lines
 
 	var scat_line = d3.line().curve(d3.curveBasis)
@@ -293,7 +325,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 	var simulation = d3.forceSimulation(dat)
-		.force("x", d3.forceX(width/2).strength(0.05))
+		.force("x", d3.forceX(width/2).strength(0.07))
 		.force("y", d3.forceY(function(d){
 			return perc_scale(
 				pnt_by_yr(d, year, 'GR')
@@ -355,39 +387,24 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			tt_fill(d, tooltip);
 
-			// tooltip.style('visibility', 'visible');
-   //    		tooltip.append('p').classed('tt_main', true)
-   //        			.text(d['Discipline']);
-  	// 		tooltip.append('p').classed('tt_perc', true)
-   //    				.text((pnt_by_yr(d, year, 'GR'))+'\% Female');
+			if(d3.select(this).attr('value')=='clicked'){
+				g_line.selectAll('.scat_plot')
+					.filter(function(od){return od['Discipline']!=d["Discipline"]})
+					.style('opacity', '0.2');
 
+				d3.selectAll('.pnt')
+					.style('opacity', '0.6');
+				d3.select(this)
+					.style('opacity', '');			
 
-   //        	if (pnt_by_yr(d, year, 'intp') == 0) {
-
-  	// 			tooltip.append('p').classed('tt_n', true)
-   //    				.text(d3.format(',')(pnt_by_yr(d, year, 'n')) +' Papers');
-  	// 			tooltip.append('p').classed('tt_nf', true)
-   //    				.text(d3.format(',')(pnt_by_yr(d, year, 'F')) + ' Female')
-   //    				.style('color', col_scale(85));
-  	// 			tooltip.append('p').classed('tt_nm', true)
-   //    				.text(d3.format(',')(pnt_by_yr(d, year, 'M')) + ' Male')
-   //    				.style('color', col_scale(15));
-
-
-   //        	} else{
-   //        		tooltip.append('p').classed('tt_int', true)
-   //        			.text('Interpolated')
-   //        	};
-
-
-	
+			}
 
 
 		})
 		.on('mousemove', function(){
 	        tooltip
-                .style('top', (d3.event.pageY-40)+'px')
-                .style('left', (d3.event.pageX+35)+'px');
+                .style('top', (d3.event.pageY-150)+'px')
+                .style('left', (d3.event.pageX+5)+'px');
 
 		})
 		.on('mouseout', function(d){
@@ -398,7 +415,16 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 				d3.select(this).style('stroke-width', '1px');
 
-		}
+			}
+
+			else {
+
+				g_line.selectAll('.scat_plot')
+					.style('opacity', '');
+
+				d3.selectAll('.pnt')
+					.style('opacity', '');
+			}
 
 			tooltip.style('visibility', 'hidden');
 			tooltip.selectAll('*').remove();
@@ -417,6 +443,12 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			g_line.selectAll('.scat_plot')
 				.filter(function(od){return od['Discipline']==d['Discipline']})
 				.remove();
+
+			g_line.selectAll('.scat_plot')
+				.style('opacity', '');
+
+			d3.selectAll('.pnt')
+				.style('opacity', '');
 
 			border_plot_col_count -= 1
 
@@ -499,15 +531,26 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				// })
 				.on('mouseover', function(d){
 
+					d3.select(this.parentNode).raise();
+
 					swarmAtt = d3.select(this).attr('data-swarmDisp');
 
 					d3.selectAll('.pnt').filter(function(p){
 						return p['Discipline'] != swarmAtt;
-					}).style('fill', '#E1DFE3');
+					}).style('fill', '#E1DFE3')
+					.style('opacity', '0.6');
 
 					var swarm_point = d3.selectAll('.pnt').filter(function(p){
 									return p['Discipline'] == swarmAtt;
 							})
+					// g_bee_swarm.append('circle').classed('hover_highlight', true)
+					// 	.attr('cx', swarm_point.attr('cx'))
+					// 	.attr('cy', swarm_point.attr('cy'))
+					// 	.attr('r', swarm_point.attr('r')*1.35)
+					// 	.style('fill-opacity', '0')
+					// 	.style('stroke-width', '1.5px')
+					// 	.style('stroke', 'black');
+
 
 					tt_fill(
 						swarm_point.datum(),
@@ -519,14 +562,15 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.style('opacity', '0.2');					
 
 			        tooltip
-		                .style('top', (d3.event.pageY-40)+'px')
-		                .style('left', (d3.event.pageX+35)+'px');
+		                .style('top', (d3.event.pageY-150)+'px')
+		                .style('left', (d3.event.pageX+5)+'px');
 				})
 				.on('mouseout', function(d){
 					d3.selectAll('.pnt')
 						.style('fill', function(d){
 							return col_scale(pnt_by_yr(d, year, 'GR'))
-						});
+						})
+						.style('opacity', '');
 
 					g_line.selectAll('.scat_plot')
 						.filter(function(od){return od['Discipline']!=swarmAtt})
@@ -594,10 +638,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				// })
 				.on('mouseover', function(d){
 
+					d3.select(this.parentNode).raise();
+
 					swarmAtt = d3.select(this).attr('data-swarmDisp');
 					d3.selectAll('.pnt').filter(function(p){
 						return p['Discipline'] != swarmAtt;
-					}).style('fill', '#E1DFE3');
+					}).style('fill', '#E1DFE3')
+					.style('opacity', '0.6');
 
 					var swarm_point = d3.selectAll('.pnt').filter(function(p){
 									return p['Discipline'] == swarmAtt;
@@ -613,14 +660,15 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						);
 
 			        tooltip
-		                .style('top', (d3.event.pageY-40)+'px')
-		                .style('left', (d3.event.pageX+35)+'px');
+		                .style('top', (d3.event.pageY-150)+'px')
+		                .style('left', (d3.event.pageX+5)+'px');
 				})
 				.on('mouseout', function(d){
 					d3.selectAll('.pnt')
 						.style('fill', function(d){
 							return col_scale(pnt_by_yr(d, year, 'GR'))
-						});
+						})
+						.style('opacity', '');
 
 					g_line.selectAll('.scat_plot')
 						.filter(function(od){return od['Discipline']!=swarmAtt})
@@ -783,7 +831,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				}
 				}
 		))
-		.force('repulsion', d3.forceManyBody().strength(-12 * Math.sqrt((100 / dat_length))))
+		.force('repulsion', d3.forceManyBody().strength(-15 * Math.sqrt((100 / dat_length))))
 
 
 		simulation.alpha(0.03)

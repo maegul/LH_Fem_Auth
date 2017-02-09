@@ -4,12 +4,168 @@
 		"selected_items":
 		[
 			[
-				"pnt",
-				"pnt"
+				"bord",
+				"border_plot_col_count"
+			],
+			[
+				"bor",
+				"border_plot_col_count"
+			],
+			[
+				"plo",
+				"plot_col_count"
+			],
+			[
+				"swa",
+				"swarmAtt"
+			],
+			[
+				"uniq",
+				"uniq_cols"
+			],
+			[
+				"sw",
+				"swarm_point"
+			],
+			[
+				"E",
+				"E1DFE3"
+			],
+			[
+				"swarm",
+				"swarmDisp"
+			],
+			[
+				"not",
+				"not_clicked"
+			],
+			[
+				"uni",
+				"uniq_cols"
+			],
+			[
+				"this",
+				"this_scat"
+			],
+			[
+				"inter",
+				"interp_dat"
+			],
+			[
+				"sca",
+				"scat_plot"
+			],
+			[
+				"sc",
+				"scat_plot"
+			],
+			[
+				"scat_",
+				"scat_plot"
 			],
 			[
 				"mea",
-				"mean_n	(functions.js)"
+				"mean_n"
+			],
+			[
+				"cli",
+				"clicked"
+			],
+			[
+				"abs",
+				"abs_max_rad"
+			],
+			[
+				"dat",
+				"dat_length"
+			],
+			[
+				"ye",
+				"year"
+			],
+			[
+				"point",
+				"point_dat"
+			],
+			[
+				"margin",
+				"margin-top"
+			],
+			[
+				"marg",
+				"margin-bottom"
+			],
+			[
+				"text",
+				"text-decoration"
+			],
+			[
+				"tt",
+				"tt_nf"
+			],
+			[
+				"tt_",
+				"tt_n"
+			],
+			[
+				"mous",
+				"mousemove	(index.html)"
+			],
+			[
+				"se",
+				"select"
+			],
+			[
+				"b",
+				"bckg"
+			],
+			[
+				"ab",
+				"absolute	(index.html)"
+			],
+			[
+				"line",
+				"line_yr_scale"
+			],
+			[
+				"line_",
+				"line_dat_gen	(functions.js)"
+			],
+			[
+				"perc",
+				"perc_scale"
+			],
+			[
+				"li",
+				"line_yr_scale"
+			],
+			[
+				"y",
+				"line_yr_scale"
+			],
+			[
+				"P",
+				"Points	(functions.js)"
+			],
+			[
+				"mo",
+				"mouseover	(index.html)"
+			],
+			[
+				"ax",
+				"axisBottom	(index.html)"
+			],
+			[
+				"lin",
+				"line_plot	(index.html)"
+			],
+			[
+				"pnt",
+				"pnt_by_yr"
+			],
+			[
+				"col",
+				"col_scale"
 			],
 			[
 				"if",
@@ -84,10 +240,6 @@
 				"graph_location"
 			],
 			[
-				"li",
-				"lifeExpectancy"
-			],
-			[
 				"cl",
 				"clear_butt"
 			],
@@ -152,10 +304,6 @@
 				"prop_overall"
 			],
 			[
-				"margin",
-				"margin-right"
-			],
-			[
 				"er",
 				"err_journ"
 			],
@@ -170,14 +318,6 @@
 			[
 				"cont",
 				"cont_desc"
-			],
-			[
-				"ye",
-				"year_text"
-			],
-			[
-				"marg",
-				"margin-right"
 			],
 			[
 				"mar",
@@ -224,10 +364,6 @@
 				"easeLinear"
 			],
 			[
-				"se",
-				"selectAll"
-			],
-			[
 				"op",
 				"option	Tag"
 			],
@@ -250,10 +386,6 @@
 			[
 				"dat_",
 				"dat_arr"
-			],
-			[
-				"dat",
-				"dat_obj"
 			],
 			[
 				"update",
@@ -336,14 +468,6 @@
 				"width_scat"
 			],
 			[
-				"sca",
-				"scat_sel"
-			],
-			[
-				"sc",
-				"scat_fade"
-			],
-			[
 				"stro",
 				"stroke-opacity"
 			],
@@ -390,130 +514,6 @@
 			[
 				"hei",
 				"height_scat"
-			],
-			[
-				"c_",
-				"c_data_tun_data"
-			],
-			[
-				"tran",
-				"translate"
-			],
-			[
-				"char",
-				"chart_area_height_scat"
-			],
-			[
-				"tun",
-				"tun_cont"
-			],
-			[
-				"grid",
-				"gridsize_c"
-			],
-			[
-				"gridsi",
-				"gridsize_a"
-			],
-			[
-				"leg_",
-				"leg_2d_width_buffer"
-			],
-			[
-				"col_leg",
-				"col_leg_axis_ori"
-			],
-			[
-				"lege",
-				"legend_canv"
-			],
-			[
-				"col_leg_s",
-				"col_leg_scale_ori"
-			],
-			[
-				"le",
-				"leg_n"
-			],
-			[
-				"chart",
-				"chart_area_height"
-			],
-			[
-				"leg",
-				"leg_wt"
-			],
-			[
-				"col_leg_",
-				"col_leg_scale_ori"
-			],
-			[
-				"scal",
-				"scale_ori"
-			],
-			[
-				"ace",
-				"acellCon"
-			],
-			[
-				"col_scal_a",
-				"col_scal_a_ori"
-			],
-			[
-				"col_scal_a_en",
-				"col_scal_a_en_ori"
-			],
-			[
-				"col_scal_a_",
-				"col_scal_a_en_ori"
-			],
-			[
-				"max",
-				"max_wt_en"
-			],
-			[
-				"acell",
-				"acellCon"
-			],
-			[
-				"lay",
-				"lay_c_cont"
-			],
-			[
-				"la",
-				"lay_c"
-			],
-			[
-				"legen",
-				"legend_width"
-			],
-			[
-				"chart_",
-				"chart_area_wigth"
-			],
-			[
-				"BIPH",
-				"biphas_split_point"
-			],
-			[
-				"biph",
-				"biphas_split_point"
-			],
-			[
-				"cond",
-				"conditions2"
-			],
-			[
-				"feed",
-				"feed_button"
-			],
-			[
-				"bisect",
-				"bisectVal"
-			],
-			[
-				"char_",
-				"chart_area_width"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 873,
+				"buffer_size": 2147,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,7 +531,7 @@
 			"file": "main.js",
 			"settings":
 			{
-				"buffer_size": 4607,
+				"buffer_size": 18980,
 				"line_ending": "Unix"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "functions.js",
 			"settings":
 			{
-				"buffer_size": 1688,
+				"buffer_size": 3167,
 				"line_ending": "Unix"
 			}
 		},
@@ -548,14 +548,6 @@
 			"settings":
 			{
 				"buffer_size": 3012,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "beeswarm_ref/index.html",
-			"settings":
-			{
-				"buffer_size": 9668,
 				"line_ending": "Unix"
 			}
 		}
@@ -620,11 +612,13 @@
 	},
 	"file_history":
 	[
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/beeswarm_ref/index.html",
+		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/index.html",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/index.html",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/main.js",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/functions.js",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/search_test.js",
-		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/beeswarm_ref/index.html",
 		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/BracketHighlighter/bh_core.sublime-settings",
 		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/GitGutter/GitGutter.sublime-settings",
 		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/Terminal/Terminal.sublime-settings",
@@ -632,7 +626,6 @@
 		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/Color Highlighter/ColorHighlighter.sublime-settings",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/dynamic_beeswarm/index.html",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/data/new_JSON_format/search_test.js",
-		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/bh_core.sublime-settings",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/beeswarm/index.html",
 		"/Users/errollloyd/Desktop/test.js",
@@ -655,7 +648,6 @@
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/selector/select2_dynamic_update.html",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/selector/select2_play.html",
 		"/Users/errollloyd/Developer/CSS_play/layout_play_flexbox.html",
-		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/index.html",
 		"/Users/errollloyd/Dropbox/Science/ResBaz/DataVizExhib/gallery/jas_kidney/index.html",
 		"/Users/errollloyd/Developer/CSS_play/html5_sections.html",
 		"/Users/errollloyd/Developer/CSS_play/select2_play.html",
@@ -765,6 +757,93 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"border_plot_col_angles",
+			"border_plot_col_count",
+			"border_plot_col_angles",
+			"uniq_hue",
+			"classed('scat_inter'",
+			"uniq_",
+			"uniq",
+			"_.sample(border_plot_col_angles)",
+			"uniq_col",
+			"uniq_cols",
+			"uniq_col",
+			"bord",
+			"border_col",
+			"b",
+			"a",
+			"merge",
+			"g_line",
+			"line",
+			"mean_n",
+			"curv",
+			"dasharray",
+			"dash",
+			"col_scale",
+			"pnt",
+			"plot",
+			"border",
+			"many",
+			"dat =",
+			"dat",
+			"velocity",
+			"dat.length",
+			"many",
+			"n_ra",
+			"dat",
+			"scat",
+			"tooltip",
+			"year_slider",
+			"year",
+			"ci_line_dat_gen",
+			"mouseover",
+			"g_line",
+			"many",
+			"simulation",
+			"simulation	",
+			"simulation",
+			"'p'",
+			"0.8",
+			"'span'",
+			"('span')",
+			"col_scale",
+			"tool",
+			"disp",
+			"console",
+			"col_scale",
+			"bckg.insert",
+			"bckg",
+			"interpolate",
+			"year_text",
+			"25",
+			"width\", 2",
+			"margin",
+			"max",
+			"year_max",
+			"margin",
+			"col_scale",
+			"700",
+			"line_yr_scale",
+			"curv",
+			"context",
+			"line_scale",
+			"2030",
+			"line_dat",
+			"curv",
+			"line_yr_scale",
+			"7",
+			"1",
+			"1em",
+			"0.5",
+			"3",
+			"margin",
+			" g",
+			"g ",
+			"g",
+			"svg",
+			"col_scale",
+			"dash",
+			"col_scale",
 			"tick",
 			"auto",
 			"tick",
@@ -805,94 +884,7 @@
 			"data.w",
 			"data.b",
 			"data.a",
-			"data[2]",
-			"data[1]",
-			"data[0]",
-			"<div",
-			"div",
-			"250",
-			"0",
-			"100",
-			"750",
-			"300",
-			"min",
-			"life_min",
-			"data",
-			"butt",
-			"disc_sel",
-			"cont",
-			"'.disc'",
-			".disc_se",
-			".disc_sel",
-			".disc_sel\n",
-			"    \n",
-			"disc_sel",
-			"console",
-			"transition",
-			"filter",
-			"$('.",
-			"attr",
-			"ntot",
-			"prop",
-			"ntot",
-			"prop",
-			"overall'",
-			"overall",
-			"id",
-			"Radiology",
-			"Neurosurgery",
-			"CellBiology",
-			"id=",
-			"year_control",
-			"width",
-			"tick",
-			"alpha",
-			"$",
-			"$input",
-			"WY",
-			"display",
-			"year_text",
-			"style('fill'",
-			"attr('fill'",
-			"black",
-			"cells",
-			"flex",
-			"ANS",
-			"3c6d95",
-			"ea0064",
-			"#007dbd",
-			"#b02fff",
-			"#a43cff",
-			"#6d5eff",
-			"classed",
-			"update",
-			".err",
-			".pnt",
-			"pnt",
-			"vis",
-			"discipline",
-			"count_sel",
-			"year_slider",
-			"plot",
-			"discipline",
-			"count_se",
-			"plot",
-			"year",
-			";\n",
-			"dat_obj",
-			"type",
-			"disciplines",
-			"tooltip",
-			"classed",
-			"tooltip",
-			"country",
-			"update_gr",
-			"console.log",
-			"ex",
-			"pnt",
-			"filter",
-			".filter",
-			"d.data"
+			"data[2]"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -918,15 +910,15 @@
 					"file": "index.html",
 					"settings":
 					{
-						"buffer_size": 873,
+						"buffer_size": 2147,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								172,
-								172
+								742,
+								742
 							]
 						],
 						"settings":
@@ -980,11 +972,11 @@
 								"bh_single_quote_close"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
-							"git_gutter_enabled": true,
+							"git_gutter_enabled": false,
 							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 439.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -994,15 +986,15 @@
 					"file": "main.js",
 					"settings":
 					{
-						"buffer_size": 4607,
+						"buffer_size": 18980,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2183,
-								2183
+								8807,
+								8807
 							]
 						],
 						"settings":
@@ -1065,7 +1057,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 743.0,
+						"translation.y": 5039.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1075,15 +1067,15 @@
 					"file": "functions.js",
 					"settings":
 					{
-						"buffer_size": 1688,
+						"buffer_size": 3167,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								499,
-								499
+								3160,
+								3160
 							]
 						],
 						"settings":
@@ -1137,13 +1129,13 @@
 								"bh_single_quote_close"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
-							"git_gutter_enabled": true,
+							"git_gutter_enabled": false,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 383.0,
+						"translation.y": 2219.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1160,8 +1152,8 @@
 						"selection":
 						[
 							[
-								765,
-								1715
+								2186,
+								2074
 							]
 						],
 						"settings":
@@ -1215,89 +1207,11 @@
 								"bh_single_quote_close"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
-							"git_gutter_enabled": true,
+							"git_gutter_enabled": false,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1327.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "beeswarm_ref/index.html",
-					"settings":
-					{
-						"buffer_size": 9668,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2422,
-								2286
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close"
-							],
-							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
-							"git_gutter_enabled": true,
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 264.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

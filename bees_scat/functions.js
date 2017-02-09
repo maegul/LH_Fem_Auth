@@ -1,5 +1,45 @@
 
 
+
+
+function dispDatGen(data, disp){
+    if (disp=='J') {
+        var dat = _.filter(main_data, function(o){
+            return  (o.Country == 'allCountries') &
+                    (o.Journal != 'allJournals') & 
+                    (o.Position == 'Overall')       
+            });
+    };
+
+    if (disp=='D') {
+        var dat = _.filter(main_data, function(o){
+            return (o.Discipline != 'allDisciplines') & 
+                    (o.Country == 'allCountries') &
+                    (o.Journal == 'allJournals') & 
+                    (o.Position == 'Overall')       
+        })
+    };
+
+    if (disp=='C') {
+        var dat = _.filter(main_data, function(o){
+            return  (o.Discipline) == 'allDisciplines' &
+                    (o.Country != 'allCountries') &
+                    (o.Position == 'Overall')       
+        });
+    };
+
+    if (disp=='P') {
+        var dat = _.filter(main_data, function(o){
+            return  (o.Discipline) == 'allDisciplines' &
+                    (o.Country == 'allCountries')   
+        });
+    };
+
+
+    return dat;
+}
+
+
 function curv(c,r,t, dec){
     return _.round(100 * Math.exp(0.5 * r * (t-2000)) / (2 * Math.exp(0.5 * r * (t-2000)) + c),
                     dec
