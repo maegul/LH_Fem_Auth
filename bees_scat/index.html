@@ -12,102 +12,102 @@
 
 <style type="text/css">
 
-/** {
-	border: 1px solid red;
-}*/
+	/** {
+		border: 1px solid red;
+	}*/
 
-.canvas {
-/*	display: inline-block;
-	width:80%;*/
-}
+	.canvas {
+	/*	display: inline-block;
+		width:80%;*/
+	}
 
-.main {
-	margin: auto;
-	width: 900;
-}
+	.main {
+		margin: auto;
+		width: 900;
+	}
 
-.background {
-	position: absolute;
-}
+	.background {
+		position: absolute;
+	}
 
-.pnt {
-    fill: #ad3d8f;
-    opacity: 1;
-    stroke:black;
-    stroke-opacity:0.8;
-    stroke-width: 1px;
+	.pnt {
+	    fill: #ad3d8f;
+	    opacity: 1;
+	    stroke:black;
+	    stroke-opacity:0.8;
+	    stroke-width: 1px;
 
-    cursor: pointer;
+	    cursor: pointer;
 
-}
+	}
 
-.scat {
-	stroke: black;
-	stroke-width: 1px;
-}
-
-
-.tooltip {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
-  width: auto;
-  padding: 0.5em;
-
-}
+	.scat {
+		stroke: black;
+		stroke-width: 1px;
+	}
 
 
+	.tooltip {
+	  background-color: rgba(255, 255, 255, 0.9);
+	  border-radius: 10px;
+	  width: auto;
+	  padding: 0.5em;
 
-.tt_main {
-	text-decoration: underline;
-	margin-top: 0.1em;
-	margin-bottom: 0.1em;
-
-}
-
-.tt_perc {
-	margin-top: 0.25em;
-	margin-bottom: 0.1em;
-	font-weight: lighter;
+	}
 
 
-}
 
-.tt_n{
-	margin-top: 1em;
-	margin-bottom: 0.1em;
-	font-weight: lighter;
+	.tt_main {
+		text-decoration: underline;
+		margin-top: 0.1em;
+		margin-bottom: 0.1em;
 
-}
+	}
 
-.tt_nf, .tt_nm {
-	margin-top: 0.1em;
-	margin-bottom: 0.1em;
-	font-weight: lighter;
+	.tt_perc {
+		margin-top: 0.25em;
+		margin-bottom: 0.1em;
+		font-weight: lighter;
 
-}
 
-.tt_int {
-	margin-top: 1em;
-	margin-bottom: 0.1em;
-	font-style: italic;
-	font-weight: lighter;
-}
+	}
 
-/*.tt_nm {
-	margin-top: 0.1em;
-	margin-bottom: 0.1em;
+	.tt_n{
+		margin-top: 1em;
+		margin-bottom: 0.1em;
+		font-weight: lighter;
 
-}*/
+	}
 
-#year_slider {
-	cursor: ew-resize;
-}
+	.tt_nf, .tt_nm {
+		margin-top: 0.1em;
+		margin-bottom: 0.1em;
+		font-weight: lighter;
+
+	}
+
+	.tt_int {
+		margin-top: 1em;
+		margin-bottom: 0.1em;
+		font-style: italic;
+		font-weight: lighter;
+	}
+
+	/*.tt_nm {
+		margin-top: 0.1em;
+		margin-bottom: 0.1em;
+
+	}*/
+
+	#year_slider {
+		cursor: ew-resize;
+	}
 
 </style>
 
 <body>
 
-<div>
+<div id='controls'>
 
   <input style='width:20%;' type="range" name="range" class="slider" id="year_slider" value="2016" min="2002" max="2030" step="1" >
 </div>

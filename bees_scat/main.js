@@ -3,13 +3,7 @@
 //
 // !! Some of the interpolated GR data is out of range? (beyond 100%)
 
-// Restyle scatter and multi highlight
 
-	// On hover -- tool tip
-	// Suggestion to click for plot (cond: scat plot)
-	// on click - plot, dark color highlight, legend
-	// Max 5(?)
-	// Clear
 
 // Display modes
 
@@ -26,7 +20,22 @@
 
 
 
+dispOpts = ['J', 'D', 'C', 'P'];
 
+
+for (var i = 0; i < dispOpts.length; i++) {
+	
+	d3.select('#controls').append('div')
+		.text(dispOpts[i])
+		.style('cursor', 'pointer')
+		.on('mouseover', function(){
+			d3.select(this).style('color', 'red')
+		})
+		.on('mouseout', function(){
+			d3.select(this).style('color', '')
+		});
+
+};
 
 var bckg = d3.select('#background');
 
@@ -239,34 +248,12 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	// }
 
 
+	var dat = dispDatGen(main_data, 'D');
+	var dat_length = dat.length;
 
-
-	var dat = _.filter(main_data, function(o){
-		return (o.Discipline != 'allDisciplines') & 
-				(o.Country == 'allCountries') &
-				(o.Journal == 'allJournals') & 
-				(o.Position == 'Overall')		
-	});
 
 	console.log(dat);
 
-	// var field_idx = {
-	// 	D: {
-	// 		allX: 'allDisciplines',
-	// 		list: != allX
-	// 	}
-
-	// }
-
-
-
-	var dat_test = _.filter(main_data, function(o){
-
-		return (o.Discipline != 'allDisciplines') & 
-				(o.Country == 'allCountries') &
-				(o.Journal != 'allJournals') & 
-				(o.Position == 'Overall')		
-	})
 
 
 	// Filt D: C, P
@@ -274,14 +261,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	// Filt C: P, D
 	// Filt P: C, D
 
-	console.log('dat test')
-	console.log(dat_test)
 
-	console.log('length of unique')
-	console.log(_.uniq(dat_test.map(function(d){return d['Journal']})).length)
-
-
-	var dat_length = dat.length;
 
 	// radius.range([5, 20])
 
@@ -323,7 +303,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-
+// disp
 	var simulation = d3.forceSimulation(dat)
 		.force("x", d3.forceX(width/2).strength(0.07))
 		.force("y", d3.forceY(function(d){
@@ -353,7 +333,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			.attr('cy', function(d){return d.y})
 	}
 
-
+// disp
 	var pnt = g_bee_swarm.selectAll('.pnt')
 				.data(dat, function(d){return d['Discipline'];})
 
@@ -370,7 +350,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		.style('font-family', 'sans-serif');
 
 
-
+// disp
 	pnt.enter().append('circle').classed('pnt', true)
 		.attr('r', function(d){
 			return radius(pnt_by_yr(d, year, 'n'))})
@@ -435,22 +415,22 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			if (d3.select(this).attr('value')=='clicked') {
 
 
-			d3.select(this).attr('value', 'not_clicked');
-			d3.select(this)
-				.style('stroke-width', '')
-				.style('stroke', '');
+				d3.select(this).attr('value', 'not_clicked');
+				d3.select(this)
+					.style('stroke-width', '')
+					.style('stroke', '');
 
-			g_line.selectAll('.scat_plot')
-				.filter(function(od){return od['Discipline']==d['Discipline']})
-				.remove();
+				g_line.selectAll('.scat_plot')
+					.filter(function(od){return od['Discipline']==d['Discipline']})
+					.remove();
 
-			g_line.selectAll('.scat_plot')
-				.style('opacity', '');
+				g_line.selectAll('.scat_plot')
+					.style('opacity', '');
 
-			d3.selectAll('.pnt')
-				.style('opacity', '');
+				d3.selectAll('.pnt')
+					.style('opacity', '');
 
-			border_plot_col_count -= 1
+				border_plot_col_count -= 1
 
 
 			} 
@@ -679,7 +659,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 				});
-;
+
 
 
 		}

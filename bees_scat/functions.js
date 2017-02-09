@@ -4,7 +4,7 @@
 
 function dispDatGen(data, disp){
     if (disp=='J') {
-        var dat = _.filter(main_data, function(o){
+        var dat = _.filter(data, function(o){
             return  (o.Country == 'allCountries') &
                     (o.Journal != 'allJournals') & 
                     (o.Position == 'Overall')       
@@ -12,7 +12,7 @@ function dispDatGen(data, disp){
     };
 
     if (disp=='D') {
-        var dat = _.filter(main_data, function(o){
+        var dat = _.filter(data, function(o){
             return (o.Discipline != 'allDisciplines') & 
                     (o.Country == 'allCountries') &
                     (o.Journal == 'allJournals') & 
@@ -21,7 +21,7 @@ function dispDatGen(data, disp){
     };
 
     if (disp=='C') {
-        var dat = _.filter(main_data, function(o){
+        var dat = _.filter(data, function(o){
             return  (o.Discipline) == 'allDisciplines' &
                     (o.Country != 'allCountries') &
                     (o.Position == 'Overall')       
@@ -29,7 +29,7 @@ function dispDatGen(data, disp){
     };
 
     if (disp=='P') {
-        var dat = _.filter(main_data, function(o){
+        var dat = _.filter(data, function(o){
             return  (o.Discipline) == 'allDisciplines' &
                     (o.Country == 'allCountries')   
         });
