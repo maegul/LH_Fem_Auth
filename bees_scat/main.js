@@ -6,6 +6,7 @@
 
 
 // Display modes
+	// disp variable
 
 // Filters (+ highlight)
 
@@ -142,6 +143,8 @@ g_bckg.insert("line", 'svg')
 	.attr("stroke-width", 1)
 	.attr("stroke", "#A3A0A6");
 
+
+
 g_bckg.insert("line", 'svg')
 	.attr("x1", 0)
 	.attr("y1", perc_scale(25))
@@ -209,15 +212,32 @@ var year_text = bckg.insert('text', 'svg')
 	.attr('text-anchor', 'start');
 
 
+// Scat Plot Unique Colours
+
 var border_plot_col_angles = [
 0.0, 30, 124, 258, 280, 310 
 ];
 
 var border_plot_col_count = 0;
 
-d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
-	dispOpts = ['J', 'D', 'C', 'P'];
+
+var dispDatKey = {
+	D: 'Discipline',
+	J: 'Journal',
+	C: 'Country',
+	P: 'Position'
+};
+
+
+var dispOpts = ['J', 'D', 'C', 'P'];
+
+var dispMode = 'D';
+
+
+// ASYNC Data Function
+
+d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 	for (var i = 0; i < dispOpts.length; i++) {
@@ -233,9 +253,14 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			})
 			.on('click', function(){
 				g_bee_swarm.selectAll('*').remove();
-				g_line.selectAll('*').remove('*');
+				g_line.selectAll('*').remove();
 
 				dat = dispDatGen(main_data, d3.select(this).text());
+				dispMode = d3.select(this).text();
+
+				console.log(dispMode)
+				console.log(dat)
+
 				disp()
 			});
 
@@ -250,12 +275,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-	// var disp = {
-	// 	D: 
-	// }
 
-
-	var dat = dispDatGen(main_data, 'D');
+	var dat = dispDatGen(main_data, dispMode);
 	var dat_length = dat.length;
 
 
@@ -287,15 +308,6 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	
 
 	radius.domain(n_range(dat));
-
-	// radius.domain(n_range(
-	// 	_.filter(main_data, function(o){
-	// 	return (o.Discipline != 'allDisciplines') & 
-	// 			(o.Country == 'allCountries') &
-	// 			(o.Journal == 'allJournals') & 
-	// 			(o.Position == 'Overall')
-	// 		})))
-
 
 
 	// For generating curve and CI lines
@@ -338,7 +350,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 	disp();
 
-	function disp(){
+	function disp(){ //in: dat, g_swarm, g_line; out: sim, pnt
 
 
 		// disp
@@ -352,11 +364,20 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			)
 			.force("collide", 
 				d3.forceCollide(function(d){
-					return radius(
-						pnt_by_yr(d, year, 'n')
-							)
+					if(pnt_by_yr(d, year, 'intp')==0){
+						return radius(
+							pnt_by_yr(d, year, 'n')
+								)
+							}
+					else {
+						return radius(
+							d['mean_n']
+								)
+
 						}
-					))
+
+					}
+				))
 			// .alphaTarget(0.2)
 			.velocityDecay(0.45)
 			.alphaDecay(0.011)
@@ -365,15 +386,34 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 		// disp
+
 		var pnt = g_bee_swarm.selectAll('.pnt')
-					.data(dat, function(d){return d['Discipline'];})
+					.data(dat, function(d){return d[getDispDat()];})// dispDat
 
 		// disp
 		pnt.enter().append('circle').classed('pnt', true)
 			.attr('r', function(d){
-				return radius(pnt_by_yr(d, year, 'n'))})
+					if(pnt_by_yr(d, year, 'intp')==0){
+						return radius(
+							pnt_by_yr(d, year, 'n')
+								)
+							}
+					else {
+						return radius(
+							d['mean_n']
+								)
+
+						}
+				})
 			.attr('cx', function(d){return d.x})
 			.attr('cy', function(d){return height/2})
+			.style('stroke-dasharray', function(d){
+
+				if(pnt_by_yr(d, year, 'intp')==1){
+					return '3 1';
+						}
+			})
+
 			.style('fill', function(d){
 				return col_scale(pnt_by_yr(d, year, 'GR'))
 			})
@@ -387,7 +427,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 				if(d3.select(this).attr('value')=='clicked'){
 					g_line.selectAll('.scat_plot')
-						.filter(function(od){return od['Discipline']!=d["Discipline"]})
+						.filter(function(od){return od[getDispDat()]!=d[getDispDat()]}) //dispDat
 						.style('opacity', '0.2');
 
 					d3.selectAll('.pnt')
@@ -439,7 +479,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.style('stroke', '');
 
 					g_line.selectAll('.scat_plot')
-						.filter(function(od){return od['Discipline']==d['Discipline']})
+						.filter(function(od){return od[getDispDat()]==d[getDispDat()]}) //dispDat
 						.remove();
 
 					g_line.selectAll('.scat_plot')
@@ -473,7 +513,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.style('stroke-width', '3px')
 						.style('stroke', uniq_cols.border);
 
-		      		var scat_plot = g_line.append('g').classed('scat_plot', true).datum(d);
+		      		var scat_plot = g_line.append('g')
+		      				.classed('scat_plot', true)
+		      				.datum(d);
 
 		      		
 
@@ -506,7 +548,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								 	);
 
 					scat.enter().append('circle').classed('scat', true)
-						.attr('data-swarmDisp', d['Discipline']+'')
+						.attr('data-swarmDisp', d[getDispDat()]+'') //dispDat
 						.attr('r', function(d){
 							return radius(d['n'])})
 						.attr('cx', function(d){
@@ -521,15 +563,15 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 							d3.select(this.parentNode).raise();
 
-							swarmAtt = d3.select(this).attr('data-swarmDisp');
+							swarmAtt = d3.select(this).attr('data-swarmDisp'); //dispDat
 
 							d3.selectAll('.pnt').filter(function(p){
-								return p['Discipline'] != swarmAtt;
+								return p[getDispDat()] != swarmAtt;
 							}).style('fill', '#E1DFE3')
 							.style('opacity', '0.6');
 
 							var swarm_point = d3.selectAll('.pnt').filter(function(p){
-											return p['Discipline'] == swarmAtt;
+											return p[getDispDat()] == swarmAtt; //dispDat
 									})
 
 
@@ -539,7 +581,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								);
 
 							g_line.selectAll('.scat_plot')
-								.filter(function(od){return od['Discipline']!=swarmAtt})
+								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
 								.style('opacity', '0.2');					
 
 					        tooltip
@@ -554,7 +596,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								.style('opacity', '');
 
 							g_line.selectAll('.scat_plot')
-								.filter(function(od){return od['Discipline']!=swarmAtt})
+								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
 								.style('opacity', '');					
 
 
@@ -596,7 +638,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 					scat_plot.append("path").classed('scat_line', true)
 						.datum(line_dat)
-						.attr('data-swarmDisp', d['Discipline']+'')
+						.attr('data-swarmDisp', d[getDispDat()]+'') //dispDat
 						.attr("fill", "none")
 						.attr("stroke", uniq_cols.line)
 						.attr("stroke-linejoin", "round")
@@ -611,18 +653,18 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 							d3.select(this.parentNode).raise();
 
-							swarmAtt = d3.select(this).attr('data-swarmDisp');
+							swarmAtt = d3.select(this).attr('data-swarmDisp'); //dispDat
 							d3.selectAll('.pnt').filter(function(p){
-								return p['Discipline'] != swarmAtt;
+								return p[getDispDat()] != swarmAtt; //dispDat
 							}).style('fill', '#E1DFE3')
 							.style('opacity', '0.6');
 
 							var swarm_point = d3.selectAll('.pnt').filter(function(p){
-											return p['Discipline'] == swarmAtt;
+											return p[getDispDat()] == swarmAtt; //dispDat
 									})
 
 							g_line.selectAll('.scat_plot')
-								.filter(function(od){return od['Discipline']!=swarmAtt})
+								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
 								.style('opacity', '0.2');						
 
 							tt_fill(
@@ -642,7 +684,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								.style('opacity', '');
 
 							g_line.selectAll('.scat_plot')
-								.filter(function(od){return od['Discipline']!=swarmAtt})
+								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
 								.style('opacity', '');							
 
 							tooltip.style('visibility', 'hidden');

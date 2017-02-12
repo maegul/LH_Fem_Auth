@@ -11,7 +11,7 @@ function dispDatGen(data, disp){
             return  (o.Country == 'allCountries') &
                     (o.Journal != 'allJournals') & 
                     (o.Position == 'Overall') &
-                    (o.Discipline == 'Medicine') // just for demo, will need to filter by Disc       
+                    (o.Discipline == 'Neurology') // just for demo, will need to filter by Disc       
             });
     };
 
@@ -170,7 +170,7 @@ function tt_fill(d, tooltip){
 
     tooltip.style('visibility', 'visible');
     tooltip.append('p').classed('tt_main', true)
-            .text(d['Discipline']);
+            .text(d[getDispDat()]);
     tooltip.append('p').classed('tt_perc', true)
             .text((pnt_by_yr(d, year, 'GR'))+'\% Female');
 
@@ -197,6 +197,8 @@ function tt_fill(d, tooltip){
 }
 
 
-function getSwarmDispDat() {
+function getDispDat() {
+    return dispDatKey[dispMode];
 
 }
+
