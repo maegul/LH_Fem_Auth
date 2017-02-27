@@ -44,6 +44,38 @@ function dispDatGen(data, disp){
 }
 
 
+function dispDatGenFilt(data, disp){
+    if (disp=='J') {
+        var dat = _.filter(data, function(o){
+            return (o.Journal != 'allJournals') 
+            });
+    };
+
+    if (disp=='D') {
+        var dat = _.filter(data, function(o){
+            return (o.Discipline != 'allDisciplines') & 
+                    (o.Journal == 'allJournals')
+        })
+    };
+
+    if (disp=='C') {
+        var dat = _.filter(data, function(o){
+            return   (o.Country != 'allCountries') &
+                        (o.Journal == 'allJournals')     
+        });
+    };
+
+    if (disp=='P') {
+        var dat = _.filter(data, function(o){
+            return  (o.Journal == 'allJournals')
+                    // & (o.Position != 'Overall')  
+        });
+    };
+
+
+    return dat;
+}
+
 
 function curv(c,r,t, dec){
     return _.round(100 * Math.exp(0.5 * r * (t-2000)) / (2 * Math.exp(0.5 * r * (t-2000)) + c),
@@ -69,7 +101,7 @@ function ci_line_dat_gen(points){
             }
         ]
     })
-}
+}   
 
 
 
@@ -142,20 +174,106 @@ function interpolate_years(data){
 };
 
 
+function nestDatGen(data){
+    dat = dispDatGenFilt(data, dispMode)
+
+    if (dispMode == 'J') {
+        var journDiscIdx = d3.nest()
+            .key(function(d) {return d.Journal})
+            .key(function(d) {return d.Discipline})
+            .map(dat);
+
+    }
+
+    var nestDatInit = d3.nest()
+                    .key(function(d) { return d[dispDatKey[dispMode]]})
+                    .key(function(d) { return d[dispFiltKey[dispMode][0]]})
+                    .key(function(d){ return d[dispFiltKey[dispMode][1]]})
+                    // .rollup(function(d){
+                    //  return {
+                    //      Points: d.Points,
+                    //      Curve: d.Curve,
+                    //      mean_n: d.mean_n
+                    //  }
+                    // })
+                    .object(dat)
+
+
+    // Avoid key, value structure at top
+    var nestDat = d3.keys(nestDatInit).map(function(d){ 
+                    var ndat = nestDatInit[d];
+                    ndat[dispDatKey[dispMode]] = d;
+
+                    if (dispMode=='J'){
+                        ndat['Discipline'] = journDiscIdx.get(d).keys()[0];
+                    }
+                    return ndat;
+        })
+
+    return nestDat;
+
+
+}
+
+
+
+
+
+// function n_range(data) {
+//     return d3.extent(
+//         _.flatten(
+//             _.map(data, function(d){
+//                 return d3.extent(d['Points'], function(d){
+//                             return d['n'];
+//                         })
+            
+//                     }
+//             )
+//         )
+//     )
+// }
+
 
 function n_range(data) {
+
+    // var filtParam1 = filtParams[dispFiltKey[dispMode][0]]
+
+    // var filtParam2 = filtParams[dispFiltKey[dispMode][1]]
+
+
     return d3.extent(
-        _.flatten(
-            _.map(data, function(d){
-                return d3.extent(d['Points'], function(d){
-                    return d['n'];
-                    })
-            
-                    }
+        _.flatten(_.map(data, function(d){
+                    return _.map(
+                                _.get(d, [filtParam1, filtParam2, 0, 'Points'], undefined),
+                                function(o){return o['n']}
+                            )
+                        })
+                    )
             )
-        )
-    )
+
 }
+
+
+
+function n_range_proto(data) {
+    // console.log('inner n_range_proto')
+    // console.log(filtParam1)
+    // console.log(filtParam2)
+    // console.log(data)
+
+            return d3.extent(
+            _.flatten(
+            _.map(data, function(dob){
+            return _.map(
+                _.get(dob, [filtParam1, filtParam2, 0, 'Points'], undefined),
+                function(o){return o['n']}
+                )
+            }
+            )
+            )
+            )
+        }
+
 
 
 function pnt_by_yr(dat, year, att){
@@ -166,24 +284,48 @@ function pnt_by_yr(dat, year, att){
 
 }
 
+
+function getPntDat(dat, year, att){
+
+    // filt conditional on dispMode
+
+    // var filtParam1 = filtParams[dispFiltKey[dispMode][0]]
+
+    // var filtParam2 = filtParams[dispFiltKey[dispMode][1]]
+
+    // pnt_by_yr(_.get(dat, [filtParam1, filtParam2, 0], undefined), year, att)
+    
+    return _.filter(
+                _.get(dat, [filtParam1, filtParam2, 0, 'Points'], undefined),
+                    function(o){return o['Y'] == year} 
+            )[0][att]
+
+    // Use below 
+    // How deal with undefined for data points ... if statement and fade in .attr()?
+
+    // _.get(d, [filtParam1, filtParam2, 0], undefined)    
+
+
+}
+
 function tt_fill(d, tooltip){
 
     tooltip.style('visibility', 'visible');
     tooltip.append('p').classed('tt_main', true)
             .text(d[getDispDat()]);
     tooltip.append('p').classed('tt_perc', true)
-            .text((pnt_by_yr(d, year, 'GR'))+'\% Female');
+            .text((getPntDat(d, year, 'GR'))+'\% Female');
 
 
-    if (pnt_by_yr(d, year, 'intp') == 0) {
+    if (getPntDat(d, year, 'intp') == 0) {
 
         tooltip.append('p').classed('tt_n', true)
-            .text(d3.format(',')(pnt_by_yr(d, year, 'n')) +' Papers');
+            .text(d3.format(',')(getPntDat(d, year, 'n')) +' Papers');
         tooltip.append('p').classed('tt_nf', true)
-            .text(d3.format(',')(pnt_by_yr(d, year, 'F')) + ' Female')
+            .text(d3.format(',')(getPntDat(d, year, 'F')) + ' Female')
             .style('color', col_scale(85));
         tooltip.append('p').classed('tt_nm', true)
-            .text(d3.format(',')(pnt_by_yr(d, year, 'M')) + ' Male')
+            .text(d3.format(',')(getPntDat(d, year, 'M')) + ' Male')
             .style('color', col_scale(15));
 
 
@@ -201,4 +343,9 @@ function getDispDat() {
     return dispDatKey[dispMode];
 
 }
+
+function hasDat(dat) {
+    return _.has(dat, [filtParam1, filtParam2])
+}
+
 

@@ -4,6 +4,162 @@
 		"selected_items":
 		[
 			[
+				"el",
+				"el_dat"
+			],
+			[
+				"sc",
+				"scat_line"
+			],
+			[
+				"scat_",
+				"scat_ci"
+			],
+			[
+				"stro",
+				"stroke_col"
+			],
+			[
+				"scat",
+				"scatUpdateFilt"
+			],
+			[
+				"sele",
+				"selectAll"
+			],
+			[
+				"bee",
+				"beeSwarmUpdate"
+			],
+			[
+				"filtPara",
+				"filtParams"
+			],
+			[
+				"tes",
+				"test_filt	(index.html)"
+			],
+			[
+				"nest",
+				"nestDatGen"
+			],
+			[
+				"filt",
+				"filtParam2"
+			],
+			[
+				"da",
+				"datasafd"
+			],
+			[
+				"fi",
+				"filtParam1"
+			],
+			[
+				"fit",
+				"filtParam2"
+			],
+			[
+				"filtp",
+				"filtParam1"
+			],
+			[
+				"filtP",
+				"filtParam1"
+			],
+			[
+				"D",
+				"Discipline"
+			],
+			[
+				"nestDat",
+				"nestDatInit"
+			],
+			[
+				"nestD",
+				"nestDatInit"
+			],
+			[
+				"get",
+				"dispDatGenFilt"
+			],
+			[
+				"dispDat",
+				"dispDatGenFilt"
+			],
+			[
+				"dispD",
+				"dispDatGenFilt"
+			],
+			[
+				"un",
+				"uniqC"
+			],
+			[
+				"uni",
+				"uniq	(functions.js)"
+			],
+			[
+				"nd",
+				"ndjtest"
+			],
+			[
+				"jour",
+				"journs"
+			],
+			[
+				"jou",
+				"journs"
+			],
+			[
+				"rad",
+				"radii"
+			],
+			[
+				"abs",
+				"abs_max_rad"
+			],
+			[
+				"dis",
+				"dispMode"
+			],
+			[
+				"disD",
+				"dispDatKey"
+			],
+			[
+				"dispdat",
+				"dispDatKey"
+			],
+			[
+				"disp",
+				"dispMode"
+			],
+			[
+				"all",
+				"allCountries	(functions.js)"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"scop",
+				"scopeTestFunc	(functions.js)"
+			],
+			[
+				"cur",
+				"cursor	(index.html)"
+			],
+			[
+				"swar",
+				"swarm_point"
+			],
+			[
+				"g_",
+				"g_bee_swarm"
+			],
+			[
 				"bord",
 				"border_plot_col_count"
 			],
@@ -40,10 +196,6 @@
 				"not_clicked"
 			],
 			[
-				"uni",
-				"uniq_cols"
-			],
-			[
 				"this",
 				"this_scat"
 			],
@@ -56,24 +208,12 @@
 				"scat_plot"
 			],
 			[
-				"sc",
-				"scat_plot"
-			],
-			[
-				"scat_",
-				"scat_plot"
-			],
-			[
 				"mea",
 				"mean_n"
 			],
 			[
 				"cli",
 				"clicked"
-			],
-			[
-				"abs",
-				"abs_max_rad"
 			],
 			[
 				"dat",
@@ -200,10 +340,6 @@
 				"for	for (…) {…} (Improved Native For-Loop)"
 			],
 			[
-				"dis",
-				"disciplines"
-			],
-			[
 				"pl",
 				"plotly-graph-div"
 			],
@@ -268,10 +404,6 @@
 				"discipline"
 			],
 			[
-				"sele",
-				"selectAll"
-			],
-			[
 				"selec",
 				"select2"
 			],
@@ -290,10 +422,6 @@
 			[
 				"ma",
 				"main"
-			],
-			[
-				"con",
-				"cont"
 			],
 			[
 				"ntot_ov",
@@ -386,134 +514,6 @@
 			[
 				"dat_",
 				"dat_arr"
-			],
-			[
-				"update",
-				"update_graph"
-			],
-			[
-				"no",
-				"node_update"
-			],
-			[
-				"forc",
-				"forceSimulation"
-			],
-			[
-				"fi",
-				"filt_data"
-			],
-			[
-				"ve",
-				"ven_tog"
-			],
-			[
-				"ar",
-				"art_tog"
-			],
-			[
-				"ki",
-				"kid_vis"
-			],
-			[
-				"tu",
-				"tum_tog"
-			],
-			[
-				"background",
-				"background-color"
-			],
-			[
-				"ba",
-				"background-div6"
-			],
-			[
-				"back",
-				"backbutton"
-			],
-			[
-				"mou",
-				"mouseover"
-			],
-			[
-				"wait",
-				"waittime"
-			],
-			[
-				"my_cats",
-				"my_cats_data"
-			],
-			[
-				"outline",
-				"outline-width"
-			],
-			[
-				"svg_a",
-				"svg_a_en"
-			],
-			[
-				"svg",
-				"svg_a"
-			],
-			[
-				"sv",
-				"svg_a"
-			],
-			[
-				"ch",
-				"chart_area_height_scat"
-			],
-			[
-				"wid",
-				"width_scat"
-			],
-			[
-				"stro",
-				"stroke-opacity"
-			],
-			[
-				"mouse",
-				"mouseout"
-			],
-			[
-				"c_cell",
-				"c_cell_dat"
-			],
-			[
-				"scat",
-				"scat_en"
-			],
-			[
-				"ci",
-				"circ_var"
-			],
-			[
-				"ori",
-				"ori"
-			],
-			[
-				"plot_sc",
-				"plot_scat_en"
-			],
-			[
-				"circ_v",
-				"circ_var_axis"
-			],
-			[
-				"plot",
-				"plot_scat_en"
-			],
-			[
-				"circ",
-				"circ_var_axis"
-			],
-			[
-				"wi",
-				"width_scat"
-			],
-			[
-				"hei",
-				"height_scat"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 2147,
+				"buffer_size": 2280,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,7 +531,7 @@
 			"file": "main.js",
 			"settings":
 			{
-				"buffer_size": 18980,
+				"buffer_size": 28278,
 				"line_ending": "Unix"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "functions.js",
 			"settings":
 			{
-				"buffer_size": 3167,
+				"buffer_size": 8097,
 				"line_ending": "Unix"
 			}
 		},
@@ -555,9 +555,37 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 247.0,
+		"height": 392.0,
 		"selected_items":
 		[
+			[
+				"Bo",
+				"SublimeBookmarks: Goto Bookmark"
+			],
+			[
+				"goto",
+				"SublimeBookmarks: Goto Bookmark"
+			],
+			[
+				"Add",
+				"SublimeBookmarks: Add Bookmark"
+			],
+			[
+				"Pack",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"BracketHighlighter: Jump to Right Bracket"
+			],
+			[
+				"bh j",
+				"BracketHighlighter: Jump to Right Bracket"
+			],
+			[
+				"bh",
+				"BracketHighlighter: Jump to Right Bracket"
+			],
 			[
 				"inst",
 				"Package Control: Install Package"
@@ -599,7 +627,7 @@
 	},
 	"console":
 	{
-		"height": 50.0
+		"height": 272.0
 	},
 	"distraction_free":
 	{
@@ -612,21 +640,25 @@
 	},
 	"file_history":
 	[
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/bh_core.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/SublimeBookmarks/Default.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/GitGutter.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/BracketHighlighter/Example.sublime-keymap",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/BracketHighlighter/bh_core.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/Terminal/Terminal.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/ColorHighlighter.sublime-settings",
+		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/GitGutter/GitGutter.sublime-settings",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/beeswarm_ref/index.html",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/index.html",
-		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/index.html",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/main.js",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/functions.js",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/bees_scat/search_test.js",
-		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/BracketHighlighter/bh_core.sublime-settings",
-		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/GitGutter/GitGutter.sublime-settings",
-		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/Terminal/Terminal.sublime-settings",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/data/new_JSON_format/zip_test.HTML",
 		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/Color Highlighter/ColorHighlighter.sublime-settings",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/demo/dynamic_beeswarm/index.html",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/data/new_JSON_format/search_test.js",
-		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/User/bh_core.sublime-settings",
 		"/Users/errollloyd/Developer/LH_femPubGap_project/proto/beeswarm/index.html",
 		"/Users/errollloyd/Desktop/test.js",
 		"/tmp/subl stdin 3bLdPN.txt",
@@ -735,11 +767,7 @@
 		"/Users/errollloyd/Documents/latex_test_delete/latex_test.tex",
 		"/Users/errollloyd/Developer/node_test/hello_world2.js",
 		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/mouseover/date close.tsv",
-		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/mouseover/index.html",
-		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/simple_play/line_simple_animated_mouseover_interact.html",
-		"/Users/errollloyd/Library/Application Support/Sublime Text 2/Packages/Default/Default (OSX).sublime-keymap",
-		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/simple_play/canvas_conventions",
-		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/Plotly/scatter_plots/basic.html"
+		"/Users/errollloyd/Dropbox/Science/ResBaz/Code/D3_Demos/D3_Demos/mouseover/index.html"
 	],
 	"find":
 	{
@@ -757,6 +785,75 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"line_dat",
+			"scat_ci_line",
+			"'scat'",
+			"classed",
+			"'scat'",
+			"(d",
+			"merge",
+			"line_yr_scale",
+			"data(point_dat,",
+			"scat_line",
+			"scatUpdate",
+			"d3.forceY",
+			"perc_scale",
+			"disp()",
+			"disp",
+			"d['Curve']",
+			"line_dat",
+			"d['mean_n']",
+			"hasDat",
+			"perc_scale",
+			"disp()",
+			"disp",
+			"tick",
+			"year = ",
+			"disp()",
+			"simulation",
+			"nestDatGen",
+			"pnt_by_yr",
+			"d",
+			"tick",
+			"filtParam1",
+			"radius",
+			"radius(",
+			"year",
+			"tick",
+			"getDi",
+			"dat",
+			"pnt_by_yr",
+			"dispMode",
+			"year",
+			"var Year",
+			"year",
+			"var year",
+			"dispMode",
+			"dispMode\ndispMode",
+			"dispMode",
+			"ndjtest",
+			"dat",
+			"5",
+			"n_",
+			"Variable",
+			"variable",
+			"pnt_",
+			"dispDat",
+			"year_slider",
+			"disp_mode",
+			"g_bee_swarm",
+			"function disp",
+			"main_data",
+			"font",
+			"border_plot_col_angles",
+			"		\n",
+			"dat_test",
+			"dat =",
+			"dat",
+			"mouseover",
+			"d3.event.pageY",
+			"scat.enter",
+			"year_slider",
 			"border_plot_col_angles",
 			"border_plot_col_count",
 			"border_plot_col_angles",
@@ -815,83 +912,15 @@
 			"bckg",
 			"interpolate",
 			"year_text",
-			"25",
-			"width\", 2",
-			"margin",
-			"max",
-			"year_max",
-			"margin",
-			"col_scale",
-			"700",
-			"line_yr_scale",
-			"curv",
-			"context",
-			"line_scale",
-			"2030",
-			"line_dat",
-			"curv",
-			"line_yr_scale",
-			"7",
-			"1",
-			"1em",
-			"0.5",
-			"3",
-			"margin",
-			" g",
-			"g ",
-			"g",
-			"svg",
-			"col_scale",
-			"dash",
-			"col_scale",
-			"tick",
-			"auto",
-			"tick",
-			"reverse",
-			"data",
-			"main_data",
-			"data",
-			"y",
-			"Y",
-			"y",
-			"content",
-			"brackethighlighter.default",
-			"dat",
-			" i",
-			"i",
-			"]",
-			"button",
-			"div",
-			"<div",
-			"div",
-			"select",
-			"input",
-			"'",
-			"magenta",
-			"b",
-			", \"",
-			"\":",
-			"graph",
-			"b",
-			"m",
-			"data.r",
-			"data.h",
-			"data.s",
-			"data.space",
-			"data.x",
-			"data.w",
-			"data.c",
-			"data.w",
-			"data.b",
-			"data.a",
-			"data[2]"
+			"25"
 		],
-		"highlight": false,
+		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
 		"regex": false,
 		"replace_history":
 		[
+			"getPntDat"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -910,15 +939,15 @@
 					"file": "index.html",
 					"settings":
 					{
-						"buffer_size": 2147,
+						"buffer_size": 2280,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								742,
-								742
+								1666,
+								1667
 							]
 						],
 						"settings":
@@ -972,11 +1001,12 @@
 								"bh_single_quote_close"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
-							"git_gutter_enabled": false,
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"git_gutter_enabled": true,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 439.0,
+						"translation.y": 1195.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -986,15 +1016,24 @@
 					"file": "main.js",
 					"settings":
 					{
-						"buffer_size": 18980,
+						"buffer_size": 28278,
 						"regions":
 						{
+							"bookmarks":
+							{
+								"flags": 144,
+								"icon": "bookmark",
+								"regions":
+								[
+								],
+								"scope": "bookmarks"
+							}
 						},
 						"selection":
 						[
 							[
-								8807,
-								8807
+								558,
+								558
 							]
 						],
 						"settings":
@@ -1057,7 +1096,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5039.0,
+						"translation.y": 204.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1067,15 +1106,15 @@
 					"file": "functions.js",
 					"settings":
 					{
-						"buffer_size": 3167,
+						"buffer_size": 8097,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3160,
-								3160
+								2382,
+								2382
 							]
 						],
 						"settings":
@@ -1129,13 +1168,13 @@
 								"bh_single_quote_close"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
-							"git_gutter_enabled": false,
+							"git_gutter_enabled": true,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2219.0,
+						"translation.y": 1321.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1152,8 +1191,8 @@
 						"selection":
 						[
 							[
-								2186,
-								2074
+								3002,
+								2896
 							]
 						],
 						"settings":
@@ -1207,11 +1246,11 @@
 								"bh_single_quote_close"
 							],
 							"color_scheme": "Packages/User/Color Highlighter/themes/Tomorrow.tmTheme",
-							"git_gutter_enabled": false,
+							"git_gutter_enabled": true,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 264.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1252,7 +1291,7 @@
 	"menu_visible": true,
 	"replace":
 	{
-		"height": 0.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":

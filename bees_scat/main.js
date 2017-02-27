@@ -5,17 +5,29 @@
 
 
 
-// Display modes
-	// disp variable
 
 // Filters (+ highlight)
 
+
+		// Make filter update deal with non-existent data
+			// keep g element - and color (?) - remove all inside.
+		// Filter code deals with IO from filters, runs update
+
+	// Re-normalise radius scale on filter
+
+
+
+
+
 // Click to see deeper data
+
+// Tweak simulation
+	// Deal with large difference in bubble size
+		// Get range of radii and increase repulsion accordingly
 
 // Disp filters
 	// Overall Disp
 	// Filter of overall disp
-
 
 
 
@@ -212,6 +224,11 @@ var year_text = bckg.insert('text', 'svg')
 	.attr('text-anchor', 'start');
 
 
+
+
+
+
+
 // Scat Plot Unique Colours
 
 var border_plot_col_angles = [
@@ -229,10 +246,32 @@ var dispDatKey = {
 	P: 'Position'
 };
 
+var dispFiltKey = {
+	D: ['Country', 'Position'],
+	J: ['Country', 'Position'],
+	C: ['Position', 'Discipline'],
+	P: ['Country', 'Discipline']
+
+}
+
+var filtParams = {
+	Discipline:'allDisciplines',
+	Country: 'allCountries',
+	Position: 'Overall'
+}
+
 
 var dispOpts = ['J', 'D', 'C', 'P'];
 
 var dispMode = 'D';
+
+var filtParam1 = filtParams[dispFiltKey[dispMode][0]]
+
+var filtParam2 = filtParams[dispFiltKey[dispMode][1]]
+
+
+
+
 
 
 // ASYNC Data Function
@@ -255,8 +294,14 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				g_bee_swarm.selectAll('*').remove();
 				g_line.selectAll('*').remove();
 
-				dat = dispDatGen(main_data, d3.select(this).text());
 				dispMode = d3.select(this).text();
+
+				filtParam1 = filtParams[dispFiltKey[dispMode][0]]
+
+				filtParam2 = filtParams[dispFiltKey[dispMode][1]]
+
+
+				dat = nestDatGen(main_data);
 
 				console.log(dispMode)
 				console.log(dat)
@@ -266,7 +311,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 	};
 
-
+	console.log('main data')
+	console.log(main_data)
 	interpolate_years(main_data)
 	// console.log(main_data)
 
@@ -276,13 +322,93 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-	var dat = dispDatGen(main_data, dispMode);
+	// var dat = dispDatGen(main_data, dispMode);
+	// var dat_length = dat.length;
+
+	var dat = nestDatGen(main_data)
 	var dat_length = dat.length;
 
-
+	console.log('disp data')
 	console.log(dat);
 
 
+
+    console.log([filtParam1, filtParam2])
+
+    console.log(dat.map(function(d){
+    	if (hasDat(d)) {
+    		return radius(getPntDat(d, year, 'n'))
+   	 }
+   	 else {return 'dlfjlskd'}
+	}))
+
+    // console.log(
+    // 	_.map(dat, function(d){
+    // 			return _.get(d, [filtParam1, filtParam2, 0], undefined)
+    // 		})
+    // 	)
+
+    // console.log(_.has(dat[4], [filtParam1, filtParam2]))
+
+    // console.log(
+    // 	d3.extent(
+	   //  _.flatten(_.map(dat, function(d){
+	   //  	return _.map(
+	   //  			_.get(d, [filtParam1, filtParam2, 0, 'Points'], undefined),
+	   //  			function(o){return o['n']}
+	   //  	)
+	   //  })
+	   //  )
+	   //  )
+    // )
+
+
+
+
+	// var t0 = performance.now();
+
+
+
+	// var journDiscIdx = d3.nest()
+	// 			.key(function(d) {return d.Journal})
+	// 			.key(function(d) {return d.Discipline})
+	// 			.map(dispDatGenFilt(main_data, 'J'));
+
+
+	// var nestTest = d3.nest()
+	// 			.key(function(d) { return d[dispDatKey[dispMode]]})
+	// 			.key(function(d) { return d[dispFiltKey[dispMode][0]]})
+	// 			.key(function(d){ return d[dispFiltKey[dispMode][1]]})
+	// 			// .rollup(function(d){
+	// 			// 	return {
+	// 			// 		Points: d.Points,
+	// 			// 		Curve: d.Curve,
+	// 			// 		mean_n: d.mean_n
+	// 			// 	}
+	// 			// })
+	// 			.object(dispDatGenFilt(main_data, dispMode))
+
+	// var nestDat = d3.keys(nestTest).map(function(d){ 
+	// 				var ndat = nestTest[d];
+	// 				ndat[dispDatKey[dispMode]] = d;
+
+	// 				if (dispMode=='J'){
+	// 					ndat['Discipline'] = journDiscIdx.get(d).keys()[0];
+	// 					// ndat['Discipline'] = _.find(journDiscIdx, function(j){return j.J == d})['D']
+	// 				}
+	// 				return ndat;
+	// 	})
+
+
+	// console.log(nestDat)
+
+
+
+
+
+
+	// var t1 = performance.now();
+	// console.log("Call to map a disc search took " + (t1 - t0) + " milliseconds.");
 
 	// Filt D: C, P
 	// Filt J: D, C, P
@@ -293,21 +419,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 	// radius.range([5, 20])
 
-	var abs_max_rad = 23;
-	var n_dep_max_rad = 0.5* (width / (dat.length* 0.1));
-
-	if (n_dep_max_rad > abs_max_rad){
-		radius.range([5, abs_max_rad]);
-	}
-
-	else {
-		radius.range([5, n_dep_max_rad])
-	}
 
 
 	
 
-	radius.domain(n_range(dat));
 
 
 	// For generating curve and CI lines
@@ -330,6 +445,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	function tick(){
 		// console.log(simulation.alpha());
 		d3.selectAll('.pnt')
+		// .filter(function(d){hasDat(d)})
 			.attr('cx', function(d){return d.x})
 			.attr('cy', function(d){return d.y})
 	}
@@ -353,31 +469,73 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	function disp(){ //in: dat, g_swarm, g_line; out: sim, pnt
 
 
+
+		// State log
+		console.log('dispMode')
+		console.log(dispMode)
+		console.log('year')
+		console.log(year)
+
+
+		// Varibale radius scale to fit in data set
+
+
+		radius.domain(n_range(dat));
+
+		var abs_max_rad = 20;
+		var abs_min_rad = 5;
+		var n_dep_max_rad = 0.5* (width / (dat.length* 0.12));
+
+		if (n_dep_max_rad > abs_max_rad){
+			radius.range([abs_min_rad, abs_max_rad]);
+		}
+
+		else {
+			radius.range([abs_min_rad, n_dep_max_rad])
+		}
+
+
+		// Simulation init
 		// disp
 		var simulation = d3.forceSimulation(dat)
 			.force("x", d3.forceX(width/2).strength(0.07))
 			.force("y", d3.forceY(function(d){
-				return perc_scale(
-					pnt_by_yr(d, year, 'GR')
-					)
+					if (hasDat(d)) {
+
+						return perc_scale(
+							getPntDat(d, year, 'GR')
+							)
+						}
+
+					else{
+						return perc_scale(50) // Highest possible
+					}
 				}).strength(0.99)
+
 			)
 			.force("collide", 
 				d3.forceCollide(function(d){
-					if(pnt_by_yr(d, year, 'intp')==0){
-						return radius(
-							pnt_by_yr(d, year, 'n')
-								)
-							}
-					else {
-						return radius(
-							d['mean_n']
-								)
+					if (hasDat(d)) {
 
+						if(getPntDat(d, year, 'intp')==0){
+							return radius(
+								getPntDat(d, year, 'n')
+									)
+								}
+						else {
+							return radius(
+								_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+									)
+
+							}
+						}
+					else {
+						return 0;
 						}
 
 					}
-				))
+				)
+				)
 			// .alphaTarget(0.2)
 			.velocityDecay(0.45)
 			.alphaDecay(0.011)
@@ -387,35 +545,57 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 		// disp
 
+		// pnt init
 		var pnt = g_bee_swarm.selectAll('.pnt')
 					.data(dat, function(d){return d[getDispDat()];})// dispDat
 
 		// disp
+
+		// pnt.filter(function(d){
+		// 		return !_.has(d, [filtParam1, filtParam2]) } )
+		// 	.append('circle')
+		// 	.classed('pnt', true)
+		// 	.attr('r', 0)
+		// 	.attr('cx', function(d){return d.x})
+		// 	.attr('cy', function(d){return d.y})
+
 		pnt.enter().append('circle').classed('pnt', true)
 			.attr('r', function(d){
-					if(pnt_by_yr(d, year, 'intp')==0){
-						return radius(
-							pnt_by_yr(d, year, 'n')
-								)
-							}
-					else {
-						return radius(
-							d['mean_n']
-								)
+					if (hasDat(d)) {
+						if(getPntDat(d, year, 'intp')==0){
 
+
+							return radius(
+								getPntDat(d, year, 'n')
+									)
+								}
+						else {
+							return radius(
+								_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+									)
+							}
 						}
+
+					else {
+						return 0;
+					}
 				})
 			.attr('cx', function(d){return d.x})
-			.attr('cy', function(d){return height/2})
+			.attr('cy', function(d){return d.y})
 			.style('stroke-dasharray', function(d){
 
-				if(pnt_by_yr(d, year, 'intp')==1){
-					return '3 1';
-						}
+				if(hasDat(d)) {
+					if(getPntDat(d, year, 'intp')==1){
+						return '3 1';
+							}
+				}
+
 			})
 
 			.style('fill', function(d){
-				return col_scale(pnt_by_yr(d, year, 'GR'))
+				if (hasDat(d)) {
+					return col_scale(getPntDat(d, year, 'GR'))
+				}
 			})
 			.on('mouseover', function(d){
 
@@ -467,6 +647,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				tooltip.style('visibility', 'hidden');
 				tooltip.selectAll('*').remove();
 			})
+
+			// scat init
 			.on('click', function(d){
 
 
@@ -517,12 +699,21 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		      				.classed('scat_plot', true)
 		      				.datum(d);
 
-		      		
 
-					var point_dat = _.filter(d['Points'], 
-											function(o){return o['intp']==0}
-											)
-					var line_dat = line_dat_gen(d['Curve'], yr_max);
+					// var point_dat = _.filter(d['Points'], 
+					// 						function(o){return o['intp']==0}
+					// 						)
+
+					var point_dat = _.filter(
+										_.get(d, [filtParam1, filtParam2, 0, 'Points']),
+										function(o){return o['intp']==0}
+										)
+
+					console.log('point_dat')
+					console.log(point_dat);
+
+
+					var line_dat = line_dat_gen(_.get(d, [filtParam1, filtParam2, 0, 'Curve']), yr_max);
 
 					// Con Interval error bars - line generator
 					var scat_ci = scat_plot.selectAll('.scat_ci')
@@ -559,6 +750,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						})
 						.style('fill', '#E1DFE3')
 						.style('stroke', uniq_cols.border)
+					.merge(scat)
 						.on('mouseover', function(d){
 
 							d3.select(this.parentNode).raise();
@@ -591,9 +783,15 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.on('mouseout', function(d){
 							d3.selectAll('.pnt')
 								.style('fill', function(d){
-									return col_scale(pnt_by_yr(d, year, 'GR'))
+									if (hasDat(d)) {
+										return col_scale(getPntDat(d, year, 'GR'))
+									}
 								})
-								.style('opacity', '');
+								.style('opacity', function(d){
+									if (hasDat(d)) {
+										return '';
+									}
+								});
 
 							g_line.selectAll('.scat_plot')
 								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
@@ -624,7 +822,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 						scat_plot.append('circle').classed('scat_inter', true)
-							.attr('r', radius(d['mean_n']))
+							.attr('r', radius(_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])))
 							.attr('cy', perc_scale(_.filter(line_dat, function(o){
 								return o['year'] == year;
 							})[0]['perc']))
@@ -679,9 +877,15 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.on('mouseout', function(d){
 							d3.selectAll('.pnt')
 								.style('fill', function(d){
-									return col_scale(pnt_by_yr(d, year, 'GR'))
+									if (hasDat(d)) {
+										return col_scale(getPntDat(d, year, 'GR'))
+									}
 								})
-								.style('opacity', '');
+								.style('opacity', function(d){
+									if (hasDat(d)) {
+										return '';
+									}
+								});
 
 							g_line.selectAll('.scat_plot')
 								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
@@ -700,111 +904,334 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			})
 
-		// Year Slider
-
-		d3.select('#year_slider').on("input", function(){
-
-			year = parseInt(this.value);
-
-			year_text.text(year);
 
 
-		d3.selectAll('.scat_inter').remove();
+//////////
+// Update
+//////////
 
-		d3.selectAll('.scat_plot').each(function(d){
+		d3.select('#test_filt').on('click', function(){
+
+			if (d3.select(this).attr('value') == '0') {
+
+				filtParams['Country']='Australia';
+				d3.select(this).attr('value', '1')
 
 
-			var this_scat = d3.select(this);
-
-			var current_point = this_scat.selectAll('.scat').filter(function(d){return d['Y'] == year});
-
-			if (current_point.size() == 1){
-
-				this_scat.selectAll('.scat')
-					.sort(function(a, b) {
-					  return a['Y'] < b['Y'] ? -1 : a['Y'] > b['Y'] ? 1 : a['Y'] >= b['Y'] ? 0 : NaN;
-					})
-					.style('fill', '#E1DFE3')
-					.style('stroke-width', 'initial');
-
-				current_point
-					.raise()
-					.style('stroke-width', '3px')
-					.style('fill', 
-					col_scale(current_point.datum()['GR'])
-					);
-
-				this_scat.selectAll('.scat_line').raise();
 			} 
-			else {
+			else{
 
-				this_scat.selectAll('.scat')
-					.style('fill', '#E1DFE3')
-					.style('stroke-width', 1);
-				interp_dat = this_scat.selectAll('.scat_line').datum();
+				filtParams['Country']='allCountries';
+				d3.select(this).attr('value', '0');
 
 
-
-				this_scat.append('circle').classed('scat_inter', true)
-					.attr('r', radius(d['mean_n']))
-					.attr('cy', perc_scale(_.filter(interp_dat, function(o){
-						return o['year'] == year;
-					})[0]['perc']))
-					.attr('cx', line_yr_scale(year))
-					.attr('stroke-width', 3)
-					.attr('stroke', 'black')
-					.style('stroke-dasharray', '3 1')
-					.style('fill-opacity', '0');
 			};
 
 
-		});
+			filtParam1 = filtParams[dispFiltKey[dispMode][0]]
 
+			filtParam2 = filtParams[dispFiltKey[dispMode][1]]
+
+
+			beeSwarmUpdate()
+			scatUpdateFilt()
+		})
+
+
+		// Update the scatter on filter change
+		function scatUpdateFilt(){
+			// remove plots without data
+				// don't remove g, remove contents
+				// if g, and data now appears, re init (?)
+				// Deal with interpolated circle
+					// If in, move with line
+
+			// transition CI & lines
+
+
+			// Go through each scat plot g element, and deal with it!
+			d3.selectAll('.scat_plot').each(function(el_dat){
+
+
+
+				var this_scat = d3.select(this);
+
+				var point_dat = _.filter(
+						_.get(el_dat, [filtParam1, filtParam2, 0, 'Points']),
+						function(o){return o['intp']==0}
+					)
+
+				console.log('pre_trans_ci')
+				console.log(this_scat.selectAll('.scat_ci'))
+
+
+				this_scat.selectAll('.scat_ci')
+					// .transition().duration(100)
+					// .style('opacity', 1e-6)
+					.remove();
+
+				console.log('ci dat')
+				console.log(ci_line_dat_gen(point_dat))
+
+				var scat_ci = this_scat.selectAll('.scat_ci')
+							.data(ci_line_dat_gen(point_dat),
+							 	function(p){return p['Y']}
+							 	);
+
+				// scat_ci.exit()
+				// 	// .transition().duration(1000)
+				// 	// .style('opacity', 1e-6)
+				// 	.remove();
+
+				// scat_ci.transition().duration(1000)
+				// 	.attr('d', scat_ci_line)
+
+				console.log('scat_ci')
+				console.log(scat_ci)
+
+				scat_ci.enter().append('path').lower()
+					// .merge(scat_ci)
+					.classed('scat_ci', true)
+					.style('opacity', 0)
+					.attr("fill", "none")
+					.attr("stroke", "#8B8B90FF")
+					.attr("stroke-linejoin", "round")
+					.attr('stroke-miterlimit', 2)
+					.attr("stroke-linecap", "round")
+					.attr("stroke-width", 1.5)
+					.attr('d', scat_ci_line)
+					.transition().duration(100).delay(1000)
+					.style('opacity', 1)
+
+
+
+				var scat = this_scat.selectAll('.scat')
+					.data(point_dat, function(p){
+						return p['Y'];
+							}
+					)
+
+
+				var stroke_col = this_scat.selectAll('.scat').style('stroke');
+
+
+				scat.exit()
+					.transition().duration(1000)
+					.style('opacity', 1e-6)
+					.remove();
+
+				scat.transition().duration(1000)
+					.attr('r', function(d){
+						return radius(d['n'])})
+					.attr('cx', function(d){
+						return line_yr_scale(d['Y']);
+					})
+					.attr('cy', function(d){
+						return perc_scale(d['GR'])
+					});
+
+
+
+				
+
+				scat.enter().append('circle').classed('scat', true)
+						.style('opacity', 0)
+						.attr('data-swarmDisp', el_dat[getDispDat()]+'') //dispDat
+						.attr('r', function(d){
+							return radius(d['n'])})
+						.attr('cx', function(d){
+							return line_yr_scale(d['Y']);
+						})
+						.attr('cy', function(d){
+							return perc_scale(d['GR'])
+						})
+						.style('fill', '#E1DFE3')
+						.style('stroke', stroke_col)
+						.transition().duration(1000)
+						.style('opacity', 1)
+						.on('mouseover', function(d){
+
+							d3.select(this.parentNode).raise();
+
+							swarmAtt = d3.select(this).attr('data-swarmDisp'); //dispDat
+
+							d3.selectAll('.pnt').filter(function(p){
+								return p[getDispDat()] != swarmAtt;
+							}).style('fill', '#E1DFE3')
+							.style('opacity', '0.6');
+
+							var swarm_point = d3.selectAll('.pnt').filter(function(p){
+											return p[getDispDat()] == swarmAtt; //dispDat
+									})
+
+
+							tt_fill(
+								swarm_point.datum(),
+								tooltip
+								);
+
+							g_line.selectAll('.scat_plot')
+								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
+								.style('opacity', '0.2');					
+
+					        tooltip
+				                .style('top', (d3.event.pageY-150)+'px')
+				                .style('left', (d3.event.pageX+5)+'px');
+						})
+						.on('mouseout', function(d){
+							d3.selectAll('.pnt')
+								.style('fill', function(d){
+									if (hasDat(d)) {
+										return col_scale(getPntDat(d, year, 'GR'))
+									}
+								})
+								.style('opacity', function(d){
+									if (hasDat(d)) {
+										return '';
+									}
+								});
+
+							g_line.selectAll('.scat_plot')
+								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
+								.style('opacity', '');					
+
+
+							tooltip.style('visibility', 'hidden');
+							tooltip.selectAll('*').remove();
+
+
+						});
+
+
+
+
+				var line_dat = line_dat_gen(
+							_.get(el_dat, [filtParam1, filtParam2, 0, 'Curve']), yr_max
+							);
+
+				this_scat.selectAll('.scat_line')
+					.datum(line_dat)
+					.transition().duration(1000)
+					.attr("d", scat_line)
+
+
+
+			})// end scat_plot each function
+
+		}
+
+
+		// Update scatter on year change
+		function scatUpdateYear(){
+			d3.selectAll('.scat_inter').remove();
+
+			d3.selectAll('.scat_plot').each(function(d){
+
+
+				var this_scat = d3.select(this);
+
+
+
+				var current_point = this_scat.selectAll('.scat').filter(function(d){return d['Y'] == year});
+
+				if (current_point.size() == 1){
+
+					this_scat.selectAll('.scat')
+						.sort(function(a, b) {
+						  return a['Y'] < b['Y'] ? -1 : a['Y'] > b['Y'] ? 1 : a['Y'] >= b['Y'] ? 0 : NaN;
+						})
+						.style('fill', '#E1DFE3')
+						.style('stroke-width', 'initial');
+
+					current_point
+						.raise()
+						.style('stroke-width', '3px')
+						.style('fill', 
+						col_scale(current_point.datum()['GR'])
+						);
+
+					this_scat.selectAll('.scat_line').raise();
+				} 
+				else {
+
+					this_scat.selectAll('.scat')
+						.style('fill', '#E1DFE3')
+						.style('stroke-width', 1);
+					interp_dat = this_scat.selectAll('.scat_line').datum();
+
+
+
+					this_scat.append('circle').classed('scat_inter', true)
+						.attr('r', radius(_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])))
+						.attr('cy', perc_scale(_.filter(interp_dat, function(o){
+							return o['year'] == year;
+						})[0]['perc']))
+						.attr('cx', line_yr_scale(year))
+						.attr('stroke-width', 3)
+						.attr('stroke', 'black')
+						.style('stroke-dasharray', '3 1')
+						.style('fill-opacity', '0');
+				};
+
+
+			});
+
+		}
+
+
+		// Update beeswarm on year or filter change
+		function beeSwarmUpdate(){
 			d3.selectAll('.pnt')
 				.attr('r', function(d){
-					if(pnt_by_yr(d, year, 'intp')==0){
-						return radius(
-							pnt_by_yr(d, year, 'n')
-								)
+						if (hasDat(d)) {
+							if(getPntDat(d, year, 'intp')==0){
+								return radius(
+									getPntDat(d, year, 'n')
+										)
+									}
+							else {
+								return radius(
+									_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+										)
+								}
 							}
-					else {
-						return radius(
-							d['mean_n']
-								)
-
+						else {
+							return 0;
 						}
-					}
-				)
+					})
 				.style('stroke-dasharray', function(d){
 
-					if(pnt_by_yr(d, year, 'intp')==1){
-						return '3 1';
-							}
-					else {
-						return 'initial';
-
+					if(hasDat(d)) {
+						if(getPntDat(d, year, 'intp')==1){
+							return '3 1';
+								}
+						else {
+							return 'initial';
 						}
-
 					}
-				)
-				.style('stroke-dashoffset', function(d){
 
-					if(pnt_by_yr(d, year, 'intp')==1){
-						return '3';
+				})
+				.style('stroke-dashoffset', function(d){
+					if (hasDat(d)){
+						if(getPntDat(d, year, 'intp')==1){
+							return '3';
+								}
+						else {
+							return 'initial';
+
 							}
-					else {
-						return 'initial';
 
 						}
-
 					}
 				)
 				.style('fill', function(d){
-						return col_scale(pnt_by_yr(d, year, 'GR'))
+					if (hasDat(d)){
+						return col_scale(getPntDat(d, year, 'GR'))
 						}
+					}
 				)
 				// .style('opacity', function(d){
-				// 		if(pnt_by_yr(d, year, 'intp')==0){
+				// 		if(getPntDat(d, year, 'intp')==0){
 				// 			return 0.6
 				// 				}
 				// 		else {
@@ -815,51 +1242,108 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 				// )
 
+				// Calc range of radii in order to scale repulsive force
+				var radii = dat.map(function(d){
 
-			simulation.force("y", 
-				d3.forceY(function(d){
-					return perc_scale(
-						pnt_by_yr(d, year, 'GR')
-						)
-				}).strength(0.99)
-			)
-			.force("collide", 
-				d3.forceCollide(function(d){
+					if (hasDat(d)){
 
-					if(pnt_by_yr(d, year, 'intp')==0){
-						return radius(
-							pnt_by_yr(d, year, 'n')
+						if(getPntDat(d, year, 'intp')==0){
+							return radius(
+								getPntDat(d, year, 'n')
+									)
+								}
+						else {
+							return radius(
+								_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+									)
+						}
+					}
+
+				})
+
+				var rad_range = d3.max(radii)-d3.min(radii)
+
+
+
+				simulation.force("y", 
+					d3.forceY(function(d){
+
+						if (hasDat(d)) {
+
+							return perc_scale(
+								getPntDat(d, year, 'GR')
 								)
 							}
-					else {
-						return radius(
-							d['mean_n']
-								)
+
+						else{
+							return perc_scale(50) // Highest possible
+						}
+					}).strength(0.99)
+				)
+				.force("collide", 
+					d3.forceCollide(function(d){
+
+						if (hasDat(d)) {
+
+							if(getPntDat(d, year, 'intp')==0){
+								return radius(
+									getPntDat(d, year, 'n')
+										)
+									}
+							else {
+								return radius(
+									_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+										)
+
+								}
+							}
+						else {
+							return 0;
+							}
+
+						}
+				))
+				.force('repulsion', d3.forceManyBody().strength(-15 * Math.sqrt((100 / dat_length) * 10*(rad_range/(abs_max_rad- abs_min_rad)))  ))
 
 
-					}
-					}
-			))
-			.force('repulsion', d3.forceManyBody().strength(-15 * Math.sqrt((100 / dat_length))))
-
-
-			simulation.alpha(0.03)
-						.restart();
-
-			setTimeout(function(){
-				simulation.force('repulsion', d3.forceManyBody().strength(0))
-			}, 700)
-
-			setTimeout(function(){
-				simulation.alpha(0.04).restart();
-			}, 1300)
-
-
-		})
 
 
 
-	}
+				simulation.alpha(0.03)
+							.restart();
+
+				setTimeout(function(){
+					simulation.force('repulsion', d3.forceManyBody().strength(0))
+				}, 700)
+
+				setTimeout(function(){
+					simulation.alpha(0.06).restart();
+				}, 1300)
+
+		}
+
+
+
+
+		// Year Slider
+
+		d3.select('#year_slider').on("input", function(){
+
+			year = parseInt(this.value);
+
+			year_text.text(year);
+
+
+			beeSwarmUpdate();
+			scatUpdateYear()
+
+
+
+			})
+
+
+
+		} // end disp function
 
 
 
