@@ -235,6 +235,22 @@ var border_plot_col_angles = [
 0.0, 30, 124, 258, 280, 310 
 ];
 
+var col_params = {
+	line: {
+		sat: 90,
+		light: 50
+	},
+	border: {
+		sat: 90, 
+		light: 40
+
+	},
+	null_fill: {
+		sat: 20,
+		light: 90
+	}
+}
+
 var border_plot_col_count = 0;
 
 
@@ -670,7 +686,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					d3.selectAll('.pnt')
 						.style('opacity', '');
 
-					border_plot_col_count -= 1
+					// May make sense, but if preious unclicked, then colors repeat
+					// without the subtraction on un-click, more likely to get new color
+					// border_plot_col_count -= 1
 
 
 				} 
@@ -681,13 +699,18 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					border_plot_col_count += 1;
 
 
-					// var uniq_hue = _.random(0, 310);
 
-					var uniq_cols = {			// H, Sat, Light
-						line: hsluv.hsluvToHex([uniq_hue, 90, 50]),
-						border: hsluv.hsluvToHex([uniq_hue, 90, 40]),
-						null_fill: hsluv.hsluvToHex([uniq_hue, 20, 90])
-					};
+					// var uniq_cols = {			// H, Sat, Light
+					// 	line: hsluv.hsluvToHex([uniq_hue, col_params.line.sat, col_params.line.light]),
+					// 	border: hsluv.hsluvToHex([uniq_hue, col_params.border.sat, col_params.border.light]),
+					// 	null_fill: hsluv.hsluvToHex([uniq_hue, col_params.null_fill.sat, col_params.null_fill.light])
+					// };
+
+
+					var uniq_cols = uniqColsGen(uniq_hue)
+
+
+
 
 					
 					d3.select(this).attr('value', 'clicked');
@@ -697,12 +720,11 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 		      		var scat_plot = g_line.append('g')
 		      				.classed('scat_plot', true)
-		      				.datum(d);
+		      				.style('opacity', 1e-6)
+							.attr('uniq_hue_dat', uniq_hue)
+		      				.datum(d)
 
 
-					// var point_dat = _.filter(d['Points'], 
-					// 						function(o){return o['intp']==0}
-					// 						)
 
 					var point_dat = _.filter(
 										_.get(d, [filtParam1, filtParam2, 0, 'Points']),
@@ -801,8 +823,12 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 							tooltip.style('visibility', 'hidden');
 							tooltip.selectAll('*').remove();
 
+						})
+						.transition().duration(1000)
+						.style('opacity', 1);
 
-						});
+
+					// Circle for interpolated year?!
 
 					var current_point = scat_plot.selectAll('.scat')
 										.filter(function(d){return d['Y'] == year});
@@ -818,9 +844,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								);
 					}
 
+					// If need interpolated data point for year
 					else {
-
-
 						scat_plot.append('circle').classed('scat_inter', true)
 							.attr('r', radius(_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])))
 							.attr('cy', perc_scale(_.filter(line_dat, function(o){
@@ -895,6 +920,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 							tooltip.selectAll('*').remove();
 						});
 
+					scat_plot
+						.transition().duration(500)
+						.style('opacity', 1)
+
 
 
 				} // end else "not clicked"
@@ -940,103 +969,91 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 		// Update the scatter on filter change
 		function scatUpdateFilt(){
-			// remove plots without data
-				// don't remove g, remove contents
-				// if g, and data now appears, re init (?)
-				// Deal with interpolated circle
-					// If in, move with line
 
-			// transition CI & lines
+		// Basic logic is:
+			// if there is data for state of filters - 
+				// Check if each of scat elements are in g element (scat, ci, line, scat_inter)
+				// If so, then transition to new state
+				// if not, add new elements much like scat init but with opacity transition
+			// if no data for state of filters, keep g element, but remove contents
+
 
 
 			// Go through each scat plot g element, and deal with it!
 			d3.selectAll('.scat_plot').each(function(el_dat){
 
 
-
 				var this_scat = d3.select(this);
 
-				var point_dat = _.filter(
-						_.get(el_dat, [filtParam1, filtParam2, 0, 'Points']),
-						function(o){return o['intp']==0}
-					)
 
-				console.log('pre_trans_ci')
-				console.log(this_scat.selectAll('.scat_ci'))
+				// check if scat plot has data
+
+				if (_.get(el_dat, [filtParam1, filtParam2], undefined)){
+					console.log('I has the data')
 
 
-				this_scat.selectAll('.scat_ci')
-					// .transition().duration(100)
-					// .style('opacity', 1e-6)
-					.remove();
-
-				console.log('ci dat')
-				console.log(ci_line_dat_gen(point_dat))
-
-				var scat_ci = this_scat.selectAll('.scat_ci')
-							.data(ci_line_dat_gen(point_dat),
-							 	function(p){return p['Y']}
-							 	);
-
-				// scat_ci.exit()
-				// 	// .transition().duration(1000)
-				// 	// .style('opacity', 1e-6)
-				// 	.remove();
-
-				// scat_ci.transition().duration(1000)
-				// 	.attr('d', scat_ci_line)
-
-				console.log('scat_ci')
-				console.log(scat_ci)
-
-				scat_ci.enter().append('path').lower()
-					// .merge(scat_ci)
-					.classed('scat_ci', true)
-					.style('opacity', 0)
-					.attr("fill", "none")
-					.attr("stroke", "#8B8B90FF")
-					.attr("stroke-linejoin", "round")
-					.attr('stroke-miterlimit', 2)
-					.attr("stroke-linecap", "round")
-					.attr("stroke-width", 1.5)
-					.attr('d', scat_ci_line)
-					.transition().duration(100).delay(1000)
-					.style('opacity', 1)
+					var point_dat = _.filter(
+							_.get(el_dat, [filtParam1, filtParam2, 0, 'Points']),
+							function(o){return o['intp']==0}
+						)
 
 
+					// CI management
 
-				var scat = this_scat.selectAll('.scat')
-					.data(point_dat, function(p){
-						return p['Y'];
-							}
-					)
+					this_scat.selectAll('.scat_ci')
+						// .transition().duration(100)
+						// .style('opacity', 1e-6)
+						.remove();
 
+					console.log('ci dat')
+					console.log(ci_line_dat_gen(point_dat))
 
-				var stroke_col = this_scat.selectAll('.scat').style('stroke');
-
-
-				scat.exit()
-					.transition().duration(1000)
-					.style('opacity', 1e-6)
-					.remove();
-
-				scat.transition().duration(1000)
-					.attr('r', function(d){
-						return radius(d['n'])})
-					.attr('cx', function(d){
-						return line_yr_scale(d['Y']);
-					})
-					.attr('cy', function(d){
-						return perc_scale(d['GR'])
-					});
+					var scat_ci = this_scat.selectAll('.scat_ci')
+								.data(ci_line_dat_gen(point_dat),
+								 	function(p){return p['Y']}
+								 	);
 
 
+					console.log('scat_ci')
+					console.log(scat_ci)
 
-				
-
-				scat.enter().append('circle').classed('scat', true)
+					scat_ci.enter().append('path').lower()
+						// .merge(scat_ci)
+						.classed('scat_ci', true)
 						.style('opacity', 0)
-						.attr('data-swarmDisp', el_dat[getDispDat()]+'') //dispDat
+						.attr("fill", "none")
+						.attr("stroke", "#8B8B90FF")
+						.attr("stroke-linejoin", "round")
+						.attr('stroke-miterlimit', 2)
+						.attr("stroke-linecap", "round")
+						.attr("stroke-width", 1.5)
+						.attr('d', scat_ci_line)
+						.transition().duration(100).delay(1000)
+						.style('opacity', 1)
+
+
+
+					//Scat management
+
+					var scat = this_scat.selectAll('.scat')
+						.data(point_dat, function(p){
+							return p['Y'];
+								}
+						)
+
+
+					// var stroke_col = this_scat.selectAll('.scat').style('stroke');
+
+					var this_uniq_hue = this_scat.attr('uniq_hue_dat');
+
+					var uniq_cols = uniqColsGen(this_uniq_hue);
+
+					scat.exit()
+						.transition().duration(1000)
+						.style('opacity', 1e-6)
+						.remove();
+
+					scat.transition().duration(1000)
 						.attr('r', function(d){
 							return radius(d['n'])})
 						.attr('cx', function(d){
@@ -1044,79 +1061,249 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						})
 						.attr('cy', function(d){
 							return perc_scale(d['GR'])
-						})
-						.style('fill', '#E1DFE3')
-						.style('stroke', stroke_col)
-						.transition().duration(1000)
-						.style('opacity', 1)
-						.on('mouseover', function(d){
-
-							d3.select(this.parentNode).raise();
-
-							swarmAtt = d3.select(this).attr('data-swarmDisp'); //dispDat
-
-							d3.selectAll('.pnt').filter(function(p){
-								return p[getDispDat()] != swarmAtt;
-							}).style('fill', '#E1DFE3')
-							.style('opacity', '0.6');
-
-							var swarm_point = d3.selectAll('.pnt').filter(function(p){
-											return p[getDispDat()] == swarmAtt; //dispDat
-									})
-
-
-							tt_fill(
-								swarm_point.datum(),
-								tooltip
-								);
-
-							g_line.selectAll('.scat_plot')
-								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
-								.style('opacity', '0.2');					
-
-					        tooltip
-				                .style('top', (d3.event.pageY-150)+'px')
-				                .style('left', (d3.event.pageX+5)+'px');
-						})
-						.on('mouseout', function(d){
-							d3.selectAll('.pnt')
-								.style('fill', function(d){
-									if (hasDat(d)) {
-										return col_scale(getPntDat(d, year, 'GR'))
-									}
-								})
-								.style('opacity', function(d){
-									if (hasDat(d)) {
-										return '';
-									}
-								});
-
-							g_line.selectAll('.scat_plot')
-								.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
-								.style('opacity', '');					
-
-
-							tooltip.style('visibility', 'hidden');
-							tooltip.selectAll('*').remove();
-
-
 						});
 
 
+					scat.enter().append('circle').classed('scat', true)
+							.style('opacity', 0)
+							.attr('data-swarmDisp', el_dat[getDispDat()]+'') //dispDat
+							.attr('r', function(d){
+								return radius(d['n'])})
+							.attr('cx', function(d){
+								return line_yr_scale(d['Y']);
+							})
+							.attr('cy', function(d){
+								return perc_scale(d['GR'])
+							})
+							.style('fill', '#E1DFE3')
+							.style('stroke', uniq_cols.border)
+							.on('mouseover', function(d){
+
+								d3.select(this.parentNode).raise();
+
+								swarmAtt = d3.select(this).attr('data-swarmDisp'); //dispDat
+
+								d3.selectAll('.pnt').filter(function(p){
+									return p[getDispDat()] != swarmAtt;
+								}).style('fill', '#E1DFE3')
+								.style('opacity', '0.6');
+
+								var swarm_point = d3.selectAll('.pnt').filter(function(p){
+												return p[getDispDat()] == swarmAtt; //dispDat
+										})
 
 
-				var line_dat = line_dat_gen(
-							_.get(el_dat, [filtParam1, filtParam2, 0, 'Curve']), yr_max
+								tt_fill(
+									swarm_point.datum(),
+									tooltip
+									);
+
+								g_line.selectAll('.scat_plot')
+									.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
+									.style('opacity', '0.2');					
+
+						        tooltip
+					                .style('top', (d3.event.pageY-150)+'px')
+					                .style('left', (d3.event.pageX+5)+'px');
+							})
+							.on('mouseout', function(d){
+								d3.selectAll('.pnt')
+									.style('fill', function(d){
+										if (hasDat(d)) {
+											return col_scale(getPntDat(d, year, 'GR'))
+										}
+									})
+									.style('opacity', function(d){
+										if (hasDat(d)) {
+											return '';
+										}
+									});
+
+								g_line.selectAll('.scat_plot')
+									.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
+									.style('opacity', '');					
+
+
+								tooltip.style('visibility', 'hidden');
+								tooltip.selectAll('*').remove();
+
+
+							})
+							.transition().duration(1000)
+							.style('opacity', 1);
+
+
+					// Year highlight
+					var current_point = this_scat.selectAll('.scat').filter(function(d){return d['Y'] == year});
+
+					if (current_point.size() == 1){
+
+						this_scat.selectAll('.scat')
+							.sort(function(a, b) {
+							  return a['Y'] < b['Y'] ? -1 : a['Y'] > b['Y'] ? 1 : a['Y'] >= b['Y'] ? 0 : NaN;
+							})
+							.style('fill', '#E1DFE3')
+							.style('stroke-width', 'initial');
+
+						current_point
+							.raise()
+							.style('stroke-width', '3px')
+							.style('fill', 
+							col_scale(current_point.datum()['GR'])
 							);
-
-				this_scat.selectAll('.scat_line')
-					.datum(line_dat)
-					.transition().duration(1000)
-					.attr("d", scat_line)
+					};
 
 
 
-			})// end scat_plot each function
+
+					// Line management
+
+					var line_dat = line_dat_gen(
+								_.get(el_dat, [filtParam1, filtParam2, 0, 'Curve']), yr_max
+								);
+
+
+					// If there's a line
+					if (!this_scat.selectAll('.scat_line').empty()) {
+
+
+						this_scat.selectAll('.scat_line')
+							.datum(line_dat)
+							.transition().duration(1000)
+							.attr("d", scat_line)
+
+					}
+
+					else {
+
+						this_scat.append("path").classed('scat_line', true)
+							.datum(line_dat)
+							.attr('data-swarmDisp', el_dat[getDispDat()]+'') //dispDat
+							.attr("fill", "none")
+							.attr("stroke", uniq_cols.line)
+							.attr("stroke-linejoin", "round")
+							.attr('stroke-miterlimit', 2)
+							.attr("stroke-linecap", "round")
+							.attr("stroke-width", 4)
+							.style('stroke-dasharray', '4 6')
+							.attr("d", scat_line)
+							.style('opacity', 1e-6)
+							.raise()
+							.on('mouseover', function(d){
+
+								d3.select(this.parentNode).raise();
+
+								swarmAtt = d3.select(this).attr('data-swarmDisp'); //dispDat
+								d3.selectAll('.pnt').filter(function(p){
+									return p[getDispDat()] != swarmAtt; //dispDat
+								}).style('fill', '#E1DFE3')
+								.style('opacity', '0.6');
+
+								var swarm_point = d3.selectAll('.pnt').filter(function(p){
+												return p[getDispDat()] == swarmAtt; //dispDat
+										})
+
+								g_line.selectAll('.scat_plot')
+									.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
+									.style('opacity', '0.2');						
+
+								tt_fill(
+									swarm_point.datum(),
+									tooltip
+									);
+
+						        tooltip
+					                .style('top', (d3.event.pageY-150)+'px')
+					                .style('left', (d3.event.pageX+5)+'px');
+							})
+							.on('mouseout', function(d){
+								d3.selectAll('.pnt')
+									.style('fill', function(d){
+										if (hasDat(d)) {
+											return col_scale(getPntDat(d, year, 'GR'))
+										}
+									})
+									.style('opacity', function(d){
+										if (hasDat(d)) {
+											return '';
+										}
+									});
+
+								g_line.selectAll('.scat_plot')
+									.filter(function(od){return od[getDispDat()]!=swarmAtt}) //dispDat
+									.style('opacity', '');							
+
+								tooltip.style('visibility', 'hidden');
+								tooltip.selectAll('*').remove();
+							})
+							.transition().duration(1000)
+							.style('opacity', 0.65);
+
+					} // end else
+
+
+
+
+					//Interpolated point management
+
+
+					// if an interpolated point is there
+					if (!this_scat.selectAll('.scat_inter').empty()) {
+
+						this_scat.selectAll('.scat_inter')
+							.transition().duration(1000)
+							.attr('r', radius(_.get(el_dat, [filtParam1, filtParam2, 0, 'mean_n'])))
+							.attr('cy', perc_scale(_.filter(line_dat, function(o){
+								return o['year'] == year;
+							})[0]['perc']))
+							.attr('cx', line_yr_scale(year))
+
+
+					}
+
+					else if (current_point.size() != 1) {
+
+						this_scat.append('circle').classed('scat_inter', true)
+							.style('opacity', 1e-6)
+							.attr('r', radius(_.get(el_dat, [filtParam1, filtParam2, 0, 'mean_n'])))
+							.attr('cy', perc_scale(_.filter(line_dat, function(o){
+								return o['year'] == year;
+							})[0]['perc']))
+							.attr('cx', line_yr_scale(year))
+							.attr('stroke-width', 3)
+							.attr('stroke', 'black')
+							.style('stroke-dasharray', '3 1')
+							.style('fill-opacity', '0')
+							.transition().duration(1000)
+							.style('opacity', 1);
+
+
+
+					}
+
+
+
+	
+
+
+
+
+
+
+				} // end if scat plot has data
+
+				else { // if not data for set of filters
+
+					this_scat.selectAll('*').remove();
+					
+				}
+
+
+
+
+			// end scat_plot each function
+
+			})
 
 		}
 
@@ -1131,7 +1318,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				var this_scat = d3.select(this);
 
 
-
+				// data point for current year
 				var current_point = this_scat.selectAll('.scat').filter(function(d){return d['Y'] == year});
 
 				if (current_point.size() == 1){
@@ -1152,6 +1339,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 					this_scat.selectAll('.scat_line').raise();
 				} 
+
 				else {
 
 					this_scat.selectAll('.scat')
@@ -1176,7 +1364,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			});
 
-		}
+		} // end scat update function
 
 
 		// Update beeswarm on year or filter change

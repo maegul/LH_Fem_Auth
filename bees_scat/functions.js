@@ -349,3 +349,15 @@ function hasDat(dat) {
 }
 
 
+function uniqColsGen(uniq_hue){
+    var uniq_cols = {           // H, Sat, Light
+        line: hsluv.hsluvToHex([uniq_hue, col_params.line.sat, col_params.line.light]),
+        border: hsluv.hsluvToHex([uniq_hue, col_params.border.sat, col_params.border.light]),
+        null_fill: hsluv.hsluvToHex([uniq_hue, col_params.null_fill.sat, col_params.null_fill.light])
+    };
+
+    return uniq_cols;
+}
+
+
+
