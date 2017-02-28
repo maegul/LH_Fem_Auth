@@ -201,7 +201,8 @@ function nestDatGen(data){
 
     // Avoid key, value structure at top
     var nestDat = d3.keys(nestDatInit).map(function(d){ 
-                    var ndat = nestDatInit[d];
+                    var ndat = {};
+                    ndat['nDat'] = nestDatInit[d]; //nDat = nested data
                     ndat[dispDatKey[dispMode]] = d;
 
                     if (dispMode=='J'){
@@ -244,7 +245,7 @@ function n_range(data) {
     return d3.extent(
         _.flatten(_.map(data, function(d){
                     return _.map(
-                                _.get(d, [filtParam1, filtParam2, 0, 'Points'], undefined),
+                                _.get(d, ['nDat', filtParam1, filtParam2, 0, 'Points'], undefined),
                                 function(o){return o['n']}
                             )
                         })
@@ -265,7 +266,7 @@ function n_range_proto(data) {
             _.flatten(
             _.map(data, function(dob){
             return _.map(
-                _.get(dob, [filtParam1, filtParam2, 0, 'Points'], undefined),
+                _.get(dob, ['nDat', filtParam1, filtParam2, 0, 'Points'], undefined),
                 function(o){return o['n']}
                 )
             }
@@ -293,17 +294,17 @@ function getPntDat(dat, year, att){
 
     // var filtParam2 = filtParams[dispFiltKey[dispMode][1]]
 
-    // pnt_by_yr(_.get(dat, [filtParam1, filtParam2, 0], undefined), year, att)
+    // pnt_by_yr(_.get(dat, ['nDat', filtParam1, filtParam2, 0], undefined), year, att)
     
     return _.filter(
-                _.get(dat, [filtParam1, filtParam2, 0, 'Points'], undefined),
+                _.get(dat, ['nDat', filtParam1, filtParam2, 0, 'Points'], undefined),
                     function(o){return o['Y'] == year} 
             )[0][att]
 
     // Use below 
     // How deal with undefined for data points ... if statement and fade in .attr()?
 
-    // _.get(d, [filtParam1, filtParam2, 0], undefined)    
+    // _.get(d, ['nDat', filtParam1, filtParam2, 0], undefined)    
 
 
 }
@@ -345,7 +346,7 @@ function getDispDat() {
 }
 
 function hasDat(dat) {
-    return _.has(dat, [filtParam1, filtParam2])
+    return _.has(dat, ['nDat', filtParam1, filtParam2])
 }
 
 

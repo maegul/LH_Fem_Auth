@@ -357,8 +357,6 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	console.log('disp data')
 	console.log(dat);
 
-	console.log('filt params')
-    console.log([filtParam1, filtParam2])
 
 
 
@@ -374,17 +372,17 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
     // console.log(
     // 	_.map(dat, function(d){
-    // 			return _.get(d, [filtParam1, filtParam2, 0], undefined)
+    // 			return _.get(d, ['nDat',filtParam1, filtParam2, 0], undefined)
     // 		})
     // 	)
 
-    // console.log(_.has(dat[4], [filtParam1, filtParam2]))
+    // console.log(_.has(dat[4], ['nDat',filtParam1, filtParam2]))
 
     // console.log(
     // 	d3.extent(
 	   //  _.flatten(_.map(dat, function(d){
 	   //  	return _.map(
-	   //  			_.get(d, [filtParam1, filtParam2, 0, 'Points'], undefined),
+	   //  			_.get(d, ['nDat',filtParam1, filtParam2, 0, 'Points'], undefined),
 	   //  			function(o){return o['n']}
 	   //  	)
 	   //  })
@@ -554,7 +552,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								}
 						else {
 							return radius(
-								_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+								_.get(d, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])
 									)
 
 							}
@@ -582,7 +580,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		// disp
 
 		// pnt.filter(function(d){
-		// 		return !_.has(d, [filtParam1, filtParam2]) } )
+		// 		return !_.has(d, ['nDat',filtParam1, filtParam2]) } )
 		// 	.append('circle')
 		// 	.classed('pnt', true)
 		// 	.attr('r', 0)
@@ -601,7 +599,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								}
 						else {
 							return radius(
-								_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+								_.get(d, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])
 									)
 							}
 						}
@@ -741,7 +739,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 					var point_dat = _.filter(
-										_.get(d, [filtParam1, filtParam2, 0, 'Points']),
+										_.get(d, ['nDat',filtParam1, filtParam2, 0, 'Points']),
 										function(o){return o['intp']==0}
 										)
 
@@ -749,7 +747,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					console.log(point_dat);
 
 
-					var line_dat = line_dat_gen(_.get(d, [filtParam1, filtParam2, 0, 'Curve']), yr_max);
+					var line_dat = line_dat_gen(_.get(d, ['nDat',filtParam1, filtParam2, 0, 'Curve']), yr_max);
 
 					// Con Interval error bars - line generator
 					var scat_ci = scat_plot.selectAll('.scat_ci')
@@ -861,7 +859,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					// If need interpolated data point for year
 					else {
 						scat_plot.append('circle').classed('scat_inter', true)
-							.attr('r', radius(_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])))
+							.attr('r', radius(_.get(d, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])))
 							.attr('cy', perc_scale(_.filter(line_dat, function(o){
 								return o['year'] == year;
 							})[0]['perc']))
@@ -1010,12 +1008,12 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 				// check if scat plot has data
 
-				if (_.get(el_dat, [filtParam1, filtParam2], undefined)){
+				if (_.get(el_dat, ['nDat',filtParam1, filtParam2], undefined)){
 					console.log('I has the data')
 
 
 					var point_dat = _.filter(
-							_.get(el_dat, [filtParam1, filtParam2, 0, 'Points']),
+							_.get(el_dat, ['nDat',filtParam1, filtParam2, 0, 'Points']),
 							function(o){return o['intp']==0}
 						)
 
@@ -1181,7 +1179,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					// Line management
 
 					var line_dat = line_dat_gen(
-								_.get(el_dat, [filtParam1, filtParam2, 0, 'Curve']), yr_max
+								_.get(el_dat, ['nDat',filtParam1, filtParam2, 0, 'Curve']), yr_max
 								);
 
 
@@ -1274,7 +1272,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 						this_scat.selectAll('.scat_inter')
 							.transition().duration(1000)
-							.attr('r', radius(_.get(el_dat, [filtParam1, filtParam2, 0, 'mean_n'])))
+							.attr('r', radius(_.get(el_dat, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])))
 							.attr('cy', perc_scale(_.filter(line_dat, function(o){
 								return o['year'] == year;
 							})[0]['perc']))
@@ -1287,7 +1285,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 						this_scat.append('circle').classed('scat_inter', true)
 							.style('opacity', 1e-6)
-							.attr('r', radius(_.get(el_dat, [filtParam1, filtParam2, 0, 'mean_n'])))
+							.attr('r', radius(_.get(el_dat, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])))
 							.attr('cy', perc_scale(_.filter(line_dat, function(o){
 								return o['year'] == year;
 							})[0]['perc']))
@@ -1372,7 +1370,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 					this_scat.append('circle').classed('scat_inter', true)
-						.attr('r', radius(_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])))
+						.attr('r', radius(_.get(d, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])))
 						.attr('cy', perc_scale(_.filter(interp_dat, function(o){
 							return o['year'] == year;
 						})[0]['perc']))
@@ -1401,7 +1399,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 									}
 							else {
 								return radius(
-									_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+									_.get(d, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])
 										)
 								}
 							}
@@ -1464,7 +1462,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								}
 						else {
 							return radius(
-								_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+								_.get(d, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])
 									)
 						}
 					}
@@ -1502,7 +1500,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 									}
 							else {
 								return radius(
-									_.get(d, [filtParam1, filtParam2, 0, 'mean_n'])
+									_.get(d, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])
 										)
 
 								}
