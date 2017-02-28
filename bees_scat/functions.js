@@ -360,4 +360,31 @@ function uniqColsGen(uniq_hue){
 }
 
 
+function getCountFiltOpts(dat){
+
+    var datActive = _.filter(dat, function(o){
+        return _.has(o, ['Iran', 'Last'])
+    });
+
+    // return datActive;
+
+
+
+    return _.filter(
+                _.uniq(
+                    _.flatten(
+                            _.map(datActive, function(o){
+                                return _.keys(o)
+                                })
+                            )
+                    ),
+                    function(o){
+                        return o != 'Discipline';
+                        }
+            )
+            
+
+}
+
+
 

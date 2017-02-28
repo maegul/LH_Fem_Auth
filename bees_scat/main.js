@@ -13,7 +13,17 @@
 			// keep g element - and color (?) - remove all inside.
 		// Filter code deals with IO from filters, runs update
 
-	// Re-normalise radius scale on filter
+			// country filter box for disc
+
+
+			// Initialise filters based on disp mode
+				// dispfilt key
+				// get list of options and populate
+				// make list of options co-dependent
+			// trigger filt with selection
+
+// Re-normalise radius scale on filter - done (simply call n_range(), which is filt dependent)
+	// Need radius legend too ... otherwise confusing what's going on.
 
 
 
@@ -347,16 +357,20 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	console.log('disp data')
 	console.log(dat);
 
-
-
+	console.log('filt params')
     console.log([filtParam1, filtParam2])
 
-    console.log(dat.map(function(d){
-    	if (hasDat(d)) {
-    		return radius(getPntDat(d, year, 'n'))
-   	 }
-   	 else {return 'dlfjlskd'}
-	}))
+
+
+    // get list of unique countries
+    console.log('uniq countries test from nested dat')
+    console.log(
+    		getCountFiltOpts(dat)
+
+
+    	)
+    	
+
 
     // console.log(
     // 	_.map(dat, function(d){
@@ -939,6 +953,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 // Update
 //////////
 
+
+
+		$('#filters').select2({
+			width: '100%',
+			data: d3.range(10)
+		})
+
 		d3.select('#test_filt').on('click', function(){
 
 			if (d3.select(this).attr('value') == '0') {
@@ -960,6 +981,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			filtParam1 = filtParams[dispFiltKey[dispMode][0]]
 
 			filtParam2 = filtParams[dispFiltKey[dispMode][1]]
+			radius.domain(n_range(dat));
 
 
 			beeSwarmUpdate()
