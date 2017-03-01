@@ -13,7 +13,12 @@
 			// keep g element - and color (?) - remove all inside.
 		// Filter code deals with IO from filters, runs update
 
-			// country filter box for disc
+			// search highlight filter
+				// get all unique on disp
+				// disable on filter
+				// click on selection
+
+			// init filters on display (depends on disp mode)
 
 
 			// Initialise filters based on disp mode
@@ -21,6 +26,13 @@
 				// get list of options and populate
 				// make list of options co-dependent
 			// trigger filt with selection
+
+
+// scat plot
+	// add CI option
+	// add legend
+		// on side
+		// colour coded
 
 // Re-normalise radius scale on filter - done (simply call n_range(), which is filt dependent)
 	// Need radius legend too ... otherwise confusing what's going on.
@@ -360,13 +372,37 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-    // get list of unique countries
-    console.log('uniq countries test from nested dat')
-    console.log(
-    		getCountFiltOpts(dat)
+	// INIT filts
+
+	// calculate for all and call based on disp mode - make all function and auto filt function
+	var all_uniq_counts = getCountFiltOpts(dat);
+	var all_uniq_pos = getPosFiltOpts(dat)
+
+	console.log('filt test')
+	console.log(all_uniq_counts)
 
 
-    	)
+	$('.count_filter').select2({
+		placeholder: 'Search Country',
+		width: '100%',
+		data: _.map(getCountFiltOpts(dat), function(c){
+			return {id: c,
+					text: c
+					}
+		})
+	})
+
+
+	$('.pos_filter').select2({
+		placeholder: 'Search Position',
+		width: '100%',
+		data: _.map(all_uniq_pos, function(c){
+			return {id: c,
+					text: c
+					}
+		})
+	})
+
     	
 
 
@@ -953,38 +989,119 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-		$('#filters').select2({
-			width: '100%',
-			data: d3.range(10)
+		$('.count_filter').on('select2:select', function(e){
+			filtParams['Country'] = e.params.data.text;
+
+			console.log('count select event');
+			console.log(e);
+
+
+
+			filtUpdate();
+
 		})
 
-		d3.select('#test_filt').on('click', function(){
 
-			if (d3.select(this).attr('value') == '0') {
+		$('.pos_filter').on('select2:select', function(e){
+			filtParams['Position'] = e.params.data.text;
 
-				filtParams['Country']='Australia';
-				d3.select(this).attr('value', '1')
-
-
-			} 
-			else{
-
-				filtParams['Country']='allCountries';
-				d3.select(this).attr('value', '0');
+			console.log('count select event');
+			console.log(e);
 
 
-			};
 
+			filtUpdate();
+
+		})
+
+		function filtUpdate(){
 
 			filtParam1 = filtParams[dispFiltKey[dispMode][0]]
 
 			filtParam2 = filtParams[dispFiltKey[dispMode][1]]
+
+			console.log('Filt Update filt params')
+			console.log([filtParam1, filtParam2])
+
 			radius.domain(n_range(dat));
+			beeSwarmUpdate();
+			scatUpdateFilt();
+			reInitFilt();
+
+		}
 
 
-			beeSwarmUpdate()
-			scatUpdateFilt()
-		})
+
+		function checkInActive(current, active){
+
+			// if in active
+			if (_.findIndex(active, function(ac){
+				return ac == current; // current count not in active
+					})==-1) {
+				return true; // ie, current not active, so true for disabled
+			}
+			else {
+				return false;
+			}			
+
+		}
+
+		function checkSelected(current, filt){
+			if (current == filtParams[filt]){
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+
+		function reInitFilt(){
+
+			var active_uniq_counts = getCountFiltOpts(dat);
+			var active_uniq_pos = getPosFiltOpts(dat);
+
+
+			//Country filter
+			$('.count_filter').select2('destroy').empty()
+				.select2({
+					placeholder: 'Search Country',
+					width: '100%',
+					data: _.map(all_uniq_counts, function(c){
+
+						return {
+							id: c,
+							text: c,
+							disabled: checkInActive(c, active_uniq_counts),
+							selected: checkSelected(c, $('.count_filter').attr('value'))
+						}
+					})
+				});
+
+
+			$('.pos_filter').select2('destroy').empty()
+				.select2({
+					placeholder: 'Search Position',
+					width: '100%',
+					data: _.map(all_uniq_pos, function(c){
+
+						return {
+							id: c,
+							text: c,
+							disabled: checkInActive(c, active_uniq_pos),
+							selected: checkSelected(c, $('.pos_filter').attr('value'))
+						}
+
+					})
+				});
+
+
+
+
+		}
+
+
+
 
 
 		// Update the scatter on filter change
@@ -1154,7 +1271,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 					// Year highlight
-					var current_point = this_scat.selectAll('.scat').filter(function(d){return d['Y'] == year});
+					var current_point = this_scat.selectAll('.scat')
+											.filter(function(d){
+												return d['Y'] == year
+											});
 
 					if (current_point.size() == 1){
 
@@ -1268,7 +1388,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 					// if an interpolated point is there
-					if (!this_scat.selectAll('.scat_inter').empty()) {
+					if (current_point.size() == 0 && !this_scat.selectAll('.scat_inter').empty()) {
 
 						this_scat.selectAll('.scat_inter')
 							.transition().duration(1000)
@@ -1334,57 +1454,59 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			d3.selectAll('.scat_plot').each(function(d){
 
+				// if scat plot has data, then manipulate.
+				if (_.get(d, ['nDat',filtParam1, filtParam2], undefined)) {
 
-				var this_scat = d3.select(this);
-
-
-				// data point for current year
-				var current_point = this_scat.selectAll('.scat').filter(function(d){return d['Y'] == year});
-
-				if (current_point.size() == 1){
-
-					this_scat.selectAll('.scat')
-						.sort(function(a, b) {
-						  return a['Y'] < b['Y'] ? -1 : a['Y'] > b['Y'] ? 1 : a['Y'] >= b['Y'] ? 0 : NaN;
-						})
-						.style('fill', '#E1DFE3')
-						.style('stroke-width', 'initial');
-
-					current_point
-						.raise()
-						.style('stroke-width', '3px')
-						.style('fill', 
-						col_scale(current_point.datum()['GR'])
-						);
-
-					this_scat.selectAll('.scat_line').raise();
-				} 
-
-				else {
-
-					this_scat.selectAll('.scat')
-						.style('fill', '#E1DFE3')
-						.style('stroke-width', 1);
-					interp_dat = this_scat.selectAll('.scat_line').datum();
+					var this_scat = d3.select(this);
 
 
+					// data point for current year
+					var current_point = this_scat.selectAll('.scat').filter(function(d){return d['Y'] == year});
 
-					this_scat.append('circle').classed('scat_inter', true)
-						.attr('r', radius(_.get(d, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])))
-						.attr('cy', perc_scale(_.filter(interp_dat, function(o){
-							return o['year'] == year;
-						})[0]['perc']))
-						.attr('cx', line_yr_scale(year))
-						.attr('stroke-width', 3)
-						.attr('stroke', 'black')
-						.style('stroke-dasharray', '3 1')
-						.style('fill-opacity', '0');
-				};
+					if (current_point.size() == 1){
+
+						this_scat.selectAll('.scat')
+							.sort(function(a, b) {
+							  return a['Y'] < b['Y'] ? -1 : a['Y'] > b['Y'] ? 1 : a['Y'] >= b['Y'] ? 0 : NaN;
+							})
+							.style('fill', '#E1DFE3')
+							.style('stroke-width', 'initial');
+
+						current_point
+							.raise()
+							.style('stroke-width', '3px')
+							.style('fill', 
+							col_scale(current_point.datum()['GR'])
+							);
+
+						this_scat.selectAll('.scat_line').raise();
+					} 
+
+					else {
+
+						this_scat.selectAll('.scat')
+							.style('fill', '#E1DFE3')
+							.style('stroke-width', 1);
+						interp_dat = this_scat.selectAll('.scat_line').datum();
 
 
-			});
 
-		} // end scat update function
+						this_scat.append('circle').classed('scat_inter', true)
+							.attr('r', radius(_.get(d, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])))
+							.attr('cy', perc_scale(_.filter(interp_dat, function(o){
+								return o['year'] == year;
+							})[0]['perc']))
+							.attr('cx', line_yr_scale(year))
+							.attr('stroke-width', 3)
+							.attr('stroke', 'black')
+							.style('stroke-dasharray', '3 1')
+							.style('fill-opacity', '0');
+					};
+				} // end if
+
+			}); // end each function
+
+		} // end scat year update function
 
 
 		// Update beeswarm on year or filter change
@@ -1488,6 +1610,17 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						}
 					}).strength(0.99)
 				)
+				.force('x', d3.forceX(function(d){
+
+						if (hasDat(d)) {
+							return width/2;
+						}
+						else {
+							return 0;
+						}
+
+					}).strength(0.07)
+				)
 				.force("collide", 
 					d3.forceCollide(function(d){
 
@@ -1511,21 +1644,30 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 						}
 				))
-				.force('repulsion', d3.forceManyBody().strength(-15 * Math.sqrt((100 / dat_length) * 10*(rad_range/(abs_max_rad- abs_min_rad)))  ))
+				.force('repulsion', d3.forceManyBody()
+						.strength(-15 * Math.sqrt((100 / dat_length) * 10*(rad_range/(abs_max_rad- abs_min_rad)))  )
+						.distanceMax(100)
+				)
 
 
+				if (typeof sim_repuls_TO !== 'undefined') {
+					clearTimeout(sim_repuls_TO);
+				}
+
+				if (typeof sim_second_heat_TO !== 'undefined'){
+					clearTimeout(sim_second_heat_TO)
+				}
 
 
-
-				simulation.alpha(0.03)
+				simulation.alpha(0.05)
 							.restart();
 
-				setTimeout(function(){
+				sim_repuls_TO = setTimeout(function(){
 					simulation.force('repulsion', d3.forceManyBody().strength(0))
 				}, 700)
 
-				setTimeout(function(){
-					simulation.alpha(0.06).restart();
+				sim_second_heat_TO = setTimeout(function(){
+					simulation.alpha(0.2).restart();
 				}, 1300)
 
 		}

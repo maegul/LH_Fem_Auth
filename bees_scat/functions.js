@@ -361,29 +361,57 @@ function uniqColsGen(uniq_hue){
 }
 
 
+function getDatActive(dat){
+
+    return _.filter(dat, function(o){
+        return _.has(o, ['nDat', filtParam1, filtParam2])
+    });
+
+    // return _.filter(dat, function(o){
+    //     return _.has(o, ['nDat', 'Japan', filtParam2])
+    // });
+
+
+}
+
+
 function getCountFiltOpts(dat){
 
-    var datActive = _.filter(dat, function(o){
-        return _.has(o, ['Iran', 'Last'])
-    });
+    // var datActive = _.filter(dat, function(o){
+    //     return _.has(o, ['nDat', 'Iran', 'Last'])
+    // });
 
     // return datActive;
 
 
 
-    return _.filter(
-                _.uniq(
-                    _.flatten(
-                            _.map(datActive, function(o){
-                                return _.keys(o)
-                                })
-                            )
-                    ),
-                    function(o){
-                        return o != 'Discipline';
-                        }
-            )
+    return _.uniq(
+                _.flatten(
+                        _.map(getDatActive(dat), function(o){
+                            return _.keys(o['nDat'])
+                            })
+                        )
+                )
             
+}
+
+
+function getPosFiltOpts(dat){
+
+    return _.uniq(
+                _.flattenDeep(
+                        _.map(getDatActive(dat), function(o){
+
+                            // var keys = _.keys(o['nDat']);
+
+                            return _.map(_.keys(o['nDat']), function(k){
+                                return _.keys(o['nDat'][k]);
+                                    })
+
+                            })
+                        )
+                )
+
 
 }
 
