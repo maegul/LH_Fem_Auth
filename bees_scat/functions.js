@@ -188,7 +188,7 @@ function nestDatGen(data){
     var nestDatInit = d3.nest()
                     .key(function(d) { return d[dispDatKey[dispMode]]})
                     .key(function(d) { return d[dispFiltKey[dispMode][0]]})
-                    .key(function(d){ return d[dispFiltKey[dispMode][1]]})
+                    .key(function(d) { return d[dispFiltKey[dispMode][1]]})
                     // .rollup(function(d){
                     //  return {
                     //      Points: d.Points,
@@ -202,8 +202,8 @@ function nestDatGen(data){
     // Avoid key, value structure at top
     var nestDat = d3.keys(nestDatInit).map(function(d){ 
                     var ndat = {};
-                    ndat['nDat'] = nestDatInit[d]; //nDat = nested data
-                    ndat[dispDatKey[dispMode]] = d;
+                    ndat['nDat'] = nestDatInit[d]; // nDat = nested data
+                    ndat[dispDatKey[dispMode]] = d; // disp mode coded in as key id
 
                     if (dispMode=='J'){
                         ndat['Discipline'] = journDiscIdx.get(d).keys()[0];
@@ -361,10 +361,23 @@ function uniqColsGen(uniq_hue){
 }
 
 
-function getDatActive(dat){
+// function getDatActive(dat){
+
+//     return _.filter(dat, function(o){
+//         return _.has(o, ['nDat', filtParam1, filtParam2])
+//     });
+
+//     // return _.filter(dat, function(o){
+//     //     return _.has(o, ['nDat', 'Japan', filtParam2])
+//     // });
+
+
+// }
+
+function getDatActive(dat, f1, f2){
 
     return _.filter(dat, function(o){
-        return _.has(o, ['nDat', filtParam1, filtParam2])
+        return _.has(o, ['nDat', f1, f2])
     });
 
     // return _.filter(dat, function(o){
@@ -373,6 +386,53 @@ function getDatActive(dat){
 
 
 }
+
+function getActiveFiltOneOpts(dat, all_uniq){
+    return _.filter(all_uniq, function(au){
+                var optDat = getDatActive(dat, au, filtParam2);
+                return optDat.length > 0;
+            })
+
+}
+
+function getActiveFiltTwoOpts(dat, all_uniq){
+    return _.filter(all_uniq, function(au){
+                var optDat = getDatActive(dat, filtParam1, au);
+                return optDat.length > 0;
+            })
+
+}
+
+
+function getFiltOneOpts(dat){
+
+    return _.uniq(
+                _.flatten(
+                        _.map(getDatActive(dat, filtParam1, filtParam2), function(o){
+                            return _.keys(o['nDat'])
+                            })
+                        )
+                )
+            
+}
+
+
+function getFiltTwoOpts(dat){
+
+    return _.uniq(
+                _.flattenDeep(
+                        _.map(getDatActive(dat, filtParam1, filtParam2), function(o){
+
+                            return _.map(_.keys(o['nDat']), function(k){
+                                return _.keys(o['nDat'][k]);
+                                    })
+
+                            })
+                        )
+                )
+
+}
+
 
 
 function getCountFiltOpts(dat){
@@ -387,7 +447,7 @@ function getCountFiltOpts(dat){
 
     return _.uniq(
                 _.flatten(
-                        _.map(getDatActive(dat), function(o){
+                        _.map(getDatActive(dat, filtParam1, filtParam2), function(o){
                             return _.keys(o['nDat'])
                             })
                         )
@@ -400,7 +460,7 @@ function getPosFiltOpts(dat){
 
     return _.uniq(
                 _.flattenDeep(
-                        _.map(getDatActive(dat), function(o){
+                        _.map(getDatActive(dat, filtParam1, filtParam2), function(o){
 
                             // var keys = _.keys(o['nDat']);
 
@@ -413,6 +473,15 @@ function getPosFiltOpts(dat){
                 )
 
 
+}
+
+function getDispOpts(dat){
+    return _.map(
+                getDatActive(dat), function(d){
+                    return d[dispMode]
+                }
+
+        )
 }
 
 

@@ -378,6 +378,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	var all_uniq_counts = getCountFiltOpts(dat);
 	var all_uniq_pos = getPosFiltOpts(dat)
 
+	var all_uniq_filt_one = getFiltOneOpts(dat);
+	var all_uniq_filt_two = getFiltTwoOpts(dat);
+
 	console.log('filt test')
 	console.log(all_uniq_counts)
 
@@ -1028,6 +1031,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			scatUpdateFilt();
 			reInitFilt();
 
+			console.log('get disp opts test')
+			console.log(getDispOpts(dat))
+
 		}
 
 
@@ -1058,8 +1064,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 		function reInitFilt(){
 
-			var active_uniq_counts = getCountFiltOpts(dat);
-			var active_uniq_pos = getPosFiltOpts(dat);
+			var active_uniq_counts = getActiveFiltOneOpts(dat, all_uniq_filt_one);
+			var active_uniq_pos = getActiveFiltTwoOpts(dat, all_uniq_filt_two);
 
 
 			//Country filter
@@ -1646,7 +1652,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				))
 				.force('repulsion', d3.forceManyBody()
 						.strength(-15 * Math.sqrt((100 / dat_length) * 10*(rad_range/(abs_max_rad- abs_min_rad)))  )
-						.distanceMax(100)
+						.distanceMax(90)
 				)
 
 
