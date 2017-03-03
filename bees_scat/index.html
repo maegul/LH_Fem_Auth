@@ -3,7 +3,7 @@
 	<title>New Beeswarm plus Scatter</title>
 
 
-	<script type="text/javascript" src='d3.min.js'></script>
+	<script type="text/javascript" src='d3.min.js' charset="utf-8"></script>
 	<script type="text/javascript" src='d3-scale-chromatic.min.js'></script>
 	<script type="text/javascript" src='lodash.js'></script>
 	<script type="text/javascript" src='hsluv.min.js'></script>
@@ -21,9 +21,28 @@
 		border: 1px solid red;
 	}*/
 
+
+
 	.canvas {
 	/*	display: inline-block;
 		width:80%;*/
+	}
+
+	.cont_main {
+		display: flex;
+		flex-direction: row;
+	}
+
+	#controls {
+		width: 20%;
+	}
+
+	.legend_item {
+		display: flex;
+		flex-direction: row;
+		font-family: sans-serif;
+		font-weight: lighter;
+		cursor: pointer;
 	}
 
 	.main {
@@ -112,22 +131,7 @@
 
 <body>
 
-<div id='controls'>
-
-  <input style='width:20%;' type="range" name="range" class="slider" id="year_slider" value="2016" min="2002" max="2030" step="1" >
-
-
-  <div id='filters'>
-  	<select class='count_filter' value='Country'>
-  		<option></option>
-  	</select>
-
-  	<select class='pos_filter' value='Position'>
-  		<option></option>
-  	</select>
-
-  </div>
-</div>
+<div class='cont_main'>
 
 <div class='main'>
 
@@ -165,6 +169,48 @@
 
 
 
+<div id='controls'>
+
+  <input style='width:80%;' type="range" name="range" class="slider" id="year_slider" value="2016" min="2002" max="2030" step="1" >
+
+  <div class='cont_disp'>
+  	<div value='J'>Journals</div>
+  	<div value='D'>Disciplines</div>
+  	<div value='C'>Countries</div>
+	<div value='P'>Author Positions</div>
+  </div>
+
+
+  <div id='filters'>
+  	<select class='search'>
+  		<option></option>
+  	</select>
+
+  	<button id='search_reset' class='filt_butt'>Clear Highlights</button>
+
+  	<select class='filter_one' value='Country'>
+  		<option></option>
+  	</select>
+
+  	<button id='filter_one_reset' class='filt_butt'>Reset</button>
+
+  	<select class='filter_two' value='Position'>
+  		<option></option>
+  	</select>
+
+  	<button id='filter_two_reset' class='filt_butt'>Reset</button>
+
+  </div>
+
+  <div class='legend'>
+
+
+  </div>
+</div>
+
+
+
+</div>
 
 
 

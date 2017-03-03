@@ -374,6 +374,38 @@ function uniqColsGen(uniq_hue){
 
 // }
 
+//////
+// FOr filtering
+//////
+
+
+
+function checkInActive(current, active){
+
+    // if in active
+    if (_.findIndex(active, function(ac){
+        return ac == current; // current count not in active
+            })==-1) {
+        return true; // ie, current not active, so true for disabled
+    }
+    else {
+        return false;
+    }           
+
+}
+
+function checkSelected(current, filt){
+    if (current == filtParams[filt]){
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+
+
+
 function getDatActive(dat, f1, f2){
 
     return _.filter(dat, function(o){
@@ -475,10 +507,13 @@ function getPosFiltOpts(dat){
 
 }
 
+
+
 function getDispOpts(dat){
     return _.map(
-                getDatActive(dat), function(d){
-                    return d[dispMode]
+                getDatActive(dat, filtParam1, filtParam2), 
+                function(d){
+                    return d[dispDatKey[dispMode]];
                 }
 
         )

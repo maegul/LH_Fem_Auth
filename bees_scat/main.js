@@ -9,30 +9,14 @@
 // Filters (+ highlight)
 
 
-		// Make filter update deal with non-existent data
-			// keep g element - and color (?) - remove all inside.
-		// Filter code deals with IO from filters, runs update
-
-			// search highlight filter
-				// get all unique on disp
-				// disable on filter
-				// click on selection
-
-			// init filters on display (depends on disp mode)
 
 
-			// Initialise filters based on disp mode
-				// dispfilt key
-				// get list of options and populate
-				// make list of options co-dependent
-			// trigger filt with selection
+
 
 
 // scat plot
 	// add CI option
-	// add legend
-		// on side
-		// colour coded
+
 
 // Re-normalise radius scale on filter - done (simply call n_range(), which is filt dependent)
 	// Need radius legend too ... otherwise confusing what's going on.
@@ -43,9 +27,6 @@
 
 // Click to see deeper data
 
-// Tweak simulation
-	// Deal with large difference in bubble size
-		// Get range of radii and increase repulsion accordingly
 
 // Disp filters
 	// Overall Disp
@@ -292,16 +273,27 @@ var dispFiltKey = {
 
 }
 
-var filtParams = {
+
+// Initial disp Mode and filter values defined here
+
+var default_filtParams = {
 	Discipline:'allDisciplines',
 	Country: 'allCountries',
 	Position: 'Overall'
 }
 
+var default_dispMode = 'D';
 
-var dispOpts = ['J', 'D', 'C', 'P'];
 
-var dispMode = 'D';
+
+var filtParams = _.cloneDeep(default_filtParams);
+
+// Initial display mode defined here
+var dispMode = _.clone(default_dispMode);
+
+
+
+var dispOpts = ['J', 'D', 'C', 'P']; // redundant?
 
 var filtParam1 = filtParams[dispFiltKey[dispMode][0]]
 
@@ -317,10 +309,22 @@ var filtParam2 = filtParams[dispFiltKey[dispMode][1]]
 d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
+// DispMode revamp
+
+
+// initialise filters according to disp requirements
+	// necessary filters are from filtParams
+
+	// rely on nested data and ordering of it (which all hinges on filtParams!!)
+
+	// Journal special case of a discipline filter set to allDisciplines
+
+
+
+
 	for (var i = 0; i < dispOpts.length; i++) {
 		
-		d3.select('#controls').append('div')
-			.text(dispOpts[i])
+		d3.select('.cont_disp').selectAll('div')
 			.style('cursor', 'pointer')
 			.on('mouseover', function(){
 				d3.select(this).style('color', 'red')
@@ -332,7 +336,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				g_bee_swarm.selectAll('*').remove();
 				g_line.selectAll('*').remove();
 
-				dispMode = d3.select(this).text();
+				dispMode = d3.select(this).attr('value');
+
+				// reset filt params to defaults
+				filtParams = _.cloneDeep(default_filtParams);
 
 				filtParam1 = filtParams[dispFiltKey[dispMode][0]]
 
@@ -341,8 +348,20 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 				dat = nestDatGen(main_data);
 
+				console.log('\ndispMode from disp mode change')
 				console.log(dispMode)
+
+				console.log('\n dat')
 				console.log(dat)
+
+				// Empty for when change disp mode and remove event listeners so no double up
+				$('.search').select2('destroy').empty().off()
+				$('.filter_one').select2('destroy').empty().off()								
+				$('.filter_two').select2('destroy').empty().off()			
+
+
+
+				initFilters()
 
 				disp()
 			});
@@ -375,120 +394,70 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	// INIT filts
 
 	// calculate for all and call based on disp mode - make all function and auto filt function
-	var all_uniq_counts = getCountFiltOpts(dat);
-	var all_uniq_pos = getPosFiltOpts(dat)
+	function initFilters(){
 
-	var all_uniq_filt_one = getFiltOneOpts(dat);
-	var all_uniq_filt_two = getFiltTwoOpts(dat);
+		// Initialised the contents of the filters
 
-	console.log('filt test')
-	console.log(all_uniq_counts)
+		all_uniq_disp_opts = getDispOpts(dat);
+
+		all_uniq_filt_one = getFiltOneOpts(dat);
+		all_uniq_filt_two = getFiltTwoOpts(dat);
 
 
-	$('.count_filter').select2({
-		placeholder: 'Search Country',
-		width: '100%',
-		data: _.map(getCountFiltOpts(dat), function(c){
-			return {id: c,
-					text: c
-					}
+
+
+		$('.search').select2({
+			placeholder: 'Search for a ' + dispDatKey[dispMode],
+			width: '100%',
+			data: _.map(all_uniq_disp_opts, function(o){
+				return {
+					id: o,
+					text: o
+				}
+			})
 		})
-	})
+
+		$('.search').val('').trigger('change')			
 
 
-	$('.pos_filter').select2({
-		placeholder: 'Search Position',
-		width: '100%',
-		data: _.map(all_uniq_pos, function(c){
-			return {id: c,
-					text: c
-					}
+
+
+
+
+		$('.filter_one').select2({
+			placeholder: 'Search ' + dispFiltKey[dispMode][0],
+			width: '100%',
+			data: _.map(all_uniq_filt_one, function(c){
+				return {id: c,
+						text: c,
+						selected: checkSelected(c, dispFiltKey[dispMode][0])
+						}
+			})
 		})
-	})
-
-    	
 
 
-    // console.log(
-    // 	_.map(dat, function(d){
-    // 			return _.get(d, ['nDat',filtParam1, filtParam2, 0], undefined)
-    // 		})
-    // 	)
-
-    // console.log(_.has(dat[4], ['nDat',filtParam1, filtParam2]))
-
-    // console.log(
-    // 	d3.extent(
-	   //  _.flatten(_.map(dat, function(d){
-	   //  	return _.map(
-	   //  			_.get(d, ['nDat',filtParam1, filtParam2, 0, 'Points'], undefined),
-	   //  			function(o){return o['n']}
-	   //  	)
-	   //  })
-	   //  )
-	   //  )
-    // )
+		$('.filter_two').select2({
+			placeholder: 'Search ' + dispFiltKey[dispMode][1],
+			width: '100%',
+			data: _.map(all_uniq_filt_two, function(c){
+				return {id: c,
+						text: c,
+						selected: checkSelected(c, dispFiltKey[dispMode][1])
+						}
+			})
+		})
 
 
 
-
-	// var t0 = performance.now();
-
-
-
-	// var journDiscIdx = d3.nest()
-	// 			.key(function(d) {return d.Journal})
-	// 			.key(function(d) {return d.Discipline})
-	// 			.map(dispDatGenFilt(main_data, 'J'));
-
-
-	// var nestTest = d3.nest()
-	// 			.key(function(d) { return d[dispDatKey[dispMode]]})
-	// 			.key(function(d) { return d[dispFiltKey[dispMode][0]]})
-	// 			.key(function(d){ return d[dispFiltKey[dispMode][1]]})
-	// 			// .rollup(function(d){
-	// 			// 	return {
-	// 			// 		Points: d.Points,
-	// 			// 		Curve: d.Curve,
-	// 			// 		mean_n: d.mean_n
-	// 			// 	}
-	// 			// })
-	// 			.object(dispDatGenFilt(main_data, dispMode))
-
-	// var nestDat = d3.keys(nestTest).map(function(d){ 
-	// 				var ndat = nestTest[d];
-	// 				ndat[dispDatKey[dispMode]] = d;
-
-	// 				if (dispMode=='J'){
-	// 					ndat['Discipline'] = journDiscIdx.get(d).keys()[0];
-	// 					// ndat['Discipline'] = _.find(journDiscIdx, function(j){return j.J == d})['D']
-	// 				}
-	// 				return ndat;
-	// 	})
-
-
-	// console.log(nestDat)
+	}
 
 
 
-
-
-
-	// var t1 = performance.now();
-	// console.log("Call to map a disc search took " + (t1 - t0) + " milliseconds.");
-
-	// Filt D: C, P
-	// Filt J: D, C, P
-	// Filt C: P, D
-	// Filt P: C, D
-
-
-
-	// radius.range([5, 20])
-
-
+	// Configure reset buttons
 
 	
+
+
 
 
 
@@ -531,6 +500,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		.style('font-family', 'sans-serif');
 
 
+	initFilters();
 	disp();
 
 	function disp(){ //in: dat, g_swarm, g_line; out: sim, pnt
@@ -538,7 +508,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 		// State log
-		console.log('dispMode')
+		console.log('dispMode fron disp()')
 		console.log(dispMode)
 		console.log('year')
 		console.log(year)
@@ -561,6 +531,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			radius.range([abs_min_rad, n_dep_max_rad])
 		}
 
+
+
+		reInitFilt();
 
 		// Simulation init
 		// disp
@@ -627,6 +600,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		// 	.attr('cy', function(d){return d.y})
 
 		pnt.enter().append('circle').classed('pnt', true)
+			.attr('value', 'not_clicked')
 			.attr('r', function(d){
 					if (hasDat(d)) {
 						if(getPntDat(d, year, 'intp')==0){
@@ -676,6 +650,12 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					g_line.selectAll('.scat_plot')
 						.filter(function(od){return od[getDispDat()]!=d[getDispDat()]}) //dispDat
 						.style('opacity', '0.2');
+
+					g_line.selectAll('.scat_plot')
+						.filter(function(od){
+							return od[getDispDat()] == d[getDispDat()]
+						})
+						.raise()
 
 					d3.selectAll('.pnt')
 						.style('opacity', '0.6');
@@ -737,8 +717,15 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					d3.selectAll('.pnt')
 						.style('opacity', '');
 
+					d3.selectAll('.legend_item')
+						.filter(function(){
+							return d3.select(this).attr('value')==d[getDispDat()]
+						})
+						.remove();
+
 					// May make sense, but if preious unclicked, then colors repeat
 					// without the subtraction on un-click, more likely to get new color
+					
 					// border_plot_col_count -= 1
 
 
@@ -762,12 +749,127 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
+					var leg_item = d3.select('.legend')
+						.append('div')
+						.classed('legend_item', true)
+						.attr('value', d[getDispDat()]+'')
+						.style('opacity', 1e-6)
+
+					leg_item.append('svg').attr('height', '1em').attr('width', '1em')
+						.append('circle')
+							.attr('r', '25%')
+							.attr('cx', '50%')
+							.attr('cy', '50%')
+							.attr('fill-opacity', 0)
+							.attr('stroke', uniq_cols.border)
+							.attr('stroke-width', 2);
+
+					leg_item.append('div')
+						.text(d[getDispDat()]+'')
+						.style('color', uniq_cols.border)
+
+					leg_item.transition('legend_init').duration(500)
+						.style('opacity', 1)
+
+
+					leg_item.on('mouseover', function(){
+
+						// opacity of legend items
+						d3.selectAll('.legend_item').style('opacity', 0.3);
+						d3.select(this).style('opacity', 1);
+
+
+						// scat
+
+						g_line.selectAll('.scat_plot')
+							.filter(function(od){return od[getDispDat()]!=d[getDispDat()]}) //dispDat
+							.style('opacity', '0.2');
+
+						g_line.selectAll('.scat_plot')
+							.filter(function(od){
+								return od[getDispDat()] == d[getDispDat()]
+							})
+							.raise()
+
+
+						// pnt
+
+						var swarmAtt = d[getDispDat()]+''
+
+						d3.selectAll('.pnt').filter(function(p){
+							return p[getDispDat()] != swarmAtt;
+						}).style('fill', '#E1DFE3')
+						.style('opacity', '0.6');
+
+
+
+					})
+
+					.on('mouseout', function(){
+
+						d3.selectAll('.legend_item').style('opacity', '');
+
+
+						g_line.selectAll('.scat_plot')
+							.style('opacity', '');
+
+						d3.selectAll('.pnt')
+							.style('opacity', '');
+
+						d3.selectAll('.pnt')
+							.style('fill', function(d){
+								if (hasDat(d)) {
+									return col_scale(getPntDat(d, year, 'GR'))
+									}
+								})
+
+					})
+					.on('click', function(){
+
+						d3.selectAll('.legend_item').style('opacity', '');
+
+						var swarmAtt = d[getDispDat()]+''
+
+						d3.selectAll('.pnt').filter(function(p){
+							return p[getDispDat()] == swarmAtt;
+							})
+							.attr('value', 'not_clicked')
+							.style('stroke-width', '')
+							.style('stroke', '')
+
+
+
+						g_line.selectAll('.scat_plot')
+							.filter(function(od){return od[getDispDat()]==d[getDispDat()]}) //dispDat
+							.remove();
+
+						g_line.selectAll('.scat_plot')
+							.style('opacity', '');
+
+						d3.selectAll('.pnt')
+							.style('opacity', '')
+							.style('fill', function(d){
+								if (hasDat(d)) {
+									return col_scale(getPntDat(d, year, 'GR'))
+									}
+								})
+
+						d3.selectAll('.legend_item').style('opacity', '')
+
+
+						d3.select(this).remove();
+
+
+					})
+
+
 
 					
 					d3.select(this).attr('value', 'clicked');
 					d3.select(this)
 						.style('stroke-width', '3px')
 						.style('stroke', uniq_cols.border);
+
 
 		      		var scat_plot = g_line.append('g')
 		      				.classed('scat_plot', true)
@@ -875,8 +977,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 							tooltip.selectAll('*').remove();
 
 						})
-						.transition().duration(1000)
-						.style('opacity', 1);
+						// Given that whole g is transitioned in, shouldn't be necessary
+						// .transition().duration(1000)
+						// .style('opacity', 1);
 
 
 					// Circle for interpolated year?!
@@ -972,7 +1075,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						});
 
 					scat_plot
-						.transition().duration(500)
+						.transition('scat_plot_init').duration(500)
 						.style('opacity', 1)
 
 
@@ -992,30 +1095,6 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-		$('.count_filter').on('select2:select', function(e){
-			filtParams['Country'] = e.params.data.text;
-
-			console.log('count select event');
-			console.log(e);
-
-
-
-			filtUpdate();
-
-		})
-
-
-		$('.pos_filter').on('select2:select', function(e){
-			filtParams['Position'] = e.params.data.text;
-
-			console.log('count select event');
-			console.log(e);
-
-
-
-			filtUpdate();
-
-		})
 
 		function filtUpdate(){
 
@@ -1031,80 +1110,163 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			scatUpdateFilt();
 			reInitFilt();
 
-			console.log('get disp opts test')
-			console.log(getDispOpts(dat))
 
 		}
 
 
 
-		function checkInActive(current, active){
-
-			// if in active
-			if (_.findIndex(active, function(ac){
-				return ac == current; // current count not in active
-					})==-1) {
-				return true; // ie, current not active, so true for disabled
-			}
-			else {
-				return false;
-			}			
-
-		}
-
-		function checkSelected(current, filt){
-			if (current == filtParams[filt]){
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
 
 
 		function reInitFilt(){
 
-			var active_uniq_counts = getActiveFiltOneOpts(dat, all_uniq_filt_one);
-			var active_uniq_pos = getActiveFiltTwoOpts(dat, all_uniq_filt_two);
+			// change to updateFilt
+			// add event listener
+			// re calc all_uniq
+			// Logic - filters primed for diaplaying ... so run in disp
+
+			all_uniq_disp_opts = getDispOpts(dat);
+
+			all_uniq_filt_one = getFiltOneOpts(dat);
+			all_uniq_filt_two = getFiltTwoOpts(dat);
 
 
-			//Country filter
-			$('.count_filter').select2('destroy').empty()
+
+			var active_disp_opts = getDispOpts(dat);
+
+			var active_uniq_filt_one = getActiveFiltOneOpts(dat, all_uniq_filt_one);
+			var active_uniq_filt_two = getActiveFiltTwoOpts(dat, all_uniq_filt_two);
+
+
+
+
+
+			$('.search').select2('destroy').empty().off()
+				.select2({
+					placeholder: 'Search for a ' + dispDatKey[dispMode],
+					width: '100%',
+					data: _.map(all_uniq_disp_opts, function(o){
+								return {
+									id: o,
+									text: o,
+									disabled: checkInActive(o, active_disp_opts)
+								}
+							})
+
+
+				})
+				
+			$('.search').val('').trigger('change')
+
+
+			$('.search').on('select2:select', function(e){
+
+					console.log('\n event from disp opts select')
+					console.log(e);
+
+					console.log('\nuniq col count')
+					console.log(border_plot_col_count)
+
+					var swarm_point = d3.selectAll('.pnt').filter(function(p){
+
+							return p[getDispDat()] == e.params.data.text; 
+					})
+
+					console.log('\n swarm point');
+					console.log(swarm_point);
+					console.log(swarm_point.datum());
+
+					swarm_point.each(function(d,i){
+						var click_func = swarm_point.on('click');
+
+						console.log('\nclick func')
+						console.log(click_func)
+
+						click_func.apply(this, [d,i]);
+
+					})
+
+
+					$('.search').val('').trigger('change')			
+
+			})
+
+
+
+			$('.filter_one').select2('destroy').empty().off()
 				.select2({
 					placeholder: 'Search Country',
 					width: '100%',
-					data: _.map(all_uniq_counts, function(c){
+					data: _.map(all_uniq_filt_one, function(c){
 
 						return {
 							id: c,
 							text: c,
-							disabled: checkInActive(c, active_uniq_counts),
-							selected: checkSelected(c, $('.count_filter').attr('value'))
+							disabled: checkInActive(c, active_uniq_filt_one),
+							selected: checkSelected(c, dispFiltKey[dispMode][0])
 						}
 					})
 				});
 
 
-			$('.pos_filter').select2('destroy').empty()
+			$('.filter_two').select2('destroy').empty().off()
 				.select2({
 					placeholder: 'Search Position',
 					width: '100%',
-					data: _.map(all_uniq_pos, function(c){
+					data: _.map(all_uniq_filt_two, function(c){
 
 						return {
 							id: c,
 							text: c,
-							disabled: checkInActive(c, active_uniq_pos),
-							selected: checkSelected(c, $('.pos_filter').attr('value'))
+							disabled: checkInActive(c, active_uniq_filt_two),
+							selected: checkSelected(c, dispFiltKey[dispMode][1])
 						}
 
 					})
 				});
+
+			$('.filter_one').on('select2:select', function(e){
+
+				console.log('filter one event on change')
+
+				console.log(e)
+				filtParams[dispFiltKey[dispMode][0]] = e.params.data.text;
+
+				console.log('\nfilt one acted')
+
+				filtUpdate();
+
+			})
+
+
+			$('.filter_two').on('select2:select', function(e){
+				filtParams[dispFiltKey[dispMode][1]] = e.params.data.text;
+
+				filtUpdate();
+
+			})
+
+
+			d3.select('#filter_one_reset').on('click', function(){
+				filtParams[dispFiltKey[dispMode][0]]  = default_filtParams[dispFiltKey[dispMode][0]];
+
+				filtUpdate();
+
+			})
+
+			d3.select('#filter_two_reset').on('click', function(){
+				filtParams[dispFiltKey[dispMode][1]]  = default_filtParams[dispFiltKey[dispMode][1]];
+
+				filtUpdate();
+
+			})
 
 
 
 
 		}
+
+
+
 
 
 
@@ -1140,6 +1302,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 							function(o){return o['intp']==0}
 						)
 
+					console.log('point dat')
+					console.log(point_dat)
+
 
 					// CI management
 
@@ -1163,7 +1328,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					scat_ci.enter().append('path').lower()
 						// .merge(scat_ci)
 						.classed('scat_ci', true)
-						.style('opacity', 0)
+						.style('opacity', 1e-6)
 						.attr("fill", "none")
 						.attr("stroke", "#8B8B90FF")
 						.attr("stroke-linejoin", "round")
@@ -1171,7 +1336,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.attr("stroke-linecap", "round")
 						.attr("stroke-width", 1.5)
 						.attr('d', scat_ci_line)
-						.transition().duration(100).delay(1000)
+						.transition('scat_ci_re_enter').duration(100).delay(1000)
 						.style('opacity', 1)
 
 
@@ -1192,11 +1357,11 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					var uniq_cols = uniqColsGen(this_uniq_hue);
 
 					scat.exit()
-						.transition().duration(1000)
+						.transition('scat_exit').duration(1000)
 						.style('opacity', 1e-6)
 						.remove();
 
-					scat.transition().duration(1000)
+					scat.transition('scat_move').duration(1000)
 						.attr('r', function(d){
 							return radius(d['n'])})
 						.attr('cx', function(d){
@@ -1208,7 +1373,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 					scat.enter().append('circle').classed('scat', true)
-							.style('opacity', 0)
+							.style('opacity', 1e-6)
 							.attr('data-swarmDisp', el_dat[getDispDat()]+'') //dispDat
 							.attr('r', function(d){
 								return radius(d['n'])})
@@ -1272,7 +1437,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 							})
-							.transition().duration(1000)
+							.transition('scat_enter').duration(1000)
 							.style('opacity', 1);
 
 
@@ -1281,8 +1446,11 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 											.filter(function(d){
 												return d['Y'] == year
 											});
+					var current_point_dat = point_dat.filter(function(pd){
+						return pd['Y'] == year
+					})
 
-					if (current_point.size() == 1){
+					if (current_point_dat.length == 1){
 
 						this_scat.selectAll('.scat')
 							.sort(function(a, b) {
@@ -1315,8 +1483,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 						this_scat.selectAll('.scat_line')
 							.datum(line_dat)
-							.transition().duration(1000)
+							.transition('scat_line_move').duration(1000)
 							.attr("d", scat_line)
+							
+						this_scat.selectAll('.scat_line').raise();
 
 					}
 
@@ -1382,7 +1552,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								tooltip.style('visibility', 'hidden');
 								tooltip.selectAll('*').remove();
 							})
-							.transition().duration(1000)
+							.transition('scat_line_enter').duration(1000)
 							.style('opacity', 0.65);
 
 					} // end else
@@ -1394,10 +1564,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 					// if an interpolated point is there
-					if (current_point.size() == 0 && !this_scat.selectAll('.scat_inter').empty()) {
+					if (current_point_dat.length == 0 && !this_scat.selectAll('.scat_inter').empty()) {
 
 						this_scat.selectAll('.scat_inter')
-							.transition().duration(1000)
+							.transition('scat_inter_move').duration(1000)
 							.attr('r', radius(_.get(el_dat, ['nDat',filtParam1, filtParam2, 0, 'mean_n'])))
 							.attr('cy', perc_scale(_.filter(line_dat, function(o){
 								return o['year'] == year;
@@ -1407,7 +1577,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 					}
 
-					else if (current_point.size() != 1) {
+					else if (current_point_dat.length == 0) {
 
 						this_scat.append('circle').classed('scat_inter', true)
 							.style('opacity', 1e-6)
@@ -1420,11 +1590,16 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 							.attr('stroke', 'black')
 							.style('stroke-dasharray', '3 1')
 							.style('fill-opacity', '0')
-							.transition().duration(1000)
+							.transition('scat_inter_enter').duration(1000)
 							.style('opacity', 1);
 
+					}
 
+					// for when there was an interpolated point and now there shouldn't be 
+					else if (current_point_dat.length > 0){
 
+						this_scat.selectAll('.scat_inter')
+							.remove();
 					}
 
 
