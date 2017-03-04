@@ -114,6 +114,7 @@ var line_yr_scale = d3.scaleLinear()
 // Line plot Year Text elements
 
 line.append('text')
+	.classed('line_plot_yrText_left', true)
 	.text(''+yr_min)
 	.attr('y', perc_scale(50))
 	.attr('x', margin_line.left)
@@ -126,6 +127,7 @@ line.append('text')
 	.attr('text-anchor', 'end');
 
 line.append('text')
+	.classed('line_plot_yrText_right', true)
 	.text(''+yr_max)
 	.attr('y', perc_scale(50))
 	.attr('x', width_line + margin_line.left)
@@ -151,6 +153,8 @@ g_bckg.insert('rect', 'svg')
 	.attr('fill', '#F6F4F8')
 
 g_bckg.insert("line", 'svg')
+	.classed('perc_line_fifty', true)
+	.attr('id', 'perc_line_fifty')
 	.attr("x1", 0)
 	.attr("y1", perc_scale(50))
 	.attr("x2", bckg.attr('width'))
@@ -161,6 +165,7 @@ g_bckg.insert("line", 'svg')
 
 
 g_bckg.insert("line", 'svg')
+	.classed('perc_line_twenty_five', true)
 	.attr("x1", 0)
 	.attr("y1", perc_scale(25))
 	.attr("x2", bckg.attr('width'))
@@ -170,6 +175,7 @@ g_bckg.insert("line", 'svg')
 	.attr('d')
 
 g_bckg.insert("line", 'svg')
+	.classed('perc_line_seventy_five', true)
 	.attr("x1", 0)
 	.attr("y1", perc_scale(75))
 	.attr("x2", bckg.attr('width'))
@@ -228,8 +234,18 @@ var year_text = bckg.insert('text', 'svg')
 
 
 
+// Positioning the legend div to be absolute 
+
+function legendPos(){
+		$('.legend')
+			.css('position', 'fixed')
+			.css('left', $('.line_plot_yrText_right').offset()['left'])
+			.css('top', document.getElementById('perc_line_fifty').getBoundingClientRect()['top'] + 10)
+	}
 
 
+legendPos();
+window.onresize = legendPos;
 
 
 // Scat Plot Unique Colours
