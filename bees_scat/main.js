@@ -17,6 +17,8 @@
 // scat plot
 	// add CI option
 
+	// fade legend item when no data
+
 
 // Re-normalise radius scale on filter - done (simply call n_range(), which is filt dependent)
 	// Need radius legend too ... otherwise confusing what's going on.
@@ -239,13 +241,20 @@ var year_text = bckg.insert('text', 'svg')
 function legendPos(){
 		$('.legend')
 			.css('position', 'fixed')
-			.css('left', $('.line_plot_yrText_right').offset()['left'])
+			.css('left', $('.line_plot_yrText_right').offset()['left']+10)
 			.css('top', document.getElementById('perc_line_fifty').getBoundingClientRect()['top'] + 10)
 	}
 
 
 legendPos();
 window.onresize = legendPos;
+window.onscroll = legendPos;
+
+
+
+
+
+
 
 
 // Scat Plot Unique Colours
@@ -351,6 +360,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			.on('click', function(){
 				g_bee_swarm.selectAll('*').remove();
 				g_line.selectAll('*').remove();
+				d3.selectAll('.legend_item').remove();
 
 				dispMode = d3.select(this).attr('value');
 
@@ -676,7 +686,16 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					d3.selectAll('.pnt')
 						.style('opacity', '0.6');
 					d3.select(this)
-						.style('opacity', '');			
+						.style('opacity', '');
+
+					d3.selectAll('.legend_item')
+						.style('opacity', 0.3);
+					d3.selectAll('.legend_item')
+						.filter(function(ld){
+							return ld['id'] == d[getDispDat()];
+							})
+						.style('opacity', 1);
+
 
 				}
 
@@ -703,6 +722,10 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					g_line.selectAll('.scat_plot')
 						.style('opacity', '');
 
+					d3.selectAll('.legend_item')
+						.style('opacity', '');
+
+
 					d3.selectAll('.pnt')
 						.style('opacity', '');
 				}
@@ -713,6 +736,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			// scat init
 			.on('click', function(d){
+
 
 
 				if (d3.select(this).attr('value')=='clicked') {
@@ -732,12 +756,19 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 					d3.selectAll('.pnt')
 						.style('opacity', '');
+					d3.selectAll('.legend_item')
+						.style('opacity', '');
+
 
 					d3.selectAll('.legend_item')
 						.filter(function(){
 							return d3.select(this).attr('value')==d[getDispDat()]
 						})
 						.remove();
+
+					sortLegend();
+					positionLegendItem();
+
 
 					// May make sense, but if preious unclicked, then colors repeat
 					// without the subtraction on un-click, more likely to get new color
@@ -764,12 +795,24 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					var uniq_cols = uniqColsGen(uniq_hue)
 
 
+					// mainly for the line plotting, but called here for legend ordering
+					var line_dat = line_dat_gen(_.get(d, ['nDat',filtParam1, filtParam2, 0, 'Curve']), yr_max);
+
+
 
 					var leg_item = d3.select('.legend')
 						.append('div')
+						.datum({
+							id: d[getDispDat()]+'',
+							ord_val: _.filter(line_dat, function(o){
+								return o['year'] == yr_max;
+							})[0]['perc']
+						})
 						.classed('legend_item', true)
 						.attr('value', d[getDispDat()]+'')
+						.attr('uniq_hue_dat', uniq_hue)									
 						.style('opacity', 1e-6)
+						.style('position', 'absolute')
 
 					leg_item.append('svg').attr('height', '1em').attr('width', '1em')
 						.append('circle')
@@ -787,6 +830,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					leg_item.transition('legend_init').duration(500)
 						.style('opacity', 1)
 
+					sortLegend();
+					positionLegendItem();
 
 					leg_item.on('mouseover', function(){
 
@@ -875,6 +920,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 						d3.select(this).remove();
 
+						sortLegend();
+						positionLegendItem();
+
 
 					})
 
@@ -885,6 +933,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					d3.select(this)
 						.style('stroke-width', '3px')
 						.style('stroke', uniq_cols.border);
+
 
 
 		      		var scat_plot = g_line.append('g')
@@ -903,8 +952,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					console.log('point_dat')
 					console.log(point_dat);
 
-
-					var line_dat = line_dat_gen(_.get(d, ['nDat',filtParam1, filtParam2, 0, 'Curve']), yr_max);
+					// now done for legend ordering - 
+					// var line_dat = line_dat_gen(_.get(d, ['nDat',filtParam1, filtParam2, 0, 'Curve']), yr_max);
 
 					// Con Interval error bars - line generator
 					var scat_ci = scat_plot.selectAll('.scat_ci')
@@ -970,6 +1019,18 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					        tooltip
 				                .style('top', (d3.event.pageY-150)+'px')
 				                .style('left', (d3.event.pageX+5)+'px');
+
+
+
+							d3.selectAll('.legend_item')
+								.style('opacity', 0.3);
+							d3.selectAll('.legend_item')
+								.filter(function(d){
+									return d['id'] == swarmAtt;
+									})
+								.style('opacity', 1);
+
+
 						})
 						.on('mouseout', function(d){
 							d3.selectAll('.pnt')
@@ -991,6 +1052,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 							tooltip.style('visibility', 'hidden');
 							tooltip.selectAll('*').remove();
+
+							d3.selectAll('.legend_item').style('opacity', '');
+
 
 						})
 						// Given that whole g is transitioned in, shouldn't be necessary
@@ -1068,6 +1132,17 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					        tooltip
 				                .style('top', (d3.event.pageY-150)+'px')
 				                .style('left', (d3.event.pageX+5)+'px');
+
+							d3.selectAll('.legend_item')
+								.style('opacity', 0.3);
+							d3.selectAll('.legend_item')
+								.filter(function(d){
+									return d['id'] == swarmAtt;
+									})
+								.style('opacity', 1);
+
+
+
 						})
 						.on('mouseout', function(d){
 							d3.selectAll('.pnt')
@@ -1088,6 +1163,12 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 							tooltip.style('visibility', 'hidden');
 							tooltip.selectAll('*').remove();
+
+
+							d3.selectAll('.legend_item')
+								.style('opacity', '');
+
+
 						});
 
 					scat_plot
@@ -1125,6 +1206,11 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			beeSwarmUpdate();
 			scatUpdateFilt();
 			reInitFilt();
+
+
+			legendItemUpdate();
+			sortLegend();
+			positionLegendItemFilt();
 
 
 		}
@@ -1706,6 +1792,149 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		} // end scat year update function
 
 
+
+
+
+		// Sorting functions for legend
+
+
+
+		function legendItemUpdate(){
+
+			d3.selectAll('.legend_item')
+				.each(function(d){
+
+					console.log('\n legend item dat')
+					console.log(d)
+
+
+					var scat_dat = d3.selectAll('.scat_plot')
+									.filter(function(sd){
+										return sd[getDispDat()] == d['id'];
+										})
+									.datum()
+					this_leg_item = d3.select(this);
+
+
+					if (_.get(scat_dat, ['nDat',filtParam1, filtParam2], undefined)) {
+
+
+							var line_dat = line_dat_gen(
+									_.get(scat_dat, ['nDat',filtParam1, filtParam2, 0, 'Curve']), yr_max
+								);
+
+							var new_dat = _.cloneDeep(d);
+
+							new_dat['ord_val'] = _.filter(line_dat, function(o){
+														return o['year'] == yr_max;
+													})[0]['perc']
+
+							this_leg_item.datum(new_dat)
+
+							var uniq_cols = uniqColsGen(this_leg_item.attr('uniq_hue_dat'))
+
+							this_leg_item.select('div').style('color', uniq_cols.border)
+
+							this_leg_item.select('svg').select('circle').style('stroke', uniq_cols.border)
+
+					}
+
+					else {
+
+
+							var new_dat = _.cloneDeep(d);
+
+							new_dat['ord_val'] = 0;
+
+							this_leg_item.datum(new_dat)
+
+							this_leg_item.select('div').style('color', 'lightgrey')
+
+							this_leg_item.select('svg').select('circle').style('stroke', 'lightgrey')
+
+					}
+				})
+		}
+
+
+		function sortLegend(){
+
+			d3.selectAll('.legend_item').sort(function(a,b){
+				return a['ord_val'] < b['ord_val'] ? 1 : a['ord_val'] > b['ord_val'] ? -1 : a['ord_val'] >= b['ord_val'] ? 0 : NaN;})
+
+		}
+
+		function positionLegendItem(){
+
+			var leg_item = d3.selectAll('.legend_item')
+
+			leg_item
+			.transition('leg_item_pos').duration(500)
+			.style('top', function(d,i){
+
+				console.log(this)
+
+
+				if (i == 0){
+						return '0px';
+					}
+
+				else {
+
+					return _.sumBy(leg_item.nodes().slice(0, (i)), function(n){
+						return n.getBoundingClientRect()['height']
+						}) + 'px';
+
+					 
+					// var prev_pos = leg_item
+					// 				.nodes()[(i-1)].getBoundingClientRect()
+
+					// return ((prev_pos['top']-this.parentNode.getBoundingClientRect()['top'])+prev_pos['height'])+'px'
+				}
+
+			})
+
+		}
+
+
+		function positionLegendItemFilt(){
+
+			var leg_item = d3.selectAll('.legend_item')
+
+			leg_item
+			.transition('leg_item_pos_filt').duration(1000)
+			.style('top', function(d,i){
+
+				console.log(this)
+
+
+				if (i == 0){
+
+						return '0px';
+
+					}
+
+				else {
+
+					return _.sumBy(leg_item.nodes().slice(0, (i)), function(n){
+						return n.getBoundingClientRect()['height']
+						}) + 'px';
+
+					 
+					// var prev_pos = leg_item
+					// 				.nodes()[(i-1)].getBoundingClientRect()
+
+					// return ((prev_pos['top']-this.parentNode.getBoundingClientRect()['top'])+prev_pos['height'])+'px'
+				}
+
+			})
+
+		}
+
+
+
+
+
 		// Update beeswarm on year or filter change
 		function beeSwarmUpdate(){
 			d3.selectAll('.pnt')
@@ -1790,8 +2019,6 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 				var rad_range = d3.max(radii)-d3.min(radii)
 
-
-
 				simulation.force("y", 
 					d3.forceY(function(d){
 
@@ -1820,6 +2047,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				)
 				.force("collide", 
 					d3.forceCollide(function(d){
+
 
 						if (hasDat(d)) {
 
