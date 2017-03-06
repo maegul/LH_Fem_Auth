@@ -21,6 +21,22 @@
 		border: 1px solid red;
 	}*/
 
+/*	*{
+	 font-family: sans-serif;
+		border: 1px solid red;
+		padding: 1px;
+			width: 100%;
+			margin: 0 auto;
+	}
+*/
+	body{
+/*			background-color: darkseagreen;
+*/
+	margin: 0;
+	}
+
+
+
 
 	.select2-results__options {
 		font-family: sans-serif;
@@ -34,7 +50,7 @@
 
 	.cont_main {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 	}
 
 	#controls {
@@ -135,11 +151,172 @@
 		cursor: ew-resize;
 	}
 
+
+	.header{
+		height:6rem;
+		width: 100%;
+
+		background-color: gray;
+		position:absolute;
+		font-size: 2.2rem;
+		color: #eeeeee;
+		text-align: center;
+		line-height: 5rem;
+	}
+
+
+	.menu{
+		height:10rem;
+		width: 100%;
+		top:4rem;
+		position:absolute;
+		opacity: .8;
+		justify-content: flex-end;
+		display: flex;
+		flex-direction: column;
+
+	}
+
+	#arrow_cont {
+		cursor: pointer;
+	}
+
+
+	.controls_by_cat_container {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		width: 100%;
+	}
+
+	.disp_butt {
+		margin: 10;
+		font: 1.3rem sans-serif;
+		font-weight: lighter;
+		border: 1px solid lightgrey;
+		padding: 5;
+		width: 100%;
+		text-align: center;
+
+	}
+
+	.disp_butt:hover {
+		border: 1px solid #769cb4;
+/*		background-color: #d5e4ef;
+*/	}
+
+	.active_butt {
+		background-color: #769cb4
+	}
+
+	.cont_cat {
+		margin: 10;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 12rem;
+	}
+
+	.filt_reset_butt_one, .filt_reset_butt_two, .search_reset_butt, .disc_butt_reset {
+
+		background-color: white;
+		align-self: flex-end;
+		font-family: sans-serif;
+		font-weight: lighter;
+		font-size: 0.9rem;
+		border: 1px solid lightgrey;
+		border-radius: 6px;
+		padding: 2;
+		margin-top: 4;
+		cursor: pointer;
+
+	}
+
+	.filt_reset_butt_one:hover {
+		background-color: #EEEEEE;
+	}
+
+
+	.search_reset_butt:hover {
+		background-color: #EEEEEE;
+	}
+
+	.filt_reset_butt_two:hover {
+		background-color: #EEEEEE;
+	}
+
+	.filt_reset_butt_one:active {
+		position: relative;
+		top: 1px;
+	}
+
+
+	.search_reset_butt:active {
+		position: relative;
+		top: 1px;
+	}
+
+	.filt_reset_butt_two:active {
+		position: relative;
+		top: 1px;
+	}
+
+	.disc_butt_reset:hover {
+		background-color: #EEEEEE;
+
+	}
+
+	.disc_butt_reset:active {
+		position: relative;
+		top: 1px;
+	}
+
+
+
 </style>
 
 <body>
 
 <div class='cont_main'>
+
+	<div class='top_main'>
+
+		<div class='menu'>
+			<div class='controls_by_cat_container'>
+
+				<div class='cont_cat Journal'>
+					<div value = 'J' class='disp_butt'>Journals</div>
+
+				</div>
+
+				<div class='cont_cat Discipline'>
+					<div value='D' class='disp_butt'>Disciplines</div>
+
+				</div>
+
+				<div class='cont_cat Country'>
+					<div value='C' class='disp_butt'>Countries</div>
+
+				</div>
+
+				<div class='cont_cat Position'>
+					<div value='P' class='disp_butt'>Auth Positions</div>
+
+				</div>
+
+
+			</div>
+
+		</div>
+
+
+		<div class='header'></div>
+
+		<div class='top_dummy'></div>
+
+
+	</div>
+
 
 <div class='main'>
 
@@ -163,17 +340,7 @@
 	</div>
 
 
-
-<!-- 	<div class='canvas'>
-		<svg id='plot' width="400" height="700"></svg>
-	</div>
-
-
-	<div class='canvas'>
-		<svg id='line_plot' width="600" height="700"></svg>
-
-	</div>
- --></div>
+</div>
 
 
 
@@ -181,34 +348,6 @@
 
   <input style='width:80%;' type="range" name="range" class="slider" id="year_slider" value="2016" min="2002" max="2030" step="1" >
 
-  <div class='cont_disp'>
-  	<div value='J'>Journals</div>
-  	<div value='D'>Disciplines</div>
-  	<div value='C'>Countries</div>
-	<div value='P'>Author Positions</div>
-  </div>
-
-
-  <div id='filters'>
-  	<select class='search'>
-  		<option></option>
-  	</select>
-
-  	<button id='search_reset' class='filt_butt'>Clear Highlights</button>
-
-  	<select class='filter_one' value='Country'>
-  		<option></option>
-  	</select>
-
-  	<button id='filter_one_reset' class='filt_butt'>Reset</button>
-
-  	<select class='filter_two' value='Position'>
-  		<option></option>
-  	</select>
-
-  	<button id='filter_two_reset' class='filt_butt'>Reset</button>
-
-  </div>
 
   <div class='legend'>
   </div>

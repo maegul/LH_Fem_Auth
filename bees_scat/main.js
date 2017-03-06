@@ -3,38 +3,127 @@
 //
 // !! Some of the interpolated GR data is out of range? (beyond 100%)
 
+// Journals!
 
-
-
-// Filters (+ highlight)
-
-
-
-
-
-
+// sizing of plot on different screens?
 
 // scat plot
 	// add CI option
 
-	// fade legend item when no data
 
 
 // Re-normalise radius scale on filter - done (simply call n_range(), which is filt dependent)
 	// Need radius legend too ... otherwise confusing what's going on.
 
 
-
-
-
-// Click to see deeper data
+// Click to see deeper data (??)
 
 
 // Disp filters
-	// Overall Disp
-	// Filter of overall disp
+	// currently presume that for general filt settings, all dispopts will be available
+	// may not be true for  dataset - may need to have an all and an active function like for filts
 
 
+
+
+
+
+// Menu TIME
+
+var body = d3.select('body');
+
+var main = d3.select('.top_main')
+
+var header = d3.select('.header').text('Women in Research')
+
+var menu = d3.select('.menu')
+
+var toggle = 'out'
+
+menu.style('top', function(){
+	return header.style('height')
+})
+
+d3.select('.top_dummy').style('height', function(){
+	return (parseInt(header.style('height')) + parseInt(menu.style('height')))
+})
+
+// var menubox = menu.append('div').style('margin-top', 2*rem)
+
+
+// menubox.append('select').attr('class','menuitem')
+
+// menubox.append('select').attr('class','menuitem')
+
+
+// var object = {
+// 	data: ['option1', 'option2'],
+// 	width: '80%',
+// }
+
+// $('.menuitem').select2(object)
+// $('.menuitem').select2(object)
+
+
+var arrow_container = menu.append('div')
+
+	.style('margin-top', 10)
+	.append('svg')
+	.attr('id', 'arrow_cont')
+	// .attr('top', 1*rem)
+	.attr('width','100%')
+	.style('height', '2rem')
+	.attr('viewBox','0 0 100 100')
+
+
+
+var arrow = arrow_container.append('path')
+	.attr('d',"M0,80 30,40 60,80")
+	.attr('stroke','gray')
+	.attr('stroke-width',10)
+	.attr('fill','transparent')
+	.attr('id', 'arrow')
+	.attr('stroke-linecap','round')
+	.attr('stroke-linejoin','round')
+
+var toggle = 'out'
+
+arrow_container.on('click', function(){
+
+	if (toggle=='out')
+		{ 
+			menu.transition()
+			.duration(500).ease(d3.easeBackInOut)
+			.style('top', function(){
+				console.log((this.getBoundingClientRect()['top'] - this.getBoundingClientRect()['height'] + d3.select('#arrow_cont').node().getBoundingClientRect()['height'])+'px')
+				return (this.getBoundingClientRect()['top'] - this.getBoundingClientRect()['height'] + d3.select('#arrow_cont').node().getBoundingClientRect()['height'] + window.scrollY)+'px'
+			});
+
+			arrow
+				.transition().duration(500)
+				.ease(d3.easeBackInOut)
+				.attr('d', "M0,40 30,80 60,40")
+			// animin.beginElement(); 			
+			toggle = 'in';
+		}
+	else
+		{ 
+			menu
+			.transition().duration(500).ease(d3.easeBackInOut)
+			.style('top', function(){
+				return (parseInt(header.style('height')) + window.scrollY)+'px'
+			});
+			
+			arrow
+				.transition().duration(500)
+				.ease(d3.easeBackInOut)
+				.attr('d', "M0,80 30,40 60,80")
+
+
+			// animout.beginElement(); 			
+			toggle = 'out';
+		}
+})
 
 
 
@@ -223,6 +312,7 @@ g_bckg.insert('text', 'svg')
 
 
 var year_text = bckg.insert('text', 'svg')
+	.attr('id', 'year_text')
 	.text(''+year)
 	.attr('y', perc_scale(95))
 	// .attr('x',)
@@ -233,6 +323,18 @@ var year_text = bckg.insert('text', 'svg')
 	.attr("fill", "#A3A0A6")
 	// .attr('stroke', '#A3A0A6')
 	.attr('text-anchor', 'start');
+
+
+d3.select('#year_slider')
+	.style('position', 'absolute')
+	.style('width', '8rem')
+	.style('left', function(){
+		return d3.select('#year_text').node().getBoundingClientRect()['left'] + 'px'
+	})
+	.style('top', function(){
+		var yr_txt_rect = d3.select('#year_text').node().getBoundingClientRect();
+		return (yr_txt_rect['top'] + yr_txt_rect['height'] + 2+ window.scrollY) + 'px'
+	})
 
 
 
@@ -292,7 +394,7 @@ var dispDatKey = {
 
 var dispFiltKey = {
 	D: ['Country', 'Position'],
-	J: ['Country', 'Position'],
+	J: ['Country', 'Position', 'Discipline'],
 	C: ['Position', 'Discipline'],
 	P: ['Country', 'Discipline']
 
@@ -309,6 +411,10 @@ var default_filtParams = {
 
 var default_dispMode = 'D';
 
+var default_disc = 'Multidisciplinary';
+
+var disc = _.clone(default_disc);
+
 
 
 var filtParams = _.cloneDeep(default_filtParams);
@@ -318,7 +424,7 @@ var dispMode = _.clone(default_dispMode);
 
 
 
-var dispOpts = ['J', 'D', 'C', 'P']; // redundant?
+var dispOpts = ['J', 'D', 'C', 'P']; // redundant? - no, order for the disp mode buttons
 
 var filtParam1 = filtParams[dispFiltKey[dispMode][0]]
 
@@ -347,52 +453,69 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-	for (var i = 0; i < dispOpts.length; i++) {
 		
-		d3.select('.cont_disp').selectAll('div')
-			.style('cursor', 'pointer')
-			.on('mouseover', function(){
-				d3.select(this).style('color', 'red')
-			})
-			.on('mouseout', function(){
-				d3.select(this).style('color', '')
-			})
-			.on('click', function(){
-				g_bee_swarm.selectAll('*').remove();
-				g_line.selectAll('*').remove();
-				d3.selectAll('.legend_item').remove();
+	d3.selectAll('.controls_by_cat_container .disp_butt')
+		.style('cursor', 'pointer')
+		.on('click', function(){
+			g_bee_swarm.selectAll('*').remove();
+			g_line.selectAll('*').remove();
+			d3.selectAll('.legend_item').remove();
 
-				dispMode = d3.select(this).attr('value');
+			// d3.selectAll('.controls_by_cat_container .disp_butt')
 
-				// reset filt params to defaults
-				filtParams = _.cloneDeep(default_filtParams);
-
-				filtParam1 = filtParams[dispFiltKey[dispMode][0]]
-
-				filtParam2 = filtParams[dispFiltKey[dispMode][1]]
+			dispMode = d3.select(this).attr('value');
 
 
-				dat = nestDatGen(main_data);
-
-				console.log('\ndispMode from disp mode change')
-				console.log(dispMode)
-
-				console.log('\n dat')
-				console.log(dat)
-
-				// Empty for when change disp mode and remove event listeners so no double up
-				$('.search').select2('destroy').empty().off()
-				$('.filter_one').select2('destroy').empty().off()								
-				$('.filter_two').select2('destroy').empty().off()			
+			// d3.selectAll('.controls_by_cat_container .disp_butt')
+			// 	.filter(function(){
+			// 		return d3.select(this).attr('value') == dispMode;
+			// 	})
+			// 	.classed('active_butt', true)
 
 
+			// reset filt params to defaults
+			filtParams = _.cloneDeep(default_filtParams);
 
-				initFilters()
+			disc = _.clone(default_disc);
 
-				disp()
-			});
 
-	};
+			filtParam1 = filtParams[dispFiltKey[dispMode][0]]
+
+			filtParam2 = filtParams[dispFiltKey[dispMode][1]]
+
+
+			dat = nestDatGen(main_data);
+
+			// Filter the data for specific discipline ... else its too large
+			if (dispMode == 'J') {
+				journ_unfilt_dat = _.cloneDeep(dat)
+				dat = getJournDiscSelectDat(journ_unfilt_dat)
+			}
+
+			console.log('\ndispMode from disp mode change')
+			console.log(dispMode)
+
+			console.log('\n dat')
+			console.log(dat)
+
+			// for when a discipline filter was built for journal mode
+			if(d3.select('.Journal .select2').size() > 0) {
+				$('.disc_filt').select2('destroy').empty().off()
+			}			
+
+			// Empty for when change disp mode and remove event listeners so no double up
+			$('.search').select2('destroy').empty().off()
+			$('.filter_one').select2('destroy').empty().off()								
+			$('.filter_two').select2('destroy').empty().off()
+
+			initButtFiltLoc();
+
+
+			initFilters()
+
+			disp()
+		});
+
 
 	console.log('main data')
 	console.log(main_data)
@@ -414,7 +537,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	console.log('disp data')
 	console.log(dat);
 
-
+	initButtFiltLoc();
 
 
 	// INIT filts
@@ -433,6 +556,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 		$('.search').select2({
+			
 			placeholder: 'Search for a ' + dispDatKey[dispMode],
 			width: '100%',
 			data: _.map(all_uniq_disp_opts, function(o){
@@ -451,6 +575,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 		$('.filter_one').select2({
+			
 			placeholder: 'Search ' + dispFiltKey[dispMode][0],
 			width: '100%',
 			data: _.map(all_uniq_filt_one, function(c){
@@ -463,6 +588,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 		$('.filter_two').select2({
+			
 			placeholder: 'Search ' + dispFiltKey[dispMode][1],
 			width: '100%',
 			data: _.map(all_uniq_filt_two, function(c){
@@ -474,12 +600,26 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		})
 
 
+		if (dispMode == 'J') {
+			all_uniq_disc_opts = getJournDiscOpts(journ_unfilt_dat);
+
+
+			$('.disc_filt').select2({
+				placeholder: 'Search Discipline',
+				width: '100%',
+				data: _.map(all_uniq_disc_opts, function(d){
+					return {id: d,
+							text: d,
+							selected: checkSelectedJournDisc(d)
+							}
+				})
+
+			})
+		};
+
+
 
 	}
-
-
-
-	// Configure reset buttons
 
 	
 
@@ -505,6 +645,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 	function tick(){
+
 		// console.log(simulation.alpha());
 		d3.selectAll('.pnt')
 		// .filter(function(d){hasDat(d)})
@@ -564,7 +705,17 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 		// Simulation init
 		// disp
 		var simulation = d3.forceSimulation(dat)
-			.force("x", d3.forceX(width/2).strength(0.07))
+			.force('x', d3.forceX(function(d){
+
+					if (hasDat(d)) {
+						return width/2;
+					}
+					else {
+						return 0;
+					}
+
+				}).strength(0.07)
+			)
 			.force("y", d3.forceY(function(d){
 					if (hasDat(d)) {
 
@@ -1193,16 +1344,48 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-		function filtUpdate(){
+		function filtUpdate(trig_src){
 
 			filtParam1 = filtParams[dispFiltKey[dispMode][0]]
 
 			filtParam2 = filtParams[dispFiltKey[dispMode][1]]
 
+			// if ((dispMode == 'J') && (trig_src=='journ_disc')) {
+			// 	dat = getJournDiscSelectDat(journ_unfilt_dat)
+
+
+			// 	g_bee_swarm.selectAll('*').remove();
+			// 	// g_line.selectAll('*').remove();
+			// 	// d3.selectAll('.legend_item').remove();
+
+			// 	disp();
+
+
+			// };
+
+
+			if ((dispMode == 'J') ) {
+				dat = getJournDiscSelectDat(journ_unfilt_dat)
+
+
+				g_bee_swarm.selectAll('*').remove();
+				// g_line.selectAll('*').remove();
+				// d3.selectAll('.legend_item').remove();
+
+				disp();
+
+
+			};
+
+
 			console.log('Filt Update filt params')
 			console.log([filtParam1, filtParam2])
 
 			radius.domain(n_range(dat));
+
+			console.log('\nnew n_range')
+			console.log(n_range(dat))
+
 			beeSwarmUpdate();
 			scatUpdateFilt();
 			reInitFilt();
@@ -1221,15 +1404,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 		function reInitFilt(){
 
-			// change to updateFilt
-			// add event listener
-			// re calc all_uniq
-			// Logic - filters primed for diaplaying ... so run in disp
+			// Logic - filters primed for diaplaying ... so run in disp!!
 
 			all_uniq_disp_opts = getDispOpts(dat);
 
 			all_uniq_filt_one = getFiltOneOpts(dat);
 			all_uniq_filt_two = getFiltTwoOpts(dat);
+
 
 
 
@@ -1244,6 +1425,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			$('.search').select2('destroy').empty().off()
 				.select2({
+					
 					placeholder: 'Search for a ' + dispDatKey[dispMode],
 					width: '100%',
 					data: _.map(all_uniq_disp_opts, function(o){
@@ -1262,11 +1444,6 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			$('.search').on('select2:select', function(e){
 
-					console.log('\n event from disp opts select')
-					console.log(e);
-
-					console.log('\nuniq col count')
-					console.log(border_plot_col_count)
 
 					var swarm_point = d3.selectAll('.pnt').filter(function(p){
 
@@ -1281,7 +1458,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						var click_func = swarm_point.on('click');
 
 						console.log('\nclick func')
-						console.log(click_func)
+						
 
 						click_func.apply(this, [d,i]);
 
@@ -1296,6 +1473,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			$('.filter_one').select2('destroy').empty().off()
 				.select2({
+					
 					placeholder: 'Search Country',
 					width: '100%',
 					data: _.map(all_uniq_filt_one, function(c){
@@ -1312,6 +1490,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			$('.filter_two').select2('destroy').empty().off()
 				.select2({
+					
 					placeholder: 'Search Position',
 					width: '100%',
 					data: _.map(all_uniq_filt_two, function(c){
@@ -1328,12 +1507,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			$('.filter_one').on('select2:select', function(e){
 
-				console.log('filter one event on change')
 
-				console.log(e)
 				filtParams[dispFiltKey[dispMode][0]] = e.params.data.text;
 
-				console.log('\nfilt one acted')
 
 				filtUpdate();
 
@@ -1341,6 +1517,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 			$('.filter_two').on('select2:select', function(e){
+
 				filtParams[dispFiltKey[dispMode][1]] = e.params.data.text;
 
 				filtUpdate();
@@ -1348,21 +1525,102 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			})
 
 
-			d3.select('#filter_one_reset').on('click', function(){
+			d3.select('.filt_reset_butt_one').on('click', function(){
 				filtParams[dispFiltKey[dispMode][0]]  = default_filtParams[dispFiltKey[dispMode][0]];
 
 				filtUpdate();
 
 			})
 
-			d3.select('#filter_two_reset').on('click', function(){
+
+			d3.select('.filt_reset_butt_two').on('click', function(){
 				filtParams[dispFiltKey[dispMode][1]]  = default_filtParams[dispFiltKey[dispMode][1]];
 
 				filtUpdate();
 
 			})
 
+			d3.select('.search_reset_butt').on('click', function(){
 
+
+				if(dispMode=='J') {
+
+					var sel_legs = d3.selectAll('.legend_item')
+
+					sel_legs.each(function(d,i){
+						var click_func = d3.select(this).on('click');
+
+						console.log('\nclick func')
+
+						click_func.apply(this, [d,i]);
+
+					})
+
+
+
+				}
+				else {
+
+					var sel_swarm_points = d3.selectAll('.pnt').filter(function(p){
+
+							return d3.select(this).attr('value') == 'clicked' 
+					})
+
+					sel_swarm_points.each(function(d,i){
+						var click_func = sel_swarm_points.on('click');
+
+						console.log('\nclick func')
+
+						click_func.apply(this, [d,i]);
+
+					})
+
+				}
+
+				$('.search').val('').trigger('change')			
+
+
+
+			})
+
+			if (dispMode == 'J') {
+
+				all_uniq_disc_opts = getJournDiscOpts(journ_unfilt_dat);
+				var active_disc_opts = getActiveJournDiscOpts(dat, all_uniq_disc_opts);
+
+				$('.disc_filt').select2('destroy').empty().off()
+					.select2({
+						
+						placeholder: 'Search Discipline',
+						width: '100%',
+						data: _.map(all_uniq_disc_opts, function(c){
+
+							return {
+								id: c,
+								text: c,
+								disabled: checkInActive(c, active_disc_opts),
+								selected: checkSelectedJournDisc(c)
+							}
+						})
+					});
+
+
+				$('.disc_filt').on('select2:select', function(e){
+					disc = e.params.data.text;
+
+					filtUpdate('journ_disc');
+				})
+
+				d3.select('.disc_butt_reset').on('click', function(){
+					disc = default_disc;
+
+					filtUpdate('journ_disc');
+
+				})
+
+
+
+			};
 
 
 		}
@@ -2086,6 +2344,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 				simulation.alpha(0.05)
 							.restart();
+
+
 
 				sim_repuls_TO = setTimeout(function(){
 					simulation.force('repulsion', d3.forceManyBody().strength(0))

@@ -1,5 +1,89 @@
 
 
+function initButtFiltLoc(){
+    
+    // make button active at init
+    d3.selectAll('.controls_by_cat_container .disp_butt')
+        .classed('active_butt', false)
+        .filter(function(){
+            return d3.select(this).attr('value') == dispMode;
+        })
+        .classed('active_butt', true)
+
+
+    d3.selectAll('.search').remove(); 
+    d3.selectAll('.filter_one').remove();
+    d3.selectAll('.filter_two').remove();
+
+
+    d3.select('.filt_reset_butt_one').remove()
+    d3.select('.filt_reset_butt_two').remove()
+    d3.select('.search_reset_butt').remove()
+
+    d3.selectAll('.disc_filt').remove();
+    d3.selectAll('.disc_butt_reset').remove();
+
+
+    // init location of filters in right spots
+    var filt_one_loc = d3.selectAll('.cont_cat')
+        .filter(function(){
+            return d3.select(this).classed(dispFiltKey[dispMode][0])
+        })
+
+    filt_one_loc
+        .append('select').classed('filter_one', true)
+        .append('option')
+
+    filt_one_loc
+        .append('div').classed('filt_reset_butt_one', true)
+        .text('Reset')
+
+    var filt_two_loc = d3.selectAll('.cont_cat')
+        .filter(function(){
+            return d3.select(this).classed(dispFiltKey[dispMode][1])
+        })
+
+    filt_two_loc
+        .append('select').classed('filter_two', true)
+        .append('option')
+
+    filt_two_loc
+        .append('div').classed('filt_reset_butt_two', true)
+        .text('Reset')
+
+
+    var search_loc = d3.selectAll('.cont_cat')
+        .filter(function(){
+            return d3.select(this).classed(getDispDat())
+        })
+
+    search_loc
+        .append('select').classed('search', true)
+        .append('option')
+
+    search_loc
+        .append('div').classed('search_reset_butt', true)
+        .text('Clear Selections')
+
+
+    // if dispmode is Journal ... set up Discipline filter
+
+    if (dispMode == 'J') {
+        var disc_loc = d3.select('.Discipline');
+
+        disc_loc
+            .append('select').classed('disc_filt', true)
+            .append('option')
+
+        disc_loc
+            .append('div').classed('disc_butt_reset', true)
+            .text('Reset')
+
+
+    }
+
+
+}
 
 
 
@@ -346,6 +430,7 @@ function getDispDat() {
 }
 
 function hasDat(dat) {
+
     return _.has(dat, ['nDat', filtParam1, filtParam2])
 }
 
@@ -380,6 +465,13 @@ function uniqColsGen(uniq_hue){
 
 
 
+function getJournDiscSelectDat(dat){
+    return _.filter(dat, function(d){
+        return d['Discipline'] == disc;
+    })
+}
+
+
 function checkInActive(current, active){
 
     // if in active
@@ -403,7 +495,14 @@ function checkSelected(current, filt){
     }
 }
 
-
+function checkSelectedJournDisc(current){
+    if (current == disc){ // disc here is the global variable for the selected discipline in Journal mode
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
 
 function getDatActive(dat, f1, f2){
@@ -467,42 +566,30 @@ function getFiltTwoOpts(dat){
 
 
 
-function getCountFiltOpts(dat){
-
-    // var datActive = _.filter(dat, function(o){
-    //     return _.has(o, ['nDat', 'Iran', 'Last'])
-    // });
-
-    // return datActive;
 
 
+function getJournDiscOpts(dat){
+    // For when DispMode is Journal
 
     return _.uniq(
-                _.flatten(
-                        _.map(getDatActive(dat, filtParam1, filtParam2), function(o){
-                            return _.keys(o['nDat'])
-                            })
-                        )
+                _.map(
+                    getDatActive(dat, filtParam1, filtParam2), 
+                    function(d){
+                        return d['Discipline'];
+                    }
+
                 )
-            
+            )
 }
 
 
-function getPosFiltOpts(dat){
+function getActiveJournDiscOpts(dat, all_uniq){
+    // for when dispmode is Journal
 
-    return _.uniq(
-                _.flattenDeep(
-                        _.map(getDatActive(dat, filtParam1, filtParam2), function(o){
-
-                            // var keys = _.keys(o['nDat']);
-
-                            return _.map(_.keys(o['nDat']), function(k){
-                                return _.keys(o['nDat'][k]);
-                                    })
-
-                            })
-                        )
-                )
+    return _.filter(all_uniq, function(au){
+                var optDat = getDatActive(dat, filtParam1, filtParam2);
+                return optDat.length > 0;
+            })
 
 
 }
@@ -510,12 +597,14 @@ function getPosFiltOpts(dat){
 
 
 function getDispOpts(dat){
-    return _.map(
-                getDatActive(dat, filtParam1, filtParam2), 
-                function(d){
-                    return d[dispDatKey[dispMode]];
-                }
+    return _.uniq(
+                _.map(
+                    getDatActive(dat, filtParam1, filtParam2), 
+                    function(d){
+                        return d[dispDatKey[dispMode]];
+                    }
 
+            )
         )
 }
 
