@@ -1113,8 +1113,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 								 	);
 
 					scat_ci.enter().append('path').classed('scat_ci', true)
-						.attr("fill", "none")
-						.attr("stroke", "#565556FF")
+						.attr("fill", "darkgrey")
+						.attr("stroke", "darkgrey")
 						.attr("stroke-linejoin", "round")
 						.attr('stroke-miterlimit', 2)
 						.attr("stroke-linecap", "round")
@@ -1690,7 +1690,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.classed('scat_ci', true)
 						.style('opacity', 1e-6)
 						.attr("fill", "none")
-						.attr("stroke", "#8B8B90FF")
+						.attr("stroke", "darkgrey")
 						.attr("stroke-linejoin", "round")
 						.attr('stroke-miterlimit', 2)
 						.attr("stroke-linecap", "round")
