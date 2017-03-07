@@ -429,25 +429,14 @@ var filtParam2 = filtParams[dispFiltKey[dispMode][1]]
 d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
-// DispMode revamp
 
-
-// initialise filters according to disp requirements
-	// necessary filters are from filtParams
-
-	// rely on nested data and ordering of it (which all hinges on filtParams!!)
-
-	// Journal special case of a discipline filter set to allDisciplines
-
-
-
-	$('.controls_by_cat_container .disp_butt').on('click', function(){
-		console.log('\n jquery j listiner')
-		if ($(this).attr('value')=='J') {
-			console.log('wait??')
-			$('*').css('cursor', 'wait')
-		}
-	})
+	// $('.controls_by_cat_container .disp_butt').on('click', function(){
+	// 	console.log('\n jquery j listiner')
+	// 	if ($(this).attr('value')=='J') {
+	// 		console.log('wait??')
+	// 		$('*').css('cursor', 'wait')
+	// 	}
+	// })
 		
 	d3.selectAll('.controls_by_cat_container .disp_butt')
 		.style('cursor', 'pointer')
@@ -1124,6 +1113,14 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.attr("stroke-linecap", "round")
 						.attr("stroke-width", 1.5)
 						.attr('d', scat_ci_line)
+						.attr('display', function(){
+							if (d3.select('#CI_butt').attr('value')=='off') {
+								return 'none';
+							}
+							else {
+								return '';
+							}
+						})
 						
 
 
@@ -1136,7 +1133,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 					scat.enter().append('circle').classed('scat', true)
 						.attr('data-swarmDisp', d[getDispDat()]+'') //dispDat
 						.attr('r', function(d){
-							return radius(d['n'])})
+							if (d3.select('#circ_small_butt').attr('value')=='on') {
+								return abs_min_rad;
+							}
+							else {
+								return radius(d['n'])
+							}
+						})
 						.attr('cx', function(d){
 							return line_yr_scale(d['Y']);
 						})
@@ -1332,7 +1335,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-	            	scatOptsDisp();
+	            	// scatOptsDisp();
 
 
 				} // end else "not clicked"
@@ -1402,7 +1405,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			beeSwarmUpdate();
 			scatUpdateFilt();
 
-			scatOptsDisp();
+			// scatOptsDisp();
 
 			reInitFilt();
 
@@ -1712,6 +1715,14 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 						.attr("stroke-linecap", "round")
 						.attr("stroke-width", 1.5)
 						.attr('d', scat_ci_line)
+						.attr('display', function(){
+							if (d3.select('#CI_butt').attr('value')=='off') {
+								return 'none';
+							}
+							else {
+								return '';
+							}
+						})
 						.transition('scat_ci_re_enter').duration(100).delay(1000)
 						.style('opacity', 1)
 
@@ -1739,7 +1750,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 					scat.transition('scat_move').duration(1000)
 						.attr('r', function(d){
-							return radius(d['n'])})
+							if (d3.select('#circ_small_butt').attr('value')=='on') {
+								return abs_min_rad;
+							}
+							else {
+								return radius(d['n'])
+							}
+						})
 						.attr('cx', function(d){
 							return line_yr_scale(d['Y']);
 						})
@@ -1752,7 +1769,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 							.style('opacity', 1e-6)
 							.attr('data-swarmDisp', el_dat[getDispDat()]+'') //dispDat
 							.attr('r', function(d){
-								return radius(d['n'])})
+								if (d3.select('#circ_small_butt').attr('value')=='on') {
+									return abs_min_rad;
+								}
+								else {
+									return radius(d['n'])
+								}
+							})
 							.attr('cx', function(d){
 								return line_yr_scale(d['Y']);
 							})
@@ -2408,6 +2431,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			        .on('click', function(){
 
 			            this_butt = d3.select(this);
+			            console.log('\b this BUTT')
+			            console.log(this_butt.attr('id'))
 			            
 			            var state = this_butt.attr('value');
 
@@ -2415,41 +2440,45 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			                .attr('value', toggleButt(state, 'val'))
 			                .style('background-color', toggleButt(state, 'background'));
 
-		                scatOptsDisp();
+		                scatOptsDisp(this_butt.attr('id'));
 			        })
 
 			    
 			}
 
 
-			function scatOptsDisp(){
+			function scatOptsDisp(button){
 
-			    var ci_state = d3.select('#CI_butt').attr('value')
+				if (button == 'CI_butt') {
 
-			    var circ_state = d3.select('#circ_small_butt').attr('value')
+				    var ci_state = d3.select('#CI_butt').attr('value')
 
+				    if (ci_state=='off') {
+				            d3.selectAll('.scat_ci').attr('display', 'none')
+				    }
 
-			    if (ci_state=='off') {
-			            d3.selectAll('.scat_ci').attr('display', 'none')
-			    }
+				    else {
+				            d3.selectAll('.scat_ci').attr('display', '')
+				    }
+				}
 
-			    else {
-			            d3.selectAll('.scat_ci').attr('display', '')
+				else if (button == 'circ_small_butt') {
 
-			    }
-
-			    if (circ_state=='on') {
-			            d3.selectAll('.scat')
-			            	.transition('scat_opts_disp_rad').delay(1000).duration(400)
-			            	.attr('r', abs_min_rad)
-
-			    }
-
-			    else {
-		    		scatUpdateFilt();
-			    }
+				    var circ_state = d3.select('#circ_small_butt').attr('value')
 
 
+				    if (circ_state=='on') {
+				            d3.selectAll('.scat')
+				            	.transition('scat_opts_disp_rad').duration(400)
+				            	.attr('r', abs_min_rad)
+
+				    }
+
+				    else {
+			    		scatUpdateFilt();
+				    }
+
+				};
 
 			}
 

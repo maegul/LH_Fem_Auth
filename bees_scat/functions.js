@@ -110,9 +110,30 @@ function yearSliderPos(){
 
 }
 
+function scatDispOptPos(){
+    d3.select('#scat_disp_opts')
+        .style('top', function(){
+            var right_yr_txt = d3.select('.line_plot_yrText_right')
+                                    .node().getBoundingClientRect();
+
+            var this_height = this.getBoundingClientRect()['height'];
+
+            return (right_yr_txt['top'] - this_height - 40 + window.scrollY) + 'px';
+        })
+        .style('left', function(){
+            var right_yr_txt = d3.select('.line_plot_yrText_right')
+                                    .node().getBoundingClientRect();
+
+            return (right_yr_txt['left'] + 10 + window.scrollX) + 'px';
+
+        })
+}
+
 function rePositioningScrollResize(){
     legendPos();
     yearSliderPos();
+    scatDispOptPos();
+
 }
 
 
