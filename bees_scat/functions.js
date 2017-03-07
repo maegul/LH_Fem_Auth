@@ -36,7 +36,7 @@ function initButtFiltLoc(){
 
     filt_one_loc
         .append('div').classed('filt_reset_butt_one', true)
-        .text('Reset')
+        .text('Reset to All')
 
     var filt_two_loc = d3.selectAll('.cont_cat')
         .filter(function(){
@@ -49,7 +49,7 @@ function initButtFiltLoc(){
 
     filt_two_loc
         .append('div').classed('filt_reset_butt_two', true)
-        .text('Reset')
+        .text('Reset to All')
 
 
     var search_loc = d3.selectAll('.cont_cat')
@@ -77,7 +77,7 @@ function initButtFiltLoc(){
 
         disc_loc
             .append('div').classed('disc_butt_reset', true)
-            .text('Reset')
+            .text('Reset to Multi')
 
 
     }
@@ -87,7 +87,70 @@ function initButtFiltLoc(){
 
 
 
+// Positioning functions
 
+function legendPos(){
+        $('.legend')
+            .css('position', 'fixed')
+            .css('left', $('.line_plot_yrText_right').offset()['left']+10)
+            .css('top', document.getElementById('perc_line_fifty').getBoundingClientRect()['top'] + 10)
+    }
+
+function yearSliderPos(){
+        d3.select('#year_slider')
+        .style('top', function(){
+                var yr_txt_rect = d3.select('#year_text').node().getBoundingClientRect();
+                return (yr_txt_rect['top'] + yr_txt_rect['height'] + 2+ window.scrollY) + 'px'
+            })
+        .style('left', function(){
+                var yr_txt_rect = d3.select('#year_text').node().getBoundingClientRect();
+                return (yr_txt_rect['left'] + window.scrollX) + 'px'
+            })
+        
+
+}
+
+function rePositioningScrollResize(){
+    legendPos();
+    yearSliderPos();
+}
+
+
+
+
+// Toggle Button functions
+
+function toggleButt(state, ret_value){
+
+    // blah blah blah
+
+    if(state=='off'){
+
+        if(ret_value == 'val') {
+            return 'on';
+        }
+        else if (ret_value=='background'){
+            return '#769cb4'
+        }
+    }
+    else {
+        if(ret_value == 'val') {
+            return 'off';
+        }
+        else if (ret_value=='background') {
+            return 'white' 
+        }
+    }
+}
+
+
+
+
+
+
+
+ 
+// data reanalysis
 
 function dispDatGen(data, disp){
     if (disp=='J') {

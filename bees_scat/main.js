@@ -3,12 +3,13 @@
 //
 // !! Some of the interpolated GR data is out of range? (beyond 100%)
 
-// Journals!
+// Journals ... why no filt update without freezing?
 
 // sizing of plot on different screens?
 
 // scat plot
 	// add CI option
+	// add circ rad option
 
 
 
@@ -331,26 +332,14 @@ d3.select('#year_slider')
 	.style('left', function(){
 		return d3.select('#year_text').node().getBoundingClientRect()['left'] + 'px'
 	})
-	.style('top', function(){
-		var yr_txt_rect = d3.select('#year_text').node().getBoundingClientRect();
-		return (yr_txt_rect['top'] + yr_txt_rect['height'] + 2+ window.scrollY) + 'px'
-	})
-
 
 
 // Positioning the legend div to be absolute 
 
-function legendPos(){
-		$('.legend')
-			.css('position', 'fixed')
-			.css('left', $('.line_plot_yrText_right').offset()['left']+10)
-			.css('top', document.getElementById('perc_line_fifty').getBoundingClientRect()['top'] + 10)
-	}
 
-
-legendPos();
-window.onresize = legendPos;
-window.onscroll = legendPos;
+rePositioningScrollResize();
+window.onresize = rePositioningScrollResize;
+window.onscroll = rePositioningScrollResize;
 
 
 
@@ -452,11 +441,19 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
-
+	$('.controls_by_cat_container .disp_butt').on('click', function(){
+		console.log('\n jquery j listiner')
+		if ($(this).attr('value')=='J') {
+			console.log('wait??')
+			$('*').css('cursor', 'wait')
+		}
+	})
 		
 	d3.selectAll('.controls_by_cat_container .disp_butt')
 		.style('cursor', 'pointer')
 		.on('click', function(){
+
+
 			g_bee_swarm.selectAll('*').remove();
 			g_line.selectAll('*').remove();
 			d3.selectAll('.legend_item').remove();
@@ -464,6 +461,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			// d3.selectAll('.controls_by_cat_container .disp_butt')
 
 			dispMode = d3.select(this).attr('value');
+
 
 
 			// d3.selectAll('.controls_by_cat_container .disp_butt')
@@ -485,11 +483,13 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 			dat = nestDatGen(main_data);
+			dat_length = dat.length;
 
 			// Filter the data for specific discipline ... else its too large
 			if (dispMode == 'J') {
 				journ_unfilt_dat = _.cloneDeep(dat)
 				dat = getJournDiscSelectDat(journ_unfilt_dat)
+				dat_length = dat.length;
 			}
 
 			console.log('\ndispMode from disp mode change')
@@ -514,6 +514,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 			initFilters()
 
 			disp()
+
 		});
 
 
@@ -531,8 +532,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 	// var dat = dispDatGen(main_data, dispMode);
 	// var dat_length = dat.length;
 
-	var dat = nestDatGen(main_data)
-	var dat_length = dat.length;
+	dat = nestDatGen(main_data)
+	dat_length = dat.length;
 
 	console.log('disp data')
 	console.log(dat);
@@ -701,6 +702,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 		reInitFilt();
+
+		initScatOptsButt();
 
 		// Simulation init
 		// disp
@@ -885,7 +888,8 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 				tooltip.selectAll('*').remove();
 			})
 
-			// scat init
+
+// scat init
 			.on('click', function(d){
 
 
@@ -1328,11 +1332,16 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 
+	            	scatOptsDisp();
+
+
 				} // end else "not clicked"
 
 
 
 
+
+ // end scat init
 			})
 
 
@@ -1340,6 +1349,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 //////////
 // Update
 //////////
+
+
+
 
 
 
@@ -1366,6 +1378,7 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			if ((dispMode == 'J') ) {
 				dat = getJournDiscSelectDat(journ_unfilt_dat)
+				dat_length = dat.length;
 
 
 				g_bee_swarm.selectAll('*').remove();
@@ -1388,6 +1401,9 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 			beeSwarmUpdate();
 			scatUpdateFilt();
+
+			scatOptsDisp();
+
 			reInitFilt();
 
 
@@ -2375,6 +2391,69 @@ d3.json('data_no_list_no_dup_disc.json', function(main_data){
 
 
 			})
+
+
+
+		// scat disp opts
+
+			function initScatOptsButt(){
+
+			    d3.selectAll('#CI_butt, #circ_small_butt')
+			        .style('background-color', function(){
+			            if (d3.select(this).attr('value') == 'on') {
+			                return toggleButt('off', 'background')
+			            }
+
+			        })
+			        .on('click', function(){
+
+			            this_butt = d3.select(this);
+			            
+			            var state = this_butt.attr('value');
+
+			            this_butt
+			                .attr('value', toggleButt(state, 'val'))
+			                .style('background-color', toggleButt(state, 'background'));
+
+		                scatOptsDisp();
+			        })
+
+			    
+			}
+
+
+			function scatOptsDisp(){
+
+			    var ci_state = d3.select('#CI_butt').attr('value')
+
+			    var circ_state = d3.select('#circ_small_butt').attr('value')
+
+
+			    if (ci_state=='off') {
+			            d3.selectAll('.scat_ci').attr('display', 'none')
+			    }
+
+			    else {
+			            d3.selectAll('.scat_ci').attr('display', '')
+
+			    }
+
+			    if (circ_state=='on') {
+			            d3.selectAll('.scat')
+			            	.transition('scat_opts_disp_rad').delay(1000).duration(400)
+			            	.attr('r', abs_min_rad)
+
+			    }
+
+			    else {
+		    		scatUpdateFilt();
+			    }
+
+
+
+			}
+
+
 
 
 
